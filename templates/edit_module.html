@@ -1,0 +1,61 @@
+<div class="panel panel-default" ng-controller="updateModule">
+    <div class="panel-heading">
+        <h3 class="panel-title">Edit Module</h3>
+    </div>
+    <div class="panel-body">
+        
+            <form id="demo-form2" class="form-horizontal form-label-left">
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="title">Module Title <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="title" ng-model="editmodule.title" class="form-control col-md-7 col-xs-12">
+                          <span class="help-block title_help_block danger"></span>
+                        </div>
+                      </div>
+<!--                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Link <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" ng-model="editmodule.link" readonly="" disabled="" class="form-control col-md-7 col-xs-12">
+                            <span class="help-block link_help_block danger"></span>
+                        </div>
+                      </div>-->
+                     
+<!--                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Set Parent <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                             <div class="input-group" id="adv-search3">
+                                                <input type="text" class="form-control" readonly="" ng-model="editmodule.parent_title" placeholder="Select Parent Module">
+                                                <div class="input-group-btn">
+                                                    <div class="btn-group" role="group">
+                                                        <div class="dropdown dropdown-lg">
+                                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                                                            <div class="dropdown-menu dropdown-menu-right list_of_items" style="width:254px;">
+                                                                <input type="text" autocomplete="Off" class="in_search_input" ng-model="module_query" placeholder="Search module" />
+                                                                <div class="col-md-12 list_block" ng-click="updateParent(null)">Select Module</div>
+                                                                <div class="col-md-12 list_block" ng-click="updateParent(item)" ng-class="{selected: editmodule.parent == item.id}" ng-repeat="item in parentModules | filter: module_query">{{item.title}}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            <span class="help-block parent_module_help_block danger"></span>
+                        </div>
+                      </div>-->
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                          <button type="button" ng-click="resetForm()" class="btn btn-primary">Cancel</button>
+                          <button type="button" ng-click="submitForm(editmodule)" class="btn btn-success">Submit</button>
+                        </div>
+                       
+                      </div>
+                      <div ng-if="response_message" class="alert alert-info">{{response_message}}</div>
+                      
+                    </form>
+        
+    </div>
+</div>

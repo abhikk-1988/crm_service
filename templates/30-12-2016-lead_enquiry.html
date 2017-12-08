@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+			<h3 class="fts-17"> <i class="glyphicon glyphicon-user tooltip-button demo-icon icon-edit" title=".icon-edit"></i> Lead Enquiry</h3>
+		</div>
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Enquiry</h3>
+         <div>
+			<a href="javascript:;"  ng-click="capture_lead()">Click</a>
+			<!--input type="text" class="pull-right" style="position: relative;bottom: 20px;border-radius: 0px;padding-left: 4px; outline: none;" ng-model="search_in_designation" placeholder="Search"/-->
+		</div>
+	</div>
+    <div class="panel-body">
+        <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Enquiry</th>
+                <th>Created Date/Time</th>
+                <th class="make_center">Action</th>
+            </tr>
+        </thead>
+		<tbody class="tlist">
+			<tr ng-repeat="row in enquiryData">
+				<td  style="background-color:red;color:#fff;"  ng-if="row.syn_marker_new==0" ng-bind="$index + 1"></td>
+				<td   ng-if="row.syn_marker_new==1" ng-bind="$index + 1"></td>
+				<td>
+					<div ng-repeat=" (key ,info) in row.leadJson">
+						<span><b>{{key}} :</b> <span>{{info}}</span></span>
+					</div>
+				</td>
+                <td>
+				</td>
+				<td> {{row.syn_marker_new}} </td>
+			</tr>
+		</tbody>
+    </table>
+    </div>
+</div>

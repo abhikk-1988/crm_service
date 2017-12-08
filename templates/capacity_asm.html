@@ -1,0 +1,228 @@
+<style type="text/css">
+	.tab_content_container{
+		padding: 15px;
+	}
+	
+	.scrollbale_select_list {
+		overflow: auto;
+		height: 411px;
+		overflow-x: hidden;
+	}
+	option:disabled {
+		color: #CCC;
+	}	
+	
+</style>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> 
+				<i class="fa fa-envelope tooltip-button demo-icon icon-edit" title=".icon-edit"></i>Add New Area Sales Manager Capacity
+			</h3>
+        </div>
+    </div>
+</div>
+
+<!--Tabs--> 
+    <uib-tabset active="activeTab">
+		<uib-tab index="0" heading="Select ASM" select="select(0)">
+			<div class="tab_content_container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Select ASM</label>
+							<select 
+								class="form-control" 
+									ng-model="selected_asm" 
+									ng-options="emp.id as emp.firstname + ' ' +emp.lastname disable when emp.is_capacity_assigned_this_month == 1 for emp in asm_employees"
+									ng-change="changeASM(selected_asm)"
+								>
+								<option value="">Select ASM</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-primary btn-xs pull-right" ng-disabled="!selected_asm" ng-click="continue_to_tab(2)">Continue</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</uib-tab>
+		
+		<uib-tab index="1" heading="Select Projects" disable="tabs.tab2.disable" select="select(1)">
+			<div class="tab_content_container">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Select Projects</label>
+							<ul class="list-group scrollbale_select_list">
+								<li class="list-group-item"><input type="text" placeholder="Search Project" class="form-control" ng-model="project_query"/></li>
+								<li project_query
+									class="list-group-item" 
+									ng-repeat="project in bmh_projects | filter : project_query"
+								>{{project.name}}
+								<span class="pull-right">
+									<input 
+										ng-click="selectProject($event,project.id)" 
+										type="checkbox"
+										pid="{{project.id}}"
+										track-status
+									/>
+								</span>
+								</li>
+							</ul>
+						</div>
+						<div class="form-group">
+							<div class="form-group">
+							<button class="btn btn-primary btn-xs pull-right" ng-click="continue_to_tab(3)">Continue</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-group" ng-if="selected_projects_name">
+						<label>Selected Projects</label>
+							<ul class="list-group scrollbale_select_list">
+								<li 
+									class="list-group-item" 
+									ng-repeat="project in selected_projects_name"
+									>{{project.name}}
+								</li>
+							</ul>
+					</div>
+				</div>
+			</div>
+		</uib-tab>
+		
+		<uib-tab index="2" heading="Assign Capacity" disable="tabs.tab3.disable" select="select(2)">
+			<div class="tab_content_container">
+				<div class="row">
+					<div class="col-md-12">
+						<form name="capacity_form">
+							<!--table structure in panel--> 
+							<div class="panel panel-default">
+							
+							<div class="panel-body">
+								
+								<table class="table table-striped">
+									<thead>
+										<th>#</th>
+										<th>Project</th>
+										<th>Month</th>
+										<th>Year</th>
+										<th>Capacity</th>
+										<th class="make_center">Remove Project</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in selected_projects_name">
+											<td ng-bind="$index+1"></td>
+											<td>{{item.name}}</td>
+											<td>{{month}}</td>
+											<td>{{year}}</td>
+											<td>
+												<input 
+													type="text" 
+													id="capacity_input_{{$index}}"
+													ng-model="capacity_values[$index]" 
+													class="form-control col-md-1 capacity_input"
+													data-current_capacity="{{current_capacities[$index]}}"
+													ng-keyup="setTotalCapacity($event)"
+													ng-blur="checkCapacity($event)"
+													data-base_value="{{current_capacities[$index]}}"
+													ng-disabled="item.is_disabled"   
+													style="width:100px;text-align:center;"
+													pid="{{item.id}}"   
+												/>
+											
+												<input class="form-control" style="width:110px;display: inline;margin-left:5px;font-size: 10px;" ng-model="capacity_addon" placeholder="addon in capacity" ng-if="item.is_disabled" ng-keyup="increaseCapacity($index,capacity_addon,1)" type="text" ng-keyup="" />	
+												
+											</td>
+											<td class="make_center">
+												<button 
+													class="btn btn-xs btn-danger"
+													ng-click="removeProject(item.id,$index)"
+												>
+													<i class="fa fa-times" aria-hidden="true"></i>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								
+							</div>
+							<div class="panel-footer clearfix">
+								<div class="col-md-3">	
+									
+								</div>
+								<div class="col-md-3">
+								</div>
+								<div class="col-md-3">
+									<button class="btn btn-primary" type="button">
+										Total Capacity <span class="badge">{{total_capacity}}</span>
+									</button>
+								</div>
+								<div class="col-md-3">	
+									<div class="pull-right">
+										<a ng-href="#" class="btn btn-primary" ng-click="saveCapacity()">Save</a>
+									</div>
+								</div>
+								
+								
+							</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</uib-tab>
+		
+		<uib-tab index="3" heading="MPL Capacity" disable="tabs.tab4.disable">
+			<div class="tab_content_container" ng-controller="mplCapacityCtrl">
+				<div class="row">
+					<div class="col-md-6">
+						<form>
+							<div class="form-group" ng-if="is_edit_mode">
+								<p class="text-primary">Current Capacity: <span class="badge badge-info"> {{capacity.current_capacity}}</span></p>
+							</div>
+							
+							<div class="form-group" ng-if="!is_edit_mode">
+								<label>Enter MPL Capacity</label>
+								<input type="text" 
+									   class="form-control"  
+									   ng-model="capacity.current_capacity"
+									   placeholder="Enter capacity value" />
+							</div>
+							<div class="form-group" ng-if="is_edit_mode">
+								<label>Enter value to add in current capacity</label>
+								<input type="text" 
+									   class="form-control"
+									   ng-model="capacity.capacity_addon_value"
+									   placeholder="Enter value to add on" />
+							</div>
+							<button type="submit" 
+									ng-if="!is_edit_mode"
+									ng-click="saveMplCapacity()" 
+									ng-disabled="!capacity.current_capacity" 
+									class="btn btn-default">Submit
+							</button>
+							<button type="button" 
+									ng-if="is_edit_mode"
+									ng-click="saveMplCapacity()"
+									ng-disabled="!capacity.capacity_addon_value"
+									class="btn btn-default">Update
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</uib-tab>
+    </uib-tabset>
+
+<script type="text/javascript">
+	
+	(function ($){
+			
+		$('#project_list').multiSelect();
+		
+	}(jQuery));
+	
+</script>

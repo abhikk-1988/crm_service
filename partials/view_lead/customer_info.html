@@ -1,0 +1,117 @@
+<div class="container-fluid">
+	<div class="page-header">
+		<h4>Customer Details</h4>
+	</div>
+	<form>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary">Name</label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customerName}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"> <label class="label label-primary">Mobile</label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customerMobile}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> Email </label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col" >
+					{{customer.customerEmail}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> City </label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customerCity}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> State </label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customerState}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> Address </label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customerAddress}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> Profession</label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customerProfession}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> Alternate Number </label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customer_alternate_mobile}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> Landline No </label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customerLandline}}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> DOB </label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col" format-dt dt="{{customer.customerDOB}}" format="d-MMM-yyyy">
+					{{customer.customerDOB }}
+				</div>
+			</div>
+		</div>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col"><label class="label label-primary"> Customer Remark </label></div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{customer.customerRemark }}
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

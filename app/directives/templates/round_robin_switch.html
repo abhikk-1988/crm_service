@@ -1,0 +1,16 @@
+<style type="text/css">
+	
+/*
+  Style for a toggle switch button 
+*/
+.toggle_active, .toggle_inactive {font-size:40px;cursor:pointer;}
+i.toggle_active { color: #5cb85c}
+i.toggle_inactive {color: #d9534f}
+
+/* End: toggle switch button css*/
+	
+</style>
+<div>
+	<i class="fa fa-toggle-on toggle_active" ng-if="status == true" ng-click="changeStatus();"></i>
+	<i class="fa fa-toggle-on fa-rotate-180 toggle_inactive" ng-if="status == false" ng-click="changeStatus();"></i>
+</div>

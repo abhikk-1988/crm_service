@@ -1,0 +1,60 @@
+<div class="container-fluid">
+	<div class="page-header">
+		<h4>Lead History</h4>		
+		<!--Print Icon-->
+		<div class="pull-right" ng-if="print_acccess" style="position: absolute; top: 10px; right: 33px; cursor: pointer;" id="print_history_block">
+			<span>Print History </span>
+			<i class="fa fa-2x fa-print" aria-hidden="true" ng-click="print_history('printable_block');"></i>
+		</div>
+	</div>
+
+	<!--History Block--> 
+	<div id="printable_block">
+		<div class="row notes-container" ng-repeat="history in history_data" ng-if="history_data.length">
+			<div class="col-sm-12">
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+						<i class="fa fa-history fa-2x" aria-hidden="true"></i>
+					</a>
+				</div>
+				<div class="media-body">
+					<h4 class="media-heading italic-date">
+                        {{history.created_at | date : 'mediumDate'}} 
+                        <span style="font-style:normal; font-weight:bold; color: #000; ">(ENQ: {{enquiry_id}})</span>
+                    </h4>
+					<div ng-bind-html="history.details" ng-if="!history.meta_data"></div>
+					<div ng-bind-html="history.details" ng-if="history.meta_data && history.meta_data.display_type != 'popup'"></div>
+					<div ng-if="history.meta_data && history.meta_data.display_type == 'popup'">
+						<span data-toggle="modal" data-target="#popup" class="text-primary" style="cursor: pointer;" ng-click="setPopupContent(history.meta_data)">{{history.details}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>	
+	</div>
+	
+	
+	<div class="row" ng-if="history_data.length <= 0">
+		<div class="col-sm-12">
+			No history 
+		</div>
+	</div>
+</div>
+
+<!--BS.POPUP-->
+<div class="modal fade" tabindex="-1" role="dialog" id="popup">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Note Content
+        <br> <small><i>added by <span style="color:darkblue;">{{note_added_by}}</span></i></small>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p>{{popup_content}}</p>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

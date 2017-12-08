@@ -1,0 +1,196 @@
+<div class="boxed-layout">
+	<div class="row">
+		<div class="col-md-12">
+			
+			<ol class="breadcrumb">
+				<li><a href="#">Enquiry Number</a></li>
+				<li><a href="#">{{enquiry_number}}</a></li>
+				<!--<li class="active">Data</li>-->
+			</ol>
+			
+			<div class="panel panel-default" ng-if="closure_mode === 'cheque'">
+				<div class="panel-heading">
+					<div class="panel-title">{{panel_heading}}
+						<span class="pull-right" style="font-size: 13px;">Please fill all the mandatory fields marked with <span class="danger">*</span></span>
+					</div>
+				</div>
+			
+				<div class="panel-body" ng-controller="chequeCollectionCtrl"> 
+				
+					<form>
+					<div class="form-group">
+						<label>Cheque Number <span class="danger">*</span></label>
+						<input type="text" class="form-control" placeholder="Enter cheque number" ng-model="cheque.number" />
+						<span class="help-block danger">{{cheque_number}}</span>
+					</div>
+					<div class="form-group">
+						<label>Cheque Date <span class="danger">*</span></label>
+						<input 
+							type="text" 
+							class="form-control"
+							id="cheque_datepicker"
+							placeholder="Enter cheque date"
+							uib-datepicker-popup="{{format}}" is-open="open_datepicker" datepicker-options="dateOptions"
+							ng-model="cheque.date" />
+					</div>
+					<div class="form-group">
+						<label>Amount <span class="danger">*</span></label>
+						<input type="text" class="form-control" placeholder="Enter amount" ng-model="cheque.amount" />
+						<span class="help-block danger">{{amount_error}}</span>
+					</div>
+					<div class="form-group">
+						<label>A/c Number <span class="danger">*</span></label>
+						<input type="text" class="form-control" placeholder="Enter A/c number" ng-model="cheque.ac_number" />
+					</div>
+					<div class="form-group">
+						<label>Bank Name <span class="danger">*</span></label>
+						<input type="text" class="form-control" placeholder="Enter bank name" ng-model="cheque.bank_name " />
+					</div>
+					<div class="form-group">
+						<label>Bank IFSC code</label>
+						<input type="text" class="form-control" placeholder="Enter bank name" ng-model="cheque.ifsc_code" />
+					</div>
+					<div class="form-group">
+						<label>Upload Cheque </label>
+						<input type="file" class="form-control" file-model="cheque.file" />
+					</div>
+					
+					<div class="form-group">
+						<button class="btn btn-primary pull-right" ng-click="saveChequeDetail(cheque)">Save</button>
+					</div>
+				</form>
+	
+			</div>
+			</div>
+		
+			<div class="panel panel-default" ng-if="closure_mode === 'lead_close'">
+				<div class="panel-heading">
+					<div class="panel-title">{{panel_heading}}</div>
+				</div>
+			
+				<div class="panel-body" ng-controller="LeadCloseCtrl">
+					
+					<form>
+						<div class="form-group">
+							<label>Lead Closing Date</label>
+							<input type="text"
+								   id="lead_close_datepicker"
+								   ng-model="lead_close.date"
+								   uib-datepicker-popup="{{format}}" is-open="open_datepicker" datepicker-options="dateOptions"
+								   class="form-control" />
+						</div>
+						<div class="form-group">
+							<label>Remark</label>
+							
+							<textarea ng-model="lead_close.remark" placeholder="Enter your remark" class="form-control">
+							</textarea>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-primary pull-right" ng-click="closeLead(lead_close)">Save</button>
+						</div>
+					</form>
+					
+				</div>
+			</div>
+		
+			<div class="panel panel-default" ng-if="closure_mode === 'online_transaction'">
+				<div class="panel-heading">
+					<div class="panel-title">{{panel_heading}}
+					<span class="pull-right" style="font-size: 13px;">Please fill all the mandatory fields marked with <span class="danger">*</span></span>
+					</div>
+				</div>
+			
+				<div class="panel-body" ng-controller="onlineTransactionCtrl"> 
+				
+				<form>
+					<div class="form-group">
+						<label>Amount <span class="danger">*</span></label>
+						<input type="text" class="form-control" placeholder="Enter transaction amount" ng-model="online_transaction.amount" />
+						<span class="help-block danger">{{ot_amount_error}}</span>
+					</div>
+					<div class="form-group">
+						<label>Transaction Number</label>
+						<input type="text" class="form-control" placeholder="Enter transaction number" ng-model="online_transaction.transaction_number" />
+					</div>
+					<div class="form-group">
+						<label>Transaction Date <span class="danger">*</span></label>
+						<input type="text" 
+							   class="form-control" 
+							   id="transaction_datepicker"
+							   placeholder="Enter transaction date" 
+							   uib-datepicker-popup="{{format}}" is-open="open_datepicker" datepicker-options="dateOptions"
+							   ng-model="online_transaction.transaction_date" />
+					</div>
+					<div class="form-group">
+						<label>Payment Mode <span class="danger">*</span></label>
+						<select ng-model="online_transaction.payment_mode" class="form-control">
+							<option value="">Select Payment Mode</option>
+							<option value="DC">Debit Card</option>
+							<option value="CC">Credit Card</option>
+							<option value="NB">Net Banking</option>
+						</select>
+						
+					</div>
+					<div class="form-group">
+						<label>Upload Transaction Receipt </label>
+						<input type="file" class="form-control" file-model="online_transaction.file" />
+					</div>
+					
+					<div class="form-group">
+						<button class="btn btn-primary pull-right" ng-click="saveTransactionDetail(online_transaction)">Save</button>
+					</div>
+				</form>
+			</div>
+			</div>
+		
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	
+    (function ($){
+        
+        var date	= new Date();
+        var element = $('#datepicker');
+        
+        var current = {
+            year : date.getFullYear(),
+            month : (date.getMonth() < 9 ? '0'+ date.getMonth() : date.getMonth() + 1),
+            date : date.getDate()
+        };
+        
+		var default_min_date = '01';
+        var max_year = date.getFullYear();
+        var start_year = 2012;
+		
+//        var cheque_date = new Pikaday({
+//            field: document.getElementById('datepicker'),
+//            format: 'DD-MM-YYYY',
+//            firstDay: 1,
+//            minDate: new Date(start_year,'01','01'),
+//            maxDate: new Date(max_year, current.month , current.date),
+//            yearRange: [start_year,max_year],
+//            showWeekNumber : true,
+//            onSelect: function (){
+//
+//            }
+//        });
+		
+//		var transaction_date = new Pikaday({
+//            field: document.getElementById('transaction_date'),
+//            format: 'DD-MM-YYYY',
+//            firstDay: 1,
+//            minDate: new Date(start_year,'01','01'),
+//            maxDate: new Date(max_year, current.month , current.date),
+//            yearRange: [start_year,max_year],
+//            showWeekNumber : true,
+//            onSelect: function (){
+//
+//            }
+//        });
+		
+		
+    }) (jQuery);
+</script>

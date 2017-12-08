@@ -1,0 +1,97 @@
+<style type="text/css">
+
+        #attachment_container{
+             padding: 5px;
+             position: relative;
+             top: 5px;
+             float: left;
+        }
+
+        #attachment_container > div{
+            border: 1px solid #CCC;
+            padding:5px;
+            margin: 3px 3px;
+            float: left;
+            background-color: #ccc;
+        }
+    </style>
+
+
+<div class="row page-header" >
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="">
+            <h3 class="fts-17"><i class="glyphicon glyphicon-envelope"></i> Add Project Mailer</h3>
+        </div>
+    </div>
+</div>
+
+<div id="mailer-form-container">
+
+    <form class="form-horizontal">
+        <fieldset>
+
+             <!--Form Name -->
+            <!--<legend>New Project Mailer Form</legend>-->
+
+            <!--Select City-->
+            <div class="form-group">
+                <label class="col-md-8" for="selectbasic">Select City</label>
+                <div class="col-md-8">
+                    <select id="selectbasic" ng-model="mailer.project_city" ng-change="getProject(mailer.project_city)"  ng-options="city.city_name for city in projectCities.city_list" class="form-control">
+                    <option value="">--Select City--</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Select Project -->
+            <div class="form-group">
+                <!--<input type="text" ng-model="search_project" />-->
+                <label class="col-md-8" for="selectbasic">Select Project</label>
+                <div class="col-md-8">
+                    <select id="selectbasic" ng-model="mailer.project" ng-options="project as project.project_name for project in mailerProjects | filter:{project_name:search_project}" class="form-control">
+                    <option value="">--Select Project--</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+            <label class="col-md-12" for="textinput">Mailer HTML</label>  
+            <div class="col-md-12">
+                    <div ckeditor="options" ng-model="mailer.content" ready="onReady()"></div>
+            </div>
+            
+            </div>
+
+            <!-- File Button --> 
+            <div class="form-group">
+                <label class="col-md-8" for="upload_attachment">Upload Attachment</label>
+                <div class="col-md-8">
+                    <input id="upload_attachment" name="upload_attachment" file-model="attachment.file" class="input-file" type="file">
+                    <button style="margin-top:8px;" class="btn btn-xs btn-default" ng-click="uploadAttachment(attachment)">Upload</button>
+                </div>
+                <div class="col-md-4">
+                    <div id="attachment_container">
+                        <div ng-repeat="item in mailer_attachments">
+                            <span>{{item.original_name}}</span> 
+                            <span style="cursor: pointer;" ng-click="removeMailerAttachment(item.save_name, $index)">&times;</span>
+                        </div>
+                    </div> 
+                </div>
+
+                
+            </div>
+
+            <!--Save Button-->
+            <div class="form-group">
+               <div class="col-md-4">
+                    <button class="btn btn-xs btn-primary" ng-click="saveMailer(mailer)">Save Mailer</button>
+                </div>
+            </div>
+
+            
+
+        </fieldset>
+
+    </form>
+</div>

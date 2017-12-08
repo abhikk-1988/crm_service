@@ -1,0 +1,709 @@
+<style type="text/css">
+	.mandate_feilds_list li {
+		list-style: none;
+	}
+</style>
+
+<div id="add_lead_template">
+    
+<div class="row">
+	<div class="col-lg-12 col-md-12 col-sm-12">
+		<div class="page-header">
+			<h3 class="fts-17"><i class="glyphicon glyphicon-user tooltip-button demo-icon icon-edit" title=".icon-edit"></i> Add New Lead </h3><h3><p style="color:red;" id="type"></p></h3>
+		</div>
+	</div>
+</div>
+
+<!--Mandatory Fields/ Minimum informartion List-->
+<ul class="list-group mandate_feilds_list">
+	<li class="list-group-item-info" style="padding: 8px;">Please fill the following minimum information to add a new lead</li>
+	<li style="padding: 5px; margin-left: 5px; color: green;">Client Mobile Number</li>
+	<!--	<li style="padding: 5px; margin-left: 5px; color: green;">Select At-least 1 Project</li>-->
+	<li style="padding: 5px; margin-left: 5px; color: green;">Lead Enquiry Status</li>
+</ul>
+<!-- End: Mandatory Fields -->
+
+<div class="panel panel-primary" ng-class="mark - client - error">
+	<div class="panel-heading">
+		<div class="panel-title"> <a href="" data-toggle="collapse" data-target="#panel1">Client Basic Information</a></div>
+	</div>
+
+	<div class="panel-body panel-collapse collapse in" id="panel1">
+
+		<div class="container-fluid">
+
+			<div class="row">
+				<div class="col-md-4 well" loading data="loadingData">
+					<div class="form-group">
+						<p>Mobile: <span class="danger">*</span></p>
+						<input type="text" id="mob" class="form-control" ng-model="client.mobile_number" ng-class="validation_error.mobile_number_error" ng-keyup="checkNumberExists ( client.mobile_number, $event )" ng-blur="clientMobileNumberValidation ( client.mobile_number );" ng placeholder="Mobile Number" />
+						<span class="help-block danger" ng-bind="mobile_number_error"></span>
+
+						<div class="panel panel-primary" ng-show="customer_number_exists">
+							<div class="panel-body">
+								<p class="bg-primary" style="font-size:13px; padding:6px;">{{message_for_existing_number}}</p>
+								<!--
+								<p>Do you want to edit an existing lead on this number or use this number as a reference for new enquiry/ lead ?  
+                                </p>
+                                
+-->
+                                <div ng-if="show_lead_action">
+                                    <p>Choose an action below</p>
+                                    <div>
+                                        <a id="redirectlink" ng-href="{{existing_lead_action_url}}" class="btn btn-xs btn-primary">{{action_button_text}}</a>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group">
+						<p>Email:</p>
+						<input type="text" ng-model="client.email" ng-class="validation_error.email" class="form-control" placeholder="Email" />
+						<!--<span class="help-block danger" ng-bind="email_error"></span>-->
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="form-group">
+						<p>Gender:</p>
+						<select class="form-control" ng-blur="" ng-model="client.gender" ng-options="item.value as item.label for item in gender ">{{item.label}}</select>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<p>Name:<span class="danger">*</span></p>
+						<input type="text" ng-model="client.fullname" ng-class="validation_error.fullname" class="form-control" placeholder="Name"
+						/>
+						<span class="pull-right" style="cursor: pointer;"><p ng-click="setDefaultName('XXX')" class="text-info">Set Default Name</p></span>
+						<span class="help-block danger" ng-bind="name_error"></span>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<p>Alternate Mobile:</p>
+						<input type="text" class="form-control" ng-model="client.alternate_mobile_number" placeholder="Alternate Mobile Number" />
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group phone-number">
+						<p>Land Line Number</p>
+						<div class="col-xs-3">
+							<input type="tel" name="phone" ng-model="client.landline_number.std_code" placeholder="STD" class="form-control" size="5"
+								maxlength="5" title=""></div>
+						<div class="col-xs-6">
+							<input type="tel" name="phone" ng-model="client.landline_number.number" placeholder="Number" class="form-control" size="7"
+								maxlength="7" title=""></div>
+						<div class="col-xs-4">
+							<input type="tel" name="phone" ng-model="client.landline_number.ext" placeholder="Ext" class="form-control" size="4"
+								maxlength="4" title=""></div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<p>Country:</p>
+						<input type="text" name="country" class="form-control" value="" ng-model="client.country" readonly="readonly" />
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<p>State:</p>
+						<select class="form-control" ng-model="client.state_id" ng-class="validation_error.state_error" ng-change="getStateCities ()"
+							ng-options="item.state_id as item.state_name for item in states ">
+							<option value=""> Select State</option>
+							</select>
+							<span class="help-block danger" ng-bind="state_error"></span>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group phone-number">
+						<p>City</p>
+						<select class="form-control" ng-model="client.city_id" ng-class="validation_error.city_error" ng-change="setCityName ()"
+							ng-options="item.city_id as item.city_name for item in cities ">
+							<option value=""> Select City</option>
+							</select>
+							<span class="hrlp-block danger" ng-bind="city_error"></span>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<p>Profession:</p>
+						<!--                        <input type="text" class="form-control" placeholder="Profession" ng-model="" ng-class="validation_error.profession_error"/>-->
+
+						<select class="form-control" ng-model="client.profession" ng-options="profession as profession for profession in profession_list">
+                            <option value="">--SELECT PROFESSION--</option>
+                        </select>
+
+						<!--<span class="help-block danger" ng-bind="profession_error"></span>-->
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<p>Date of Birth:</p>
+						<input type="text" readonly="" id="datepicker" ng-model="client.dob" class="form-control" placeholder="DOB" />
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group phone-number">
+						<p>Address</p>
+						<textarea class="form-control" ng-model="client.address" rows="3" placeholder="Enter Address" ng-class="validation_error.address_error"></textarea>
+					</div>
+					<!--<span class="help-block danger" ng-bind="address_error"></span>-->
+				</div>
+				<div class="col-md-4">
+					<p>Remarks</p>
+					<textarea class="form-control" rows="3" ng-model="client.remark" placeholder="Enter remarks if any"></textarea>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-title">
+			<a href="" data-toggle="collapse" data-target="#panel2">Lead Source</a>
+		</div>
+	</div>
+	<div class="panel-body panel-collapse collapse" id="panel2">
+
+		<div class="container-fluid">
+
+			<div class="col-md-4">
+				<div class="form-group">
+					<p>Select Primary Source</p>
+					<select class="form-control" ng-change="setLeadSourceName ( 'primary' )" ng-class="validation_error.primary_lead_source_error"
+						ng-model="leadsource.primary.source_id" ng-options="item.id as item.title for item in primary_lead_source">
+						<option value="">Select Primary Source</option>
+						</select>
+						<span class="help-block danger" ng-bind="primary_lead_source_error"></span>
+				</div>
+
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<p>Select Secondary Source</p>
+					<select class="form-control" ng-model="leadsource.secondary.source_name" ng-class="validation_error.secondary_lead_source_error"
+						ng-model="leadsource.secondary" ng-options="item for item in secondary_lead_source.child">
+						<option value="">Select Secondary Source</option>
+						</select>
+						<span class="help-block danger" ng-bind="secondary_lead_source_error"></span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<!--Client Preference-->
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-title"> <a href="" data-toggle="collapse" data-target="#panel3">Client Preference</a>
+		</div>
+	</div>
+	<div class="panel-body panel-collapse collapse" id="panel3">
+		<div class="row">
+
+			<div class="col-md-3">
+				<div>
+					<p class="bg-primary" style="padding:10px;">Property Type</p>
+				</div>
+				<div isteven-multi-select input-model="property_types" output-model="filters._pref_property_types" button-label="label" item-label="label"
+					tick-property="ticked" max-labels="2" min-search-length="3" helper-elements="all none filter reset" search-property="label"
+					orientation="horizontal" on-reset="resetPropertyTypeFilter()">
+				</div>
+			</div>
+		<div class="col-md-3">
+			<div>
+				<p class="bg-primary" style="padding:10px;">BHK</p>
+			</div>
+			<div isteven-multi-select input-model="bhk_range" output-model="filters._pref_bhk" button-label="label" item-label="label"
+				tick-property="ticked" max-labels="2" min-search-length="3" helper-elements="all none filter reset" search-property="label"
+				orientation="horizontal" on-reset="resetBHKTypeFilter()">
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div>
+			<p class="bg-primary" style="padding:10px;">Property Status</p>
+		</div>
+		<div isteven-multi-select input-model="property_status" output-model="filters._pref_property_status" button-label="label"
+			item-label="label" tick-property="ticked" max-labels="2" min-search-length="3" helper-elements="all none filter reset"
+			search-property="label" orientation="horizontal" on-reset="resetPropertyStatusFilter()">
+	</div>
+</div>
+
+<div class="col-md-3">
+	<div class="list-group-item active">Budget <span class="pull-right" style="cursor:pointer;"><i ng-click="filters.resetBudget ();" class="fa fa-undo" aria-hidden="true"></i></span></div>
+	<div class="filter-budget-container">
+		<div class="col-md-6 list-group min-list" style="padding:0px;">
+			<div class="list-group-item"><input type="text" readonly="" ng-model="filters.budget.min_label" class="form-control fs10" placeholder="Min Budget"
+				/></div>
+			<div class="btn list-group-item" ng-click="setMinBudget ( budget, $event )" ng-model="filters.budget.min" ng-repeat="budget in budget_range.min">{{budget.label}} {{budget.currency_suffix}}</div>
+		</div>
+		<div class="col-md-6 list-group max-list" style="padding:0px;">
+			<div class="btn list-group-item"><input type="text" readonly="" ng-model="filters.budget.max_label" class="form-control fs10" placeholder="Max Budget"
+				/></div>
+			<div class="btn list-group-item" ng-click="setMaxBudget ( budget, $event )" ng-model="filters.budget.max" ng-repeat="budget in budget_range.max">{{budget.label}} {{budget.currency_suffix}}</div>
+		</div>
+	</div>
+	<!--				<div class="row pull-right" style="margin-top: 8px;"><div class="col-md-3"><button class="btn btn-info btn-xs" ng-disabled="! filters.budget.min && ! filter.budget.max" ng-click="applyFilter ()">Filter Budget</button></div></div>-->
+</div>
+</div>
+<div class="row">
+	<div class="col-md-6"></div>
+	<div class="col-md-6">
+		<button class="btn btn-xs btn-primary pull-right" ng-click="applyFilter ()" style="margin-top:16px;">Filter Project</button>
+	</div>
+</div>
+</div>
+</div>
+
+<!--End: Client Preference-->
+
+
+<!--Select Project Panel-->
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-title"><a href="" data-toggle="collapse" data-target="#panel4"> Projects</a></div>
+	</div>
+	<div class="panel-body panel-collapse collapse" id="panel4">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="col-xs-6">
+					<input type="text" readonly="" placeholder="Select City" ng-model="project.city_name" ng-click="showCitiesList ()" class="form-control"
+					/>
+				</div>
+				<div class="col-xs-2"><button class="btn btn-primary" ng-click="searchProject ( project.city_name )">Search Project</button></div>
+				<!--                <div class="col-xs-3 pull-right"><button class="btn btn-info pull-right" ng-disabled="crm_projects.length == 0" ng-click="showFilters()">Apply Filters</button></div>-->
+				<div class="col-xs-6" ng-hide="hide_cities">
+					<ul class="list-group city_list_dropdown">
+						<li class="list-group-item">
+							<input class="form-control col-xs-3" type="text" ng-model="city_query" placeholder="Enter city name to search" />
+							<i class="fa fa-refresh" ng-click="refreshProjectCities ();" style="position: relative;top: 5px;"></i>
+						</li>
+						<li class="list-group-item" ng-mouseover="addHoverClass ( $event )" ng-mouseleave="RemoveHoverClass ( $event )" ng-class="{selected: list.city_id === project.city_id}"
+							ng-click="setCityVal ( list )" ng-repeat="list in project_cities | filter:city_query">{{list.city_name}}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" style="margin-top:15px;">
+			<div class="col-md-12">
+				<div class="col-xs-12">
+					<div class="panel panel-success">
+
+						<div class="panel-heading">Projects Listing <span class="badge">{{crm_projects.length}}</span>
+
+							<span class="pull-right">
+                                <input style="margin-top:-7px;" class="form-control" ng-model="project_query" type="text" placeholder="Search Project"/>
+                            </span>
+							<span class="pull-right">
+                                <select style="margin-top:-7px;" class="form-control" ng-model="page_record_limit" ng-options="limit for limit in [5, 10, 15, 20]">{{limit}}>
+                                    <option value="">Select items per page</option>
+                                </select>
+                            </span>
+						</div>
+						<div class="panel-body">
+
+                            
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label style="font-weight: normal;">Switch Builder Mode</label>
+                                            <toggle style="custom_bs_toggle" ng-model="project_mode" on="Raheja" size="btn-sm" off="All" onstyle="btn-primary" offstyle="btn-info" ng-change="changeProjectState(project_mode)"></toggle>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Filter By Project Type</label>
+                                            <select class="form-control" ng-change="changeProjectType(project_type_filter)" ng-model="project_type_filter">
+												<option value="">--Select--</opiton>
+												<option value="hot">Hot Projects</option>
+												<option value="featured">Featured Projects</option>
+											</select>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="pull-right well">
+									   <button id="popover_item" class="btn btn-info">Selected Projects <span class="badge">{{selectedProjects.ids.length}}</span></button>
+								    </div>
+                                </div>
+                            </div>
+                            
+							<!-- FEATURED PROJECTS BLOCK-->
+<!--
+							<div class="col-md-8 featured_projets">
+								<div class="col-md-3" id="featured_project_container" style="float:left;">
+									<p class="label" style="color:#000; font-size:13px;font-weight:normal;padding:0px;">Select Featured Projects</p>
+									<div isteven-multi-select input-model="featured_projects" output-model="selected_featured_projects"
+										button-label="project_name" item-label="project_name" tick-property="ticked" max-labels="2" min-search-length="3"
+										helper-elements="all none filter" search-property="project_name"></div>
+								</div>
+								<div class="col-md-4 featured-project-action-buttons" style="float:left; position:relative; top:20px; padding:5px;">
+									<button class="btn btn-default btn-xs" ng-disabled="!selected_featured_projects.length" ng-click="copyFeaturedProjects()">Copy &amp; Send Featured Projects links</button>
+								</div>
+						    </div>
+                        
+-->
+						<!-- END: FEATURED PROJECTS BLOCK-->
+
+						<table class="table table-bordered">
+							<thead>
+								<th class="col-xs-1 make_center">Select</th>
+                                <th>Is Featured Project</th>
+								<th>Is Hot Project</th>
+								<th>Project Name</th>
+								<th>Project Status</th>
+								<th>Project URL</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="project in crm_projects | startFrom: offset | filter: project_query | limitTo:page_record_limit">
+									<td class="make_center">
+										<input class="pull-left" ng-model="check_all_project" ng-checked="searchFromSelectedProjects ( project.project_id )" ng-click="selectProject ( project, $event )"
+											type="checkbox" />
+									</td>
+                                    <td class="make_center" ng-bind-html="isFeaturedProject(project.project_id)"></td>
+                                    <td class="make_center" ng-bind-html="isHotProject(project.project_id)"></td>
+									<td>{{project.project_name}}</td>
+									<td>{{project.status}}</td>
+									<td><a target="_blank" ng-href="{{project.project_url}}">{{project.project_url}}</a></td>
+								</tr>
+								<tr ng-if="crm_projects.length <= 0">
+									<td colspan="4" class="make_center">
+										<p class="text-warning" ng-hide="project_loading">No Project Found</p>
+										<i class="fa fa-circle-o faa-burst animated" ng-if="project_loading"></i>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="pull-right" ng-if="crm_projects.length > 0">
+							<ul uib-pagination total-items="crm_projects.length" ng-model="current_page_number" items-per-page="page_record_limit" boundary-links="true"
+								max-size="4" ng-change="pageChange ( current_page_number )">
+								</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-title"><a href="" data-toggle="collapse" data-target="#panel5">Lead Status</a></div>
+	</div>
+	<div class="panel-body panel-collapse collapse" id="panel5">
+
+		<div class="row">
+            <div class="col-sm-12">
+			     <div class="col-sm-6">
+				<div class="form-group">
+					<p class="pull-left">Select Lead Status:<span class="danger">*</span></p>
+
+					<!--action icons-->
+					<span class="pull-right" ng-if="false">
+						<i class='glyphicon glyphicon-calendar' id='callback_date' ng-show="showActionIcons"></i>
+						<i class="glyphicon glyphicon-time" id="callback_time" ng-show="showActionIcons"></i>
+						<i class="glyphicon glyphicon-pencil" id='status_remark' ng-show="showActionIcons"></i>
+					</span>
+					<!--end: action icons-->
+
+					<select class="form-control" ng-change="populate_sub_status ( lead_enquiry.id )" ng-model="lead_enquiry.id" ng-class="validation_error.enquiry_status_error"
+						ng-options="item.id as item.title for item in enquiry_status.disposition_group">
+						<option value="">Select Status</option>
+						</select>
+						<span class="help-block danger" ng-bind="enquiry_status_error"></span>
+				</div>
+			</div>
+			     <div class="col-sm-6" ng-if="enquiry_sub_status_list_item">
+				<div class="form-group">
+					<p>Select Lead Sub Status:<span class="danger">*</span></p>
+					<select class="form-control" ng-model="lead_enquiry.sub_status_id" ng-change="setValueEnquiryForSubStatus ( lead_enquiry.sub_status_id )"
+						ng-class="" ng-options="item.id as item.status for item in sub_status[0].childs">
+						<option value="">Select Status</option>
+						</select>
+				</div>
+			</div>
+            </div>
+		</div>
+
+		<!--Row: Remarks-->
+		<div class="row">
+            <div class="col-sm-12" ng-show="isActivityRemarkMandate">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <p>Remark:<span class="danger">*</span></p>
+                        <textarea class="form-control" ng-model="lead_enquiry.status_remark" placeholder="Enter remarks if any"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-6" ng-if="showActivityStatusButtons">
+                            <p>Activity Status</p>
+                            <button class="btn btn-xs no-outline" ng-click="setActivityStatus('hot')" ng-class="lead_enquiry.activity_status == 'hot' ? 'hot-status' : '' ">Hot</button>
+                            <button class="btn btn-xs no-outline" ng-click="setActivityStatus('warm')" ng-class="lead_enquiry.activity_status == 'warm' ? 'warm-status' : '' ">Warm</button>
+                            <button class="btn btn-xs" ng-click="setActivityStatus('cold')" ng-class="lead_enquiry.activity_status == 'cold' ? 'cold-status' : '' ">Cold</button>
+                </div>
+			</div>
+    
+            <!--HTML Block for displaying calender for date and time picking-->
+			<div class="col-md-6" id="calender" ng-if="showCalender">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="panel-title">
+							Select Date & Time
+							<!-- Split button -->
+							<div class="btn-group pull-right" ng-hide="true">
+								<button type="button" class="btn btn-info btn-xs">Time Format</button>
+								<button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="caret"></span>
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<ul class="dropdown-menu">
+									<!--									<li><a href="" ng-click="changeTimeFormat ( 12 )">12 Hr</a></li>-->
+									<li><a href="" ng-click="changeTimeFormat ( 24 )">24 Hr</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+
+						<div class="row">
+							<div class="col-lg-7">
+								<!--DatePicker-->
+								<div style="max-width:306px;" 
+									uib-datepicker 
+									ng-model="lead_enquiry.callback_date" 
+									class="well well-sm pull-left" 
+									datepicker-options="datepicker.options"
+								></div>
+							</div>
+
+							<div class="col-lg-5 pull-left">
+								<div class="form-group">
+									<select class="form-control" placeholder="Time" ng-model="lead_enquiry.callback_time" style="margin-bottom:8px;">
+										<option value=''>--Select time--</option>
+										<option ng-repeat="t in timepicker.time">{{t}}</option>
+									</select>	
+									<select class="form-control" ng-model="lead_enquiry.meridian">
+										<option value="">Select Meridian</option>
+										<option value="AM">AM</option>
+										<option value="PM">PM</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<ul class="list-group">
+						<li class="list-group-item alert alert-info">
+							{{lead_enquiry.callback_date| date : 'fullDate'}} {{lead_enquiry.callback_time}} {{lead_enquiry.meridian}}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--End: row-->
+
+
+		<!--Row: Meeting Address-->
+		<div class="row" ng-if="showAddressArea">
+			<div class="col-md-6">
+				<div class="form-group">
+					<p class="pull-left">{{address_event}} Address:</p>
+					<div class="pull-right">
+						<p class="text-muted pull-left" style="font-weight: bolder;font-size: small;font-style: inherit;margin-top: 2px;margin-right: 5px;">Same as: </p>
+						<input type="radio" checked name="address_type" value="misc" ng-click="setAddressType('misc')" /> Misc
+						<input type="radio" name="address_type" value="client" ng-click="setAddressType('client')" /> Client
+						<input type="radio" name="address_type" value="office" ng-click="setAddressType('office')" /> Office
+					</div>
+					<textarea class="form-control" ng-model="lead_enquiry.address" placeholder="Enter {{address_event | lowercase}} address"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row" style="padding:15px;">
+
+	<!--Error Displaying Block-->
+	<div class="col-md-6" ng-if="formErrors">
+		<ul class="list-group">
+			<li class="list-group-item-warning" style="padding: 8px;">Form Errors</li>
+			<li ng-repeat="error in formErrors" style="padding: 5px; margin-left: 5px; color: #F00;">{{error}}</li>
+		</ul>
+	</div>
+
+	<!--Add Lead Button-->
+	<div class="col-md-6 pull-right">
+		<button type="button" class="btn btn-primary pull-right" ng-disabled="disable_add_lead_button" ng-click="addLead ();">Add Lead
+        <span ng-if="disable_add_lead_button"><i class="fa fa-spinner faa-spin animated"></i></span>
+        </button>
+	</div>
+</div>
+<!--End: Add Lead form-->
+
+<!--Template for selected projects-->
+<div id="selected_projects" style="display:none;">
+	<ul class="list-group">
+		<li class="list-group-item" ng-repeat="item in selectedProjects.projects">
+			{{item.project_name}} <span aria-hidden="true" style="cursor:pointer;" class="pull-right" ng-click="removeSelected ( item )">&times;</span>
+		</li>
+	</ul>
+</div>
+<!--Template End-->
+
+<!--Status Actions template-->
+
+<div id='status_actions' style='display:none;'>
+
+	<div class="callback_datepicker">
+		<div style="display:inline-block; min-height:290px;">
+			<pre>Selected date is: <em>{{followup.callback_date| date:'fullDate' }}</em></pre>
+			<div uib-datepicker ng-model="followup.callback_date" class="well" datepicker-options="dateOptions"></div>
+		</div>
+	</div>
+
+	<div class="callback_timepicker">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div uib-timepicker ng-model="followup.callback_time" hour-step="1" minute-step="1" meridians="meridians" show-meridian="true"></div>
+				<pre class="alert alert-info">Time is: {{followup.callback_time| date:'shortTime' }}</pre>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="status_remark">
+		<div class="form-group">
+			<div class="input-group">
+				<textarea class="form-control" style="width:230px;" ng-model="followup.status_remark"></textarea>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Send Mail Directive-->
+<div class="modal fade" id="sendMailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+         <div ng-include="'partials/email_template.html'"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+	(function ($) {
+
+		var date = new Date();
+		var element = $('#datepicker');
+
+		var current = {
+			year: date.getFullYear(),
+			month: (date.getMonth() < 9 ? '0' + date.getMonth() : date.getMonth() + 1),
+			date: date.getDate()
+		};
+
+		var picker = new Pikaday(
+		{
+				field: document.getElementById('datepicker'),
+				format: 'DD-MM-YYYY',
+				firstDay: 1,
+				minDate: new Date('1900', '01', '01'),
+				maxDate: new Date(current.year, current.month, current.date),
+				yearRange: [1900, current.year],
+				showWeekNumber: true,
+				onSelect: function () {
+
+				}
+		});
+
+		$(document).ready(function () {
+
+			$('#popover_item').webuiPopover({
+				title: 'Selected Projects',
+				animation: 'pop',
+				width: '260',
+				placement: 'left',
+				cache: true, // popover will destroy and recreate every time after close 
+				arrow: true,
+				closeable: true,
+				dismissible: true,
+				type: 'html',
+				url: '#selected_projects',
+				backdrop: true,
+				//                    onshow : function ($element){},
+				//                    onhide : function ($element){}
+			});
+
+			$('#callback_date').webuiPopover({
+				title: 'Set callback date',
+				animation: 'pop',
+				width: 'auto',
+				placement: 'auto',
+				cache: true, // popover will destroy and recreate every time after close 
+				arrow: true,
+				closeable: true,
+				dismissible: false,
+				type: 'html',
+				url: '#status_actions .callback_datepicker',
+				backdrop: true
+			});
+
+			$('#callback_time').webuiPopover({
+				title: 'Set callback time',
+				animation: 'pop',
+				width: '260',
+				placement: 'left',
+				cache: true, // popover will destroy and recreate every time after close 
+				arrow: true,
+				closeable: true,
+				dismissible: false,
+				type: 'html',
+				url: '#status_actions .callback_timepicker',
+				backdrop: true
+			});
+
+			$('#status_remark').webuiPopover({
+				title: 'Set status remark',
+				animation: 'pop',
+				width: 'auto',
+				placement: 'auto',
+				cache: true, // popover will destroy and recreate every time after close 
+				arrow: true,
+				closeable: true,
+				dismissible: false,
+				type: 'html',
+				url: '#status_actions .status_remark',
+				backdrop: true
+			});
+		});
+
+	})(jQuery);
+
+</script>

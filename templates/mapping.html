@@ -1,0 +1,25 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+       <span class="badge">{{groupName}}</span> Group Status Mapping 
+       <span class="pull-right"><a href="disposition-group-master" class="btn btn-primary btn-xs">Back</a></span>
+    </div>
+    
+    <div class="panel-body">
+        <ul class="list-group no-box-shadow">
+            <li class="list-group-item alert alert-info group-list-margin" ng-repeat="item in statusItems | orderBy:item.status_title">{{item.status_title}} 
+                <div class="pull-right">
+                    <input 
+                           type="checkbox" 
+                           ng-click="selectStatus($event,item)" 
+                           ng-checked="checkitem(item.status_id,assigned_status)"
+                           ng-disabled="!item.active_state"
+                           >
+                </div>
+            </li>
+        </ul>
+    </div>
+    {{angular.toJson(selected_status, true);}}
+</div>
+<div class="row">
+    <div class="col-md-12"><button class="btn btn-primary pull-right" ng-click="save_checked_status(assigned_status)">Update Status</button></div>
+</div>

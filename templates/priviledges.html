@@ -1,0 +1,98 @@
+<div style="text-align: center;" ng-click="dismiss($event)" ng-bind-html="updateResponse"></div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17">Manage Module Priviledges</h3>
+            
+            
+            <button class="btn btn-primary pull-right" ng-click="updatePermission(designation_modules)">Update</button>
+            <button class="btn btn-primary pull-right" style="margin:0 3px;" ng-click="openAddPanel(assigned)">Add</button>
+            
+            <div class="legends">
+                <div class="pull-left permission_legend_green"></div>
+                <div class="pull-left mr15 fs8">View</div>
+                <div class="pull-left permission_legend_blue"></div> 
+                <div class="pull-left mr28 fs8">Manage</div>
+                <div class="pull-left permission_legend_red"></div>
+                <div class="pull-left mr10 fs8">Delete</div>
+            </div>
+            <button class="btn btn-primary" type="button">
+                Designation <span class="badge">{{designation_name}}</span>
+            </button>
+            
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-primary" ng-if="assigned">
+    <div class="panel-heading">Add New Modules</div>
+    <div class="panel-body">
+        <div ng-repeat="module in unassigned_modules">
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">{{module.title}} 
+                    <span class="pull-right">
+                        <button class="btn btn-xs btn-default" ng-click="addNew(module)">Save</button>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <th style="text-align: center;">Assign</th>
+                        <th style="text-align: center;">Permission</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <div class="col-md-12 custom-checkbox">
+                                        <input class="module_assign_check" ng-click="updateModuleAssignment($event,module)" type="checkbox" ng-checked="module.assign" /></div></td>
+                                <td style="text-align: center;">
+                                    <div class="col-md-3 pull-left custom-checkbox permission_legend_green"><label><input class="permission_check" disabled="" ng-checked="module.permission == 4 || module.permission == 6 || module.permission == 7 || module.permission == 5" type="checkbox" value="4" > </label></div>
+                                    <div class="col-md-3 pull-left custom-checkbox permission_legend_blue"><label><input class="permission_check" ng-click="setPermission($event,module)" ng-checked="module.permission == 2 || module.permission == 6 || module.permission == 7" type="checkbox" value="2"> </label></div>
+                                    <div class="col-md-3 pull-left custom-checkbox permission_legend_red"><label><input class="permission_check" ng-click="setPermission($event,module)" ng-checked="module.permission == 1 || module.permission == 7 || module.permission == 5" type="checkbox" value="1"> </label></div>
+                                    <div class="col-md-3 custom-checkbox">{{module.permission}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>    
+</div>
+    </div>
+</div>
+
+<div class="panel_saperator" ng-if="assigned"></div>
+
+<div class="panel panel-success">
+    <div class="panel-heading">Assigned Modules</div>
+    <div class="panel-body">
+        <div ng-repeat="module in designation_modules">
+        <div class="col-md-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">{{module.title}}</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <th style="text-align: center;">Assign</th>
+                        <th style="text-align: center;">Permission</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <div class="col-md-12 custom-checkbox"><input class="module_assign_check" ng-click="updateModuleAssignment($event,module)" type="checkbox" ng-checked="module.assign" /></div></td>
+                                <td style="text-align: center;">
+                                    <div class="col-md-3 pull-left custom-checkbox permission_legend_green"><label><input class="permission_check" disabled="" ng-checked="module.permission == 4 || module.permission == 6 || module.permission == 7 || module.permission == 5" type="checkbox" value="4" > </label></div>
+                                    <div class="col-md-3 pull-left custom-checkbox permission_legend_blue"><label><input class="permission_check" ng-click="setPermission($event,module)" ng-checked="module.permission == 2 || module.permission == 6 || module.permission == 7" type="checkbox" value="2"> </label></div>
+                                    <div class="col-md-3 pull-left custom-checkbox permission_legend_red"><label><input class="permission_check" ng-click="setPermission($event,module)" ng-checked="module.permission == 1 || module.permission == 7 || module.permission == 5" type="checkbox" value="1"> </label></div>
+                                    <div class="col-md-3 custom-checkbox">{{module.permission}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>    
+</div>
+    </div>
+</div>

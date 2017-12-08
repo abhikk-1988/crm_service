@@ -1,0 +1,82 @@
+   <div class="row" style="padding:15px;">
+            <div class="col-md-2 stats_box">
+                <div class="figures_container">
+                    <div class="stat_text1"><h4>Calls/Day</h4></div>
+                    <div class="stat_count1">
+                        <h3><span class="label label-info">{{calls_made}}</span></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 stats_box">
+                <div class="figures_container">
+                    <div class="stat_text1"><h4>Callbacks Today</h4></div>
+                    <div class="stat_count1"><h3><span class="label label-primary">{{total_callbacks}}</span></h3></div>
+                </div>
+            </div>
+            <div class="col-md-2 stats_box">
+                <div class="figures_container">
+                    <div class="stat_text1">
+                        <h4>Meeting Scheduled</h4>
+                    </div>
+                    <div class="stat_count1"><h3><span class="label label-info">{{meeting_count}}</span></h3></div>
+                </div>
+            </div>
+            <div class="col-md-2 stats_box">
+                <div class="figures_container">
+                    <div class="stat_text1">
+                        <h4>Sitevisit Scheduled</h4>
+                    </div>
+                    <div class="stat_count1"><h3><span class="label label-info">{{sitevisit_count}}</span></h3></div>
+                </div>
+            </div>
+            <div class="col-md-2 stats_box">
+                <div class="figures_container">
+                    <div class="stat_text1">
+                        <h4>Just Enquiry</h4>
+                    </div>
+                    <div class="stat_count1"><h3><span class="label label-info">{{just_enquiry_count}}</span></h3></div>
+                </div>
+            </div>
+            <div class="col-md-2 stats_box" uib-tooltip-html="others_tooltip_html" tooltip-placement="right">
+                <div class="figures_container">
+                    <div class="stat_text1">
+                        <h4>Others</h4>
+                    </div>
+                    <div class="stat_count1"><h3><span class="label label-info">{{others_count}}</span></h3></div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="row" style="padding:15px;">
+            <div class="col-md-4" ng-if="total_callbacks > 0">
+                <canvas height="200" class="chart chart-pie"
+                  chart-data="cb_data" chart-labels="cb_labels" chart-options="callback_piechart_options" chart-colors="cb_pie_bgcolors">
+                </canvas>
+            </div>
+            
+            <div class="col-md-4" ng-if="meeting_count > 0">
+                <canvas height="200" class="chart chart-pie"
+                  chart-data="meeting_data" chart-labels="meeting_labels" chart-options="meeting_piechart_options" chart-colors="meeting_label_bgcolors">
+                </canvas>
+            </div>
+            <div class="col-md-4" ng-if="sitevisit_count > 0">
+                <canvas height="200" class="chart chart-pie"
+                  chart-data="sitevisit_data" chart-labels="sitevisit_labels" chart-options="sitevisit_piechart_options" chart-colors="site_visit_label_bgcolors">
+                </canvas>
+            </div>
+<!--        </div> Row End -->
+
+            <div class="col-md-4" ng-if="just_enquiry_count > 0">
+                <canvas height="200" class="chart chart-pie"
+                  chart-data="just_enquiry_data" chart-labels="just_enquiry_labels" chart-options="just_enquiry_piechart_options">
+                </canvas>
+            </div>
+            
+            <div class="col-md-4" ng-if="others_count > 0">
+                <canvas height="200" class="chart chart-pie"
+                  chart-data="others_data" chart-labels="others_labels" chart-options="others_piechart_options">
+                </canvas>
+            </div>
+            
+        </div>

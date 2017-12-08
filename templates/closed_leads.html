@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> <i class="fa fa-list tooltip-button demo-icon icon-edit" title=".icon-edit"></i>Closed Leads</h3>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="panel-title">Closed Leads Listing</div>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead style="font-size:12px;">
+			<th>#</th>
+			<th>Lead Generation Date</th>
+			<th>Lead Number</th>
+			<th>Enquiry Number</th>
+			<th>Client Name</th>
+			<th>Client Number</th>
+            <th>Lead CLosed By Employee</th>
+			<th>Lead Close Date</th> 
+			<th class="make_center">Action</th>
+		</thead>
+		
+		<tbody>
+			<tr ng-repeat="lead in closed_leads" ng-if="closed_leads.length > 0">
+				<td ng-bind="$index+1"></td>
+				<td>{{lead.leadAddDate | date : 'medium' :'+0530'}}</td>
+                <td ng-if="lead.lead_id != 'NULL'">
+                    <a style="text-decoration:none;" ng-href="lead_detail/{{lead.enquiry_id}}/{{lead.lead_id}}">{{lead.lead_id}}</a>
+                </td>
+                <td class="make_center" ng-if="lead.lead_id == 'NULL'">NA</td>
+				<td class="make_center">
+                    <a style="text-decoration:none;" ng-href="lead_detail/{{lead.enquiry_id}}/{{lead.lead_id}}">{{lead.enquiry_id}}</a>
+                </td>
+				<td>{{lead.customerName}}</td>
+				<td>{{lead.customerMobile}}</td>
+                <td>{{lead.lead_closed_by_employee}}</td>
+				<td>{{lead.lead_closure_timestamp | date : 'dd/MMM/yyyy' : '+0530'}}</td>
+				<td class="make_center">
+					<button class="btn btn-info btn-xs" ng-click="getPaymentCollectionDetail(lead.enquiry_id,lead.lead_id)">View Collection Detail</button>
+				</td>
+			</tr>
+			
+			<tr ng-if="closed_leads.length < 1">
+				<td colspan="9" class="danger make_center">No Lead Found</td>
+			</tr>
+		</tbody>
+	</table>
+	
+</div>

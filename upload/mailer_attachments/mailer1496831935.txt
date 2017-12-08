@@ -1,0 +1,45 @@
+11. Client no is not getting displayed in message when lead is assign tl crm to asm. (Done)
+
+12 .Enquiry id is not getting displayed in emaill when lead is assign tl crm to asm. (client number is now added in email template.) (Done)
+
+
+8. Lead added by column is required in todays work out listing for all user expect Agent. (Done)
+
+9. User should able to search  lead for name and mobile no. (Done)
+
+10. Unable to update status for no response-issue (Done)
+
+5. Client basic information remarks should be display in Client information on view lead. (Done)
+
+6. Budget Filter should be display as below - (Done)
+Min Budget	Max Budget
+5Lacs	10 Lacs
+10 lacs	15 Lacs
+15 Lacs	20 Lacs
+20 Lacs	25 Lacs
+25 Lacs	30 Lacs
+30Lacs	35 Lacs
+40 Lacs	45 Lacs
+45 Lacs	50 Lacs
+50 Lacs 	70 Lacs
+70 Lacs	1 Cr
+1 Cr	1.2Cr
+1.2cr	1.5cr
+1.5c	2.cr
+2cr	2.5cr
+2.5 cr	3cr
+3cr	3.5 cr
+3.5cr	4cr
+4cr	4.5cr
+4.5cr	5cr
+ 
+7. Follow up message content is not getting displayed properly on agent mobile. (Done)
+
+1. Select page size is required for listing page in my lead section. (Done)
+
+
+2. Project name column in listing(my leads and all leads) page for all users. (Done)
+
+3. After the assigning lead user should not allow the refresh page for assign next lead. (Not an issue)
+
+4. TL of agent or CRM TL should able to edit lead. (Done but need to verify on live server) verified on staging environment

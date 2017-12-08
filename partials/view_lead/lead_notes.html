@@ -1,0 +1,56 @@
+<div class="page-header" ng-if="is_lead_editable">
+	<h5>Add Notes</h5>
+</div>
+
+<div class="container-fluid" ng-if="is_lead_editable">
+	
+	<div class="row">
+		<div class="col-md-12">
+			<form>
+				<div class="form-group">
+					<textarea class="form-control" ng-model="note_text" rows="3" placeholder="Add Your Note Here..."></textarea>
+				</div>
+				<div class="form-group">
+					<button class="btn btn-xs btn-primary pull-right" ng-click="addNote(note_text)" ng-disabled="note_text === ''">Add Note</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+	
+	<div class="row notes-container" ng-if="notes" ng-repeat="note in notes">
+		<div class="col-sm-12">
+			<div class="media">
+				<div class="media-left">
+					<a href="#">
+						<i class="fa fa-sticky-note fa-3x" aria-hidden="true"></i>
+					</a>
+				</div>
+				<div class="media-body">
+					<h4 class="media-heading italic-date">{{note.note_add_date | date : 'fullDate'}}</h4>
+					<p>{{note.note_text}}</p>
+					<p><small>Added By: <i>{{note.note_added_by_employee}}</i></small></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div>
+		<div class="row" ng-if="!notes.length">
+			<div class="col-md-12">
+				<p class="text-danger">No Notes Available</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="pull-right">
+		<nav aria-label="...">
+			<ul class="pager">
+				<li><button class="btn btn-default nav-links" ng-disabled="!previousLink" ng-click="pageChange(current_page_number,'prev')">Previous</button></li>
+				<li><button class="btn btn-default nav-links" ng-click="pageChange(current_page_number,'next')" ng-disabled="!nextLink">Next</button></li>
+			</ul>
+		</nav>
+           </div>
+</div>

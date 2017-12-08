@@ -1,0 +1,43 @@
+<!--Partial HTML code fragmet for sms template -->
+<div class="sms_block" style="
+    position: absolute;
+    left:0px;
+    top: 33px;
+    padding: 5px;background-color: #009edf;width: 335px;
+    height: auto;z-index: 99;margin-left:15px;" ng-controller="smsCtrl">
+    <div style="padding: 5px;color: #FFF;">
+        <!--<h5>Comma saparate numbers if sms will sent to more than 1</h5>-->
+        <form class="">
+            <div class="form-group">
+                <label for="name" class="cols-sm-2 control-label">Client Number</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                        <input type="text" readonly="readonly" disabled="disabled" class="form-control" ng-model="sms_data.number" name="name" id="name" placeholder="Enter Number(s)" />
+                    </div>
+                </div>
+                <!--<span class="help-block" style="color: darkgreen; font-size: 12px;">For multiple recepient saperate numbers by comma</span>-->
+            </div>
+            <div class="form-group">
+                <label for="email" class="cols-sm-2 control-label">Message</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                        <textarea class="form-control" ng-model="sms_data.message" name="email" id="email" placeholder="Write your message here" />
+                    </div>
+                </div>
+            </div>
+
+            <!--Button-->
+            <div class="form-group ">
+                <button
+                type="button" 
+                id="button" 
+                ng-disabled="!sms_data.number || !sms_data.message"
+                ng-click="sendSms(sms_data)"
+                class="btn btn-primary btn-block login-button">SEND</button>
+            </div>
+
+        </form>
+    </div>
+    </div>

@@ -1,0 +1,110 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> <i class="glyphicon glyphicon-plus tooltip-button demo-icon icon-edit" title=".icon-edit"></i>{{title}}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    
+    <div class="row">
+        
+        <div class="col-md-7 col-lg-7">
+            
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Primary Campaigns</h3>
+                </div>
+                
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Secondary campaign</th>
+                        <th class="make_center">Status</th>
+                        <th>Action</th>
+                        </thead>
+                        
+                        <tbody>
+                            <tr ng-repeat="campaign in primaryCampaigns">
+                                <td ng-bind="$index+1"></td>
+                                <td>{{campaign.title}}</td>
+                                <td class="td-link" title="Click to see secondary campaigns list" ng-click="showSecondaryCampaigns(campaign.child)">{{campaign.child[0]}}</td>
+                                <td>
+                                    <div class="checkbox no-margin">
+                                        <div ng-class="campaign.active_status == 0 ? 'checkbox_danger' : 'checkbox_success'" ng-click="setCampaignStatus(campaign,$event)" class="checkbox_success">
+                                            <i class="glyphicon glyphicon-ok lf3"></i></div>
+                                    </div>
+                                </td>
+                                <td class="make_center"><button ng-click="editCampaign(campaign)" class="btn btn-xs btn-info">Edit</button></td>
+                            </tr>
+                            
+                        </tbody>
+                        
+                    </table>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        <div class="col-md-5 col-lg-5" ng-if="showAddCampaignBlock">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Add Primary Campaign</h3>
+                </div>
+                
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="title" class="col-sm-5 control-label">Campaign Title:</label>
+                            <div class="col-sm-7">
+                              <input type="text" class="form-control" id="title" ng-class="campaign.errorClass" ng-model="campaign.title" placeholder="Campaign Title">
+                              <span class="help-block danger campaign-help-block"  ng-bind="campaign.error"></span>
+                             
+                            </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <button type="button" ng-click="saveCampaign(campaign)" class="btn btn-primary pull-right">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="col-md-5 col-lg-5" ng-if="showEditCampaignBlock">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Edit Primary Campaign <i class="glyphicon glyphicon-backward pull-right" ng-click="toggleBlcok()"></i></h3>
+                </div>
+                
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="title" class="col-sm-5 control-label">Campaign Title:</label>
+                            <div class="col-sm-7">
+                              <input type="text" class="form-control" id="title" ng-class="campaign_to_edit.errorClass" ng-model="campaign_to_edit.edit_title" placeholder="Campaign Title">
+                              <span class="help-block danger edit-campaign-help-block" ng-bind="campaign_to_edit.error"></span>
+                             
+                            </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-3 pull-right">
+                                <button type="button" ng-click="updateCampaign(campaign_to_edit)" class="btn btn-primary pull-right">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>

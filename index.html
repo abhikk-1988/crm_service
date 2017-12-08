@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+
+    <head>
+        <base href="http://crm.bookmyhouse.biz/crm/" />
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <!--    DISABLE HTML CACHING-->
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="-1" />
+        <!--    DISABLE HTML CACHING-->
+
+
+        <title>BMH CRM</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link href="styles/bootstrap.css" rel="stylesheet" type="text/css" />
+        <!--<link href="styles/bootstrap-datetimepicker.min.css" type="text/css"/>-->
+        <link href="fonts/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="fonts/font-awesome-animation.min.css">
+        <link href="styles/styles.css" rel="stylesheet" type="text/css" />
+        <link href="styles/notification.css" rel="stylesheet" type="text/css" />
+        <link href="styles/custom_checkbox.css" rel="stylesheet" type="text/css" />
+        <link href="styles/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+        <link href="styles/pace-themes/themes/green/pace-theme-center-circle.css" rel="stylesheet" type="text/css" />
+        <link href="styles/pikaday.css" rel="stylesheet" type="text/css" />
+        <!--        <link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.webui-popover/1.2.1/jquery.webui-popover.min.css">-->
+        <link rel="stylesheet" href="styles/jquery.webui-popover.min.css" type="text/css" />
+        <link href="styles/theme.css" rel="stylesheet" type="text/css" />
+
+        <link rel="styleshet" type="text/css" href="styles/angular-ui-switch.css" />
+        <!--jQuery multiselect plugin css-->
+        <link rel="stylesheet" href="styles/bootstrap-multiselect.css" type="text/css" />
+
+        <link rel="stylesheet" href="styles/multi-select.css" />
+
+        <!--jQuery Datetime Picker plugin-->
+        <link rel="stylesheet" href="styles/jquery.datetimepicker.min.css" />
+
+        <!--    Toastr CSS Lib -->
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+        <!--summernote css-->
+        <!--        <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">-->
+        <link rel="stylesheet" href="styles/summernote.css" type="text/css" />
+
+        <!--        Isteven multiselect css-->
+        <link rel="stylesheet" href="styles/isteven-multi-select.css" />
+
+        <!--Jquery timeicker CSS-->
+        <!--<link rel="stylesheet" href="styles/jquery.timepicker.css"/>-->
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+
+        <!--Bootstrap toggle CDN for CSS -->
+        <link href="styles/angular_bs_toggle.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="styles/left_nav.css"/>
+
+        <!--App constant-->
+        <script type="text/javascript" src="scripts/constant.js"></script>
+        <script src="scripts/pikaday.js" type="text/javascript"></script>
+
+    </head>
+
+    <body class="login" ng-controller="mainAppCtrl">
+
+        <!--Main Navigation Block-->
+        <header>
+            <div 
+                ng-cloak 
+                id="menu-header" 
+                ng-include="header_template_url" 
+                ng-if="loadHeader">         
+            </div>
+        </header>
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-2 col-lg-2 col-sm-2" style="padding: 0px;">
+                    <div ng-include="left_nav_template_url" ng-if="load_left_nav"></div>
+                </div>
+
+                <div class="col-md-10 col-lg-10 col-sm-10" id="page_content_block">
+                    <div class="main_content_box_margin" ng-view="" ng-cloak>
+                        <!-- Main Content Area -->
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+        <div class="notification-block"></div>
+
+        <script type="text/javascript">
+                    paceOptions = {
+                        // Disable the 'elements' source
+                        document: true,
+                        ghostTime: 1000,
+                        //maxProgressPerFrame: 20, 
+                        // Only show the progress on regular and ajax-y page navigation,
+                        // not for every request
+                        restartOnRequestAfter: true,
+                        startOnPageLoad: true,
+                        restartOnPushState: true, // for AJAX navigation 
+                        target: 'body', // Pace element to be appended on 
+                        elements: {
+                            //                selectors: ['body', '#content-layout', '.container-fluid']
+                            selectors: ['#page_content_block']
+                        },
+                        ajax: {
+                            trackMethods: ['GET', 'POST', 'DELETE', 'PUT'],
+                            ignoreURLs: ['login', 'syn_crm_enquiry.php', 'manula_push_ivr.php', 'helper.php', 'getCurrentUser.php', 'fetchCRMProjects.php', 'http://sockjs.pusher.com', '/pusher/app', 'getNotificationMessages.php', 'http://sock115-mt1.pusher.com']
+                        }
+                    };
+        </script>
+
+
+        <script src="scripts/jquery_3.1.0.js" type="text/javascript"></script>
+        <script src="scripts/bootstrap-treeview.min.js" type="text/javascript"></script>
+        <script src="scripts/webui_popover_1.2.0.js"></script>
+        <script src="scripts/pace.min.js" type="text/javascript"></script>
+        <script src="scripts/moment.min.js" type="text/javascript"></script>
+        <script src="scripts/bootstrap.js" type="text/javascript"></script>
+
+        <!--    CSV Parse JS Library-->
+        <script type="text/javascript" src="scripts/papaparse.min.js"></script>
+
+        <!--    JSON TO CSV Convert-->
+        <script type="text/javascript" src="scripts/CSVExport.js"></script>
+
+
+        <!--jQuery timepicker js-->
+        <!--<script src="scripts/jquery.timepicker.js" type="text/javascript"></script>-->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+        <!--Toastr JS Library-->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+        <!--BOOTSTRAP DATETIMEPICKER JS-->
+        <!--/*<script type="text/javascript" src="scripts/bootstrap-datetimepicker.js"></script>*/-->
+
+        <!--    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>-->
+        <script src="scripts/summernote.js" type="text/javascript"></script>
+
+        <script src="scripts/print.js" type="text/javascript"></script>
+
+        <!--    Custom Toastr JS-->
+        <script src="scripts/toastr/toastr.js" type="text/javascript"></script>
+        <!--    Custom Toastr JS-->
+
+        <!-- Pusher Client Library     -->
+        <!--    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>    -->
+        <script src="scripts/pusher/pusher.client.v4.0.0.js"></script>
+        <script src="scripts/pusher/pusher.client.js" type="text/javascript"></script>
+
+        <!-- DateRangePicker-->
+        <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+        <!-- DaterangePicker -->
+
+
+        <!--    LIBS    -->
+        <!--jQuery multiselect plugin js-->
+        <script type="text/javascript" src="scripts/bootstrap-multiselect.js"></script>
+        <script type="text/javascript" src="scripts/jquery.multi-select.js">
+        </script>
+
+        <!--CKEDITOR -->
+        <script src="https://cdn.ckeditor.com/4.7.0/standard/ckeditor.js"></script>
+
+        <!--jQuery DateTime Picker plugin-->
+        <script src="scripts/jquery.datetimepicker.full.min.js"></script>
+        <script src="scripts/angular.js" type="text/javascript"></script>
+        <script src="scripts/angular-sanitize.min.js" type="text/javascript"></script>
+        <script src="scripts/angular-route.js" type="text/javascript"></script>
+        <script src="scripts/angular.ui.router.js" type="text/javascript"></script>
+        <script src="scripts/angular-animate.min.js" type="text/javascript"></script>
+        <script src="scripts/ui-bootstrap-2.1.4.min.js" type="text/javascript"></script>
+        <script src="scripts/ui-bootstrap-tpls-2.1.4.min.js" type="text/javascript"></script>
+        <script src="scripts/angular-ui-switch.js" type="text/javascript"></script>
+        <script src="scripts/isteven-multi-select.js" type="text/javascript"></script>
+        <script src="scripts/clipboard.min.js" type="text/javascript"></script>
+        <script src="app/third_party/timepickerdirective.min.js" type="text/javascript"></script>
+
+        <script src="scripts/chart.min.js"></script>
+        <script src="scripts/angular-chart.min.js"></script>
+
+        <!--   LIBS-->
+
+        <!--Bootstrap Toggle CDN for JS-->
+        <script src="scripts/angular_bs_toggle.min.js"></script>
+
+        <!--CKEDITOR ANGULAR MODULE-->
+        <script src="scripts/angular-ckeditor.js" type="text/javascript"></script>
+
+        <script src="app/modules/script.js" type="text/javascript"></script>
+        <script src="app/controllers/loginCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/leftNavCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/homeCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/designationCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/addEmployeeCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/employeeSearchCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/editEmployeeCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/managePriviledgeCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/moduleManagerCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/createModule.js" type="text/javascript"></script>
+        <script src="app/controllers/updateModule.js" type="text/javascript"></script>
+        <script src="app/controllers/dispositionGroupCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/dispositionGroupStatusCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/primaryCampaignCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/secondaryCampaignCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/addLeadCtrl.js" type="text/javascript"></script>
+        <!-- Umesh -->
+        <script src="app/controllers/leadExtendDateListCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/reAssignLeadCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/getAgentReAssignedLeadCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/reAssignLeadToSpCtrl.js" type="text/javascript"></script>
+        <!-- END -->
+        <script src="app/controllers/leadEnquiryCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/allLeadCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/assignedLeadsCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/dispositionGroupAssignmentCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/editLeadCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/myLeadsCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/manageEmpDispositionGroupCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/viewLeadCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/notesCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/messageTemplatesCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/addMessageTemplateCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/capacities_asm.js" type="text/javascript"></script>
+        <script src="app/controllers/salesPersonCapacityCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/addSalesPersonCapacityCtrl.js" type="text/javascript"></script>
+        <!--Email template Ctrl-->
+        <script src="app/controllers/emailTemplateCtrl.js" type="text/javascript"></script>
+        <!--Add new email template ctrl-->
+        <script src="app/controllers/addEmailTemplateCtrl.js" type="text/javascript"></script>
+        <!--capacity manager controllers-->
+        <script src="app/controllers/capacityManagerAsmCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/previousCapacitiesCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/changePasswordCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/changeProfilePhotoCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/closedLeadPaymentDetailCtrl.js" type="text/javascript"></script>
+
+        <!--Lead Closure Ctrl-->
+        <script src="app/controllers/leadClosureCtrl.js" type="text/javascript"></script>
+        <script src="app/directives/contactForm.js" type="text/javascript"></script>
+        <script src="app/directives/loading.js" type="text/javascript"></script>
+
+        <!--assignedEnqueriesCtrl-->
+        <script src="app/controllers/assignedEnqueriesCtrl.js" type="text/javascript"></script>
+
+        <!--Custom directive for ul li-->
+        <script src="app/directives/activeNav.js" type="text/javascript"></script>
+        <script src="app/directives/searchProject.js" type="text/javascript"></script>
+        <script src="app/services/paceLoading.js" type="text/javascript"></script>
+        <script src="app/services/employeeService.js" type="text/javascript"></script>
+        <script src="app/services/designationService.js" type="text/javascript"></script>
+        <script src="app/services/notificationService.js" type="text/javascript"></script>
+        <script src="app/services/modalService.js" type="text/javascript"></script>
+        <script src="app/factoryServices/utilityService.js" type="text/javascript"></script>
+        <script src="app/factoryServices/httpService.js" type="text/javascript"></script>
+        <script src="app/factoryServices/projectFilterService.js" type="text/javascript"></script>
+        <script src="app/factoryServices/dateUtility.js" type="text/javascript"></script>
+        <script src="app/filters/customFilters.js" type="text/javascript"></script>
+        <script src="app/directives/sendMail.js" type="text/javascript"></script>
+        <script src="app/services/chequeCollectionService.js" type="text/javascript"></script>
+        <script type="text/javascript" src="app/services/validationService.js"></script>
+        <script type="text/javascript" src="app/directives/userSetting.js"></script>
+        <script type="text/javascript" src="app/directives/modals.js"></script>
+        <script type="text/javascript" src="app/directives/notificationMessage.js"></script>
+        <script type="text/javascript" src="app/directives/enquiry_projects.js"></script>
+        <script src="scripts/header_script.js" type="text/javascript"></script>
+        <script src="scripts/script.js" type="text/javascript"></script>
+        <script type="text/javascript" src="app/directives/quickSettings.js"></script>
+        <script type="text/javascript" src="app/directives/fileModel.js"></script>
+        <script type="text/javascript" src="app/services/leadsService.js"></script>
+        <script type="text/javascript" src="app/services/userProfileService.js"></script>
+
+        <script type="text/javascript" src="app/directives/addNewCapacitySalesPerson.js"></script>
+
+
+        <!--notification controller-->
+        <script src="app/controllers/notificationsCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/projectMailerCtrl.js" type="text/javascript"></script>
+        <script src="app/controllers/addMailerCtrl.js" type="text/javascript"></script>
+        <!--Push Notification Service-->
+        <script src="app/services/pushNotification.js" type="text/javascript"></script>
+        <script src="app/services/projectMailerService.js" type="text/javascript"></script>
+
+        <!--CRM team controller-->
+        <script src="app/controllers/crmTeamsCtrl.js" type="text/javascript"></script>
+        <script src="app/services/crmTeamService.js" type="text/javascript"></script>
+
+        <script type="text/javascript" src="app/services/dashboardService.js"></script>
+
+        <!--Bootstrap Modal directive-->
+    <my-modals></my-modals>
+    <!--End Bootstrap Modal directive-->
+
+    <script type="text/javascript">
+                    // Animation on tables for whole application
+                    (function ($) {
+
+                        $(document).ready(function () {
+
+                            $('table').css({
+                                opacity: 0
+                            }).animate({
+                                opacity: 1
+                            }, 1000, function () {
+
+                            });
+
+                            $(document).mousedown(function (event) {
+                                switch (event.which) {
+                                    case 1:
+                                        //                            alert('Left mouse button pressed');
+                                        break;
+                                    case 2:
+                                        //                            alert('Middle mouse button pressed');
+                                        break;
+                                    case 3:
+                                        alert('For security reasons right click is not allowed');
+                                        return false;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            });
+
+                        });
+
+                    }(jQuery));
+    </script>
+    <script>
+
+                function kaBoom(data) {
+
+                    var spiltData = data.split('|');
+
+                    // Putting mobile number in #mob element inside add_lead_form.html file
+                    document.getElementById("mob").value = spiltData[1];
+
+                    try {
+                        var element = document.getElementById("type");
+                        element.innerHTML = spiltData[1];
+                    } catch (e) {
+
+                    }
+
+                    try {
+                        var el = document.getElementById("edittype");
+//                 alert(spiltData[1]);
+                        el.innerHTML = spiltData[1];
+                    } catch (e) {
+
+                    }
+
+                    var scope = angular.element(document.querySelector('#add_lead_template')).scope();
+
+                    scope.$apply(function () {
+                        scope.client.mobile_number = spiltData[1];
+                        var event = {
+                            type: 'keyup',
+                            currentTarget: {
+                                offsetParent: null
+                            }
+                        };
+                        event.currentTarget.offsetParent = jQuery('#mob').parent();
+                        scope.checkNumberExists(spiltData[1], event);
+                    });
+
+
+                    var dataString = 'mobno=' + spiltData[1] + '&status=' + spiltData[0] + '&calltype=' + spiltData[2] + '&sessionid=' + spiltData[3];
+
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "apis/get_id.php",
+                        data: dataString,
+                        cache: false,
+                        success: function (html) {
+                            var data = jQuery.parseJSON(html);
+                            if (data.direction == 1) {
+
+                                window.location = "edit-lead/" + data.enquiry_id + "/" + data.lead_id + "?call-type=" + spiltData[2];
+
+                            } else {
+
+                                window.location = "lead_detail/" + data.enquiry_id + "/" + data.lead_id + "?call-type=" + spiltData[2];
+
+                            }
+                        }
+                    });
+                }
+
+                function listener(event) {
+                    //~ window.location = "add-lead";
+                    var href = location.href;
+                    if (href.indexOf('add-lead') > -1) {
+                        kaBoom(event.data);
+                    } else {
+                        var baseHref = document.getElementsByTagName('base')[0].href
+                        location.href = baseHref + 'add-lead?event-data=' + event.data;
+                    }
+                }
+
+                if (window.parent.parent.addEventListener) {
+                    addEventListener("message", listener, false)
+                } else {
+                    attachEvent("onmessage", listener)
+                }
+
+                window.onload = function () {
+                    if (location.href.indexOf('event-data=') > -1) {
+                        var data = location.href.split('event-data=');
+                        data = data[1];
+
+                        data = data.split('%7C');
+
+                        data = data.join('|');
+
+                        setTimeout(function () {
+                            kaBoom(data);
+                        }, 4000);
+                    }
+
+                    if (location.href.indexOf('call-type=') > -1) {
+                        var data = location.href.split('call-type=');
+                        data = data[1];
+
+                        if (data === 'undefined') {
+                            data = '';
+                        }
+
+                        setTimeout(function () {
+                            document.getElementById('edittype').innerHTML = data;
+                        }, 4000);
+                    }
+                }
+
+
+                /*
+                 setTimeout(function(){
+                 document.getElementById("mob").value = "9205357017";
+                 var $scope = angular.element(document.querySelector('#content-layout .container-fluid')).scope();
+                 console.log(document.querySelector('#content-layout .container-fluid'));
+                 $scope.$apply(function(){
+                 $scope.client.mobile_number = "9205357017";
+                 
+                 });
+                 },3000);
+                 */
+
+
+    </script>
+</body>
+
+</html>

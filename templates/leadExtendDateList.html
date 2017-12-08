@@ -1,0 +1,278 @@
+<style type="text/css">
+	.quick_search_block {
+		position: relative; 
+		left : 9px;
+		bottom: 3px;
+	}
+	.search-input {
+		border: none;
+		border-radius: 5px;
+		padding: 3px;
+		text-decoration: none;
+		outline: none;
+		/*position: relative;*/
+		/*bottom: 3px;*/
+		font-size: 14px;
+	}
+	#agentModel{
+		max-height: 400px;
+		overflow-y: auto;
+		
+	}
+	#historyModel{
+		max-height: 400px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		word-wrap: break-word;
+	}
+</style>
+
+<div class="row">
+    <h3 class="fts-17" style="padding-left: 1%; margin-top: 0px;">Pending leads for date extend</h3>
+</div>
+
+<div class="container-fliud">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="panel panel-default">
+            	<div class="panel-heading" style="height: 52px;">
+					<div class="panel-title">
+						<div class="col-md-3" id="enquiry_status_filter">
+							<select class="form-control" ng-model="selectedItem" ng-options="item as item.label for item in meetingStatus track by item.id"></select>
+	                	</div>
+						
+						<button class="btn btn-primary btn-xs" ng-click="popUpAsmList()" lead_status="" ng-disabled="isAsmDisabled" style="height: 34px;">Re-Assign To SP</button>
+						
+						<button class="btn btn-info btn-xs pull-right" style="height: 34px;">Total Records: <span class="badge">{{leadsData.length}}</span></button>
+					</div>
+				</div>
+				
+				<div class="panel-heading" style="height: 52px;">
+					<div class="panel-title">
+						<div class="quick_search_block pull-right">
+							<input type="text" class="search-input" placeholder="Search in leads" ng-model="search_lead_query" style="height: 34px; border: 1px solid #ccc;"/>
+						</div>
+						
+						<div class="quick_search_block pull-right" style="margin-right: 300px; width: 300px;">
+							<input type="text" id="datepicker" ng-model="updateLeadFilter" ng-change="filterByDateRange()" class="form-control" placeholder="Lead Updated Date Filter" style="float: left; width: 235px;"/>
+							<input type="button" name="resetFilter" id="resetFilter" value="Reset" style="float: right; height: 33px; border-radius: 5px;" ng-click="resetDateFilters()"/>
+						</div>
+						
+						<div class="col-md-2">
+							<select ng-model="selectedPage" class="form-control" style="height: 34px;" ng-options="page as page.label for page in PageSize track by page.id"></select>
+						</div>
+					</div>
+				</div>
+					<table class="table table-bordered" style="font-size:10x; word-wrap:break-word; table-layout: fixed;">
+                        <thead>
+	                        <th width="3%">#</th>
+							<th class="make_center" width="7%"><input type="checkbox" ng-click="checkAll()" ng-model="isCheckBox"/> Check All</th>
+							<th class="make_center" width="10%">Assign Date</th>
+							<th class="make_center" width="10%">Expire Date</th>
+	                        <th class="make_center" width="8%">Enquiry ID</th>
+	                        <th class="make_center" width="8%">Client Name</th>
+	                        <!--<th class="make_center" width="12%">Client Number</th>-->
+							<th class="make_center" width="7%">Added By</th>
+							<th class="make_center" width="10%" ng-if="login_user.designation_slug !='area_sales_manager'">ASM Name</th>
+							<th class="make_center" width="8%">SP Name</th>
+	                        <th class="make_center" width="7%">Projects</th>
+							<th class="make_center" width="10%">Current status</th>
+	                        <th class="make_center" width="15%">Action</th>
+                        </thead>
+                        <tbody> 
+                            <tr ng-repeat="data in leadsData | startFrom: ((pagination.current_page - 1) * pagination.page_size) | limitTo: pagination.page_size">
+								<td ng-bind="pagination.page_size * (pagination.current_page-1) + $index+1" width="3%"></td>
+								<td width="7%" class="make_center">
+									<input type="checkbox" ng-model="data.Selected" ng-click="checkOneByOne()"/>
+								</td>
+								<td width="10%" class="make_center">{{data.lead_assigned_to_sp_on | date :'mediumDate'}}</td>
+								<td width="10%" class="make_center">{{data.expire_date | date :'mediumDate'}}</td>
+                                <td class="popover_item make_center" width="8%">{{data.enquiry_id}}</td>
+                                <td width="8%" class="make_center">{{data.customerName}}</td>
+                                <!--<td width="12%" class="make_center">{{data.customerMobile}}</td>-->
+                                <td width="7%" class="make_center">{{data.agent_name}}</td>
+                               	<td width="10%" class="make_center" ng-if="login_user.designation_slug !='area_sales_manager'">{{data.asm_name}}</td>
+								<td width="8%" class="make_center">{{data.sp_name}}</td>
+								<td width="7%" class="make_center"><a href="" ng-click="view_projects(data.enquiry_projects)">{{data.enquiry_projects[0].project_name}}</a></td>
+                                <td width="10%" enquiry:current:status enquiry="{{data.enquiry_id}}" class="make_center"></td>
+								<td width="15%" class="make_center">
+									<button class="btn btn-primary btn-xs" ng-click="popUpHistoryList(data.enquiry_id)">History</button>
+									<button class="btn btn-primary btn-xs" ng-if="!data.status"  ng-click="extendValidity(data.enquiry_id, data.lead_assigned_to_sp)">Extend Validity</button>
+									
+									<button class="btn btn-success btn-xs" ng-if="data.status=='extended'">Extended</button>
+								</td>
+                            </tr>
+							
+							<tr ng-if="!leadsData.length">
+								<td colspan="11" class="make_center">
+									<p class="text-danger">No Lead Found</p>
+								</td>
+							</tr>
+							
+                        </tbody>
+                    </table>
+					<!--Pagination Starts here -->
+						<div class="pull-right" ng-if="leadsData.length > 0">
+							<ul uib-pagination  total-items="leadsData.length"  ng-model="pagination.current_page"  items-per-page="pagination.page_size" boundary-links="pagination.show_boundary_links" max-size="pagination.pagination_size" ng-change="pagination.changePage ( pagination.current_page )">
+							</ul>
+						</div>
+					<!--Pagination Ends here-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal: Client enquiry projects-->
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-default">
+            <div class="panel-heading"><div class="panel-title">Client Enquiry Projects</div></div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tr><th>Name</th><th>City</th><th>URL</th></tr>
+                    <tr ng-repeat="item in client_enquiry_projects">
+                        <td>{{item.project_name}}</td>
+                        <td>{{item.project_city}}</td>
+                        <td>{{item.project_url}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+<!--End Modal: Client enquiry projects-->
+
+
+<!--Area Sales Managers List BS Popup modal --> 
+<div class="modal fade" id="sp_users_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				Sale Persons List
+			</div>
+			<div class="modal-body" style="width: 100%;">
+				
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Enquiry Id: <span ng-repeat="selected_enquiry_id in selectedLeads">{{selected_enquiry_id}} | </span>
+					</div>
+					<table class="table table-bordered">
+						<thead>
+							<th>Employee Name</th>
+							<th class="make_center">Total Capacity</th>
+							<th class="make_center">Remaining Capacity</th>
+							<th class="make_center">Action</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="emp in sales_person">
+								<td>{{emp.sales_person_name}}</td>
+								<td class="make_center">{{emp.capacity && emp.capacity || '-'}}</td>
+								<td class="make_center">{{emp.remaining_capacity && emp.remaining_capacity || '-'}}</td>
+								<td class="make_center">
+									<button ng-disabled="!emp.capacity" assign:btn employee="emp" ng-click="manualLeadAssignToSp($event,emp.id)" class="btn btn-xs btn-primary">Assign</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal:  Sales Managers List BS Popup modal --> 
+
+
+<!--Lead History List BS Popup modal --> 
+<div class="modal fade" id="history_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">Lead History List</div>
+			<div class="modal-body">
+				<div class="panel panel-default">
+					<div class="panel-heading"><span style="font-weight: bold;">Enquiry Id:</span> <span>#{{history_enquiry_id}}</span></div>
+					<div id="historyModel">
+						<div class="row notes-container ng-scope" ng-repeat="history in historyData" ng-if="historyData.length" style="padding: 15px 0px 0px 15px;">
+							<div class="col-sm-12">
+								<div class="media">
+									<div class="media-left">
+										<a href="#"><i class="fa fa-history fa-2x" aria-hidden="true"></i></a>
+									</div>
+									<div class="media-body">
+										<h4 class="media-heading italic-date ng-binding"> {{history.created_at}} <span style="font-style:normal; font-weight:bold; color: #000; " class="ng-binding">(ENQ: {{history.enquiry_id}})</span></h4>
+										<div ng-bind-html="history.details" ng-if="!history.meta_data" class="ng-binding ng-scope" style="width: 490px;">{{history.details}}</div>
+										
+										<div ng-bind-html="history.details" ng-if="history.meta_data && history.meta_data.display_type != 'popup'"></div>
+										
+										<div ng-if="history.meta_data && history.meta_data.display_type == 'popup' " class="ng-scope" style="width: 490px;"><p><span style="font-weight: bold;">Note: </span>{{history.meta_data.data}}<br><span style="font-weight: bold;">Added By: </span>{{history.meta_data.added_by}}</p>
+										</div>
+									</div>
+								</div>
+								<hr style="border: 1px solid #aeada8; margin: 10px;"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal: Lead History List BS Popup modal --> 
+
+<script type="text/javascript">
+    (function ($){
+        var date = new Date(); 
+		var element = $('#datepicker');
+
+		var current = {
+			year: date.getFullYear(),
+			month: (date.getMonth() < 9 ? '0' + date.getMonth() : date.getMonth() + 1),
+			date: date.getDate()
+		};
+
+		var picker = new Pikaday(
+		{
+				field: document.getElementById('datepicker'),
+				format: 'DD-MM-YYYY',
+				firstDay: 1,
+				minDate: new Date('1900', '01', '01'),
+				maxDate: new Date(current.year, current.month, current.date),
+				yearRange: [1900, current.year],
+				showWeekNumber: true,
+				onSelect: function () {
+
+				}
+		});
+
+        $(document).ready(function (){
+            
+            $('.popover_item').webuiPopover({
+                title : 'Projects',
+                animation : 'pop',
+                width : '260',
+                placement : 'left',
+//                    style :'inverse',
+                cache : true, // popover will destroy and recreate every time after close 
+                arrow : true,
+                closeable : true,
+                dismissible : true,
+                type : 'html',
+                url : '#enquiry_project_list',
+                backdrop : true
+            });
+                
+        });
+    	
+    	$('#checkAll').click(function(){ 
+		    if($('input:checkbox').is(':checked')){
+		    	$('input:checkbox').prop('checked',false);
+		    }else{
+		    	$('input:checkbox').not(this).prop('checked', this.checked);
+		    }
+		});
+		
+    })(jQuery);
+    
+    
+</script>

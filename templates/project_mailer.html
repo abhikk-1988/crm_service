@@ -1,0 +1,100 @@
+<div class="row page-header" >
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="">
+            <h3 class="fts-17"> Projects Mailer</h3>
+        </div>
+    </div>
+    <div class="col-md-4 pull-right">
+        <div style="padding: 6px;" class="pull-right">
+            <button class="btn btn-primary" ng-click="addNewMailer()">Add New Mailer</button>
+        </div>
+    </div>
+</div>
+
+<div id="mailer-container">
+
+    <div class="row" ng-repeat="mailer in projectMailers">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                <h3 class="panel-title">{{mailer.project_name}} Mailer</h3>
+                </div>
+                <div class="panel-body">
+                    <div ckeditor="options" ng-model="mailer.content" ready="onReady()"></div>
+                </div>
+                <div class="panel-footer">
+                    <a href="#" ng-disabled="mailer.total_attachment == 0" data-toggle="modal" data-target="#display_attachment" ng-click="prepareAttachmentToDisplay(mailer)" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-paperclip"></i></a>
+                    <span>Total Attachments ({{mailer.total_attachment}})</span>
+                    <span class="pull-right">
+                        <a href="#" type="button" data-toggle="modal" data-target="#upload_attachment" class="btn btn-sm btn-default" ng-click="prepareUpload(mailer.id)"><i class="glyphicon glyphicon-paperclip"></i></a>
+                        <a href="#" type="button" class="btn btn-sm btn-warning" ng-click="editMailerContent(mailer)" ><i class="glyphicon glyphicon-edit"></i></a>
+                        <a href="#" type="button" class="btn btn-sm btn-danger" ng-click="removeMailer(mailer.id)"><i class="glyphicon glyphicon-remove"></i></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End RoW -->
+
+    <div class="row" ng-if="!projectMailers.length">
+        <div class="col-md-12">
+            <p class="bg-danger make_center" style="padding:15px;">No Mailer Found</p>    
+        </div>
+    </div>
+
+
+</div>
+
+<!--Upload attachment modal-->
+<div class="modal fade" id="upload_attachment">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!--<h5 class="modal-title">Upload Attachment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>-->
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="form-group">
+                    <label class="col-md-12" for="upload_attachment">Upload Attachment</label>
+                    <div class="col-md-4">
+                        <input id="upload_attachment" name="upload_attachment" file-model="attachment.file" class="input-file" type="file">
+                        <button style="margin-top:8px;" class="btn btn-xs btn-default" ng-click="uploadAttachment(attachment)">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form> 
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Attachments Modal-->
+
+<div class="modal fade" id="display_attachment">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Attachments</h5>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+        <div class="container-fluid">
+            <div class="row">
+                <ul class="list-group">
+                <li class="list-group-item" ng-repeat="item in showMyAttachments.attachments">{{item.original_name}}
+                    <span class="pull-right" style="cursor: pointer;" ng-click="removeAttachment(item,showMyAttachments.mailer_id,$event)">&times</span>    
+                </li> 
+                
+                </ul>
+            </div>
+        </div>
+        </form> 
+      </div>
+    </div>
+  </div>
+</div>

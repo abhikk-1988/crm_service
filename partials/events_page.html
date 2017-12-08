@@ -1,0 +1,19 @@
+<div ng-controller="eventController1">
+    <input type="text" ng-model="app_name" />
+    <button ng-click="SendAppName(app_name)">Broadcast App Name</button>
+    <h2>{{app}}</h2>
+    <div ng-controller="eventController2">
+    <h2>{{app}}</h2>
+    <div ng-controller="eventController3">
+    <h3>{{app}}</h3>
+
+    <!--Raising event from child controller to parent controller-->
+    <input type="text" ng-model="child_event" /> 
+    <button ng-click="childEvent(child_event)">Raise child event</button>
+</div>
+</div>
+
+</div>
+
+
+ 

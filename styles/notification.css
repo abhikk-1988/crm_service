@@ -1,0 +1,53 @@
+/* Notification CSS for custom popups and alert messages */
+
+.notification-container {
+/*    border: 1px solid;*/
+    padding: 10px;
+    /*background-color: #F00;*/
+    /*color: #000;*/
+    font-family: sans-serif; 
+    float: left;
+    z-index: 1050;
+    display: block;
+    margin: 5px;
+    max-width: 400px;
+    /*white-space: nowrap;*/
+    overflow-wrap: break-word; 
+    cursor: pointer;
+}
+
+.position {
+    position: fixed;
+}
+
+.bottom-right {
+    right: 10px; bottom: 0px;
+}
+
+.bottom-left {
+    left: 10px; bottom: 0px;
+}
+
+.top-right {
+    right:10px;
+    top:0px;
+}
+
+.top-left {
+    left:10px;
+    top:0px;
+}
+
+.center-aligned {
+    top: 50%; /* or whatever top you need */
+    left: 50%;
+    width: 300px;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.space {margin: 0 2px 0 2px; color: #000;}
+

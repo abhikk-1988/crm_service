@@ -1,0 +1,62 @@
+<style type="text/css">
+	
+	.right-preference-col {
+		padding: 5px;
+		height: auto;
+		box-shadow: 3px 2px 5px 0px rgba(0,0,0,0.75);
+		height: auto;
+		margin-top: 5px;
+	}
+	
+	.left-preference-col {
+		padding: 5px;
+		height: auto;
+	}
+	
+	.header-block{ 
+		text-align: left;
+		background-color: cadetblue;
+		padding: 14px;
+		font-size: 16px; 
+	}
+</style>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17">My Preferences</h3>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+	
+	<div class="col-md-3">
+		<div class="left-preference-col">
+			
+			<div class="alert alert-info" role="alert">
+				<a ng-href="#" ui-sref="change-password" style="color:initial;">Change Password</a>
+			</div>
+			<div class="alert alert-info" role="alert">
+				<a ng-href="#" ui-sref="change-profile-photo" style="color:initial;">Change Profile Photo</a>
+			</div>
+			
+<!--			<ul class="list-group">  
+				<li class="list-group-item active">
+					
+				</li>
+				<li class="list-group-item active">
+					
+				</li>
+			</ul>
+			-->
+		</div>
+		
+	</div>
+	<div class="col-md-9">
+		<div class="right-preference-col">
+			<ui-view></ui-view>
+		</div>
+	</div>
+</div>
+

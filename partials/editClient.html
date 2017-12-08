@@ -1,0 +1,117 @@
+<div class="panel panel-default" ng-controller="editClientInfoCtrl">
+
+    <div class="panel-heading">Client Information <span class="pull-right"><button class="btn btn-xs btn-default pull-right" ng-click="editClient(client)" ng-disabled="!client.customerMobile">Edit</button></span></div>
+
+    <div class="panel-body">
+
+        <form role="form" class="form">
+
+            <div class="form-group">
+                <p>Mobile:<span class="mandate">*</span></p>
+                <input name="customerMobile" class="form-control" readonly="" type="text" ng-model="client.customerMobile" />
+            </div>
+
+            <div class="form-group">
+                <p>Name:<span class="mandate">*</span></p>
+                <input name="customerName" class="form-control" type="text" ng-model="client.customerName" />
+            </div>
+
+            <div class="form-group">
+                <p>Email:</p>
+                <input name="customerEmail" class="form-control" ng-blur="validateEmail(client.customerEmail)" type="text" ng-model="client.customerEmail" />
+                <span class="help-block danger">{{email_error}}</span>
+            </div>
+
+            <div class="form-group">
+                <p>Alternate Number:</p>
+                <input name="customer_alternate_mobile" ng-blur="checkForNumberOnly($event,client.customer_alternate_mobile)" class="form-control" type="text" ng-model="client.customer_alternate_mobile" />
+                <span class="help-block"></span>
+            </div>
+
+            <div class="form-group">
+                <p>Reference Number:</p>
+                <input class="form-control" type="text" ng-model="client.customer_reference_number" />
+            </div>
+
+            <div class="form-group">
+                <p>Landline Number:</p>
+                <input class="form-control" type="text" ng-model="client.customerLandLine" />
+            </div>
+
+            <div class="form-group">
+                <p>Address:</p>
+                <input class="form-control" type="text" ng-model="client.customerAddress" />
+            </div>
+
+            <div class="form-group">
+                <p>DOB:</p>
+                <input class="form-control" readonly="" id="dob_datepicker" type="text" ng-model="client.customerDOB" />
+            </div>
+
+            <div class="form-group">
+                <p>State:</p>
+                <select class="form-control" ng-model="client.customerStateId" ng-change="changeState(client.customerStateId,true)" ng-options="item.state_id as item.state_name for item in stateList ">
+                    <option value="">--Select State--</option></select>    
+                </select>
+            </div>
+
+            <div class="form-group">
+                <p>City:</p>
+                <select class="form-control" ng-change="changeCity(client.customerCityId)" ng-model="client.customerCityId"  ng-options="item.city_id as item.city_name for item in cityList ">
+                    <option value="">--Select City--</option></select>         
+                </select>
+            </div>
+
+            <div class="form-group">
+                <p>Profession:</p>
+               <select class="form-control" ng-model="client.customerProfession" ng-options="profession as profession for profession in profession_list">
+                   <option>--Select Profession--</option>
+               </select>
+            </div>
+
+            <div class="form-group">
+                <p>Remark:</p>
+                <textarea class="form-control" ng-model="client.customerRemark"></textarea>
+            </div>
+        </form>    
+
+    </div>
+
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-xs btn-default pull-right" ng-click="editClient(client)" ng-disabled="!client.customerMobile">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    (function ($){
+
+        var date = new Date();
+        var current = {
+            year : date.getFullYear(),
+            month : (date.getMonth() < 9 ? '0'+ date.getMonth() : date.getMonth() + 1),
+            date : date.getDate()
+        };
+        
+	    var picker = new Pikaday(
+		{
+			field: document.getElementById('dob_datepicker'),
+			format: 'DD-MM-YYYY',
+			firstDay: 1,
+			minDate: new Date('1900','01','01'),
+			maxDate: new Date( current.year, current.month, current.date),
+			yearRange: [1900,current.year],
+			showWeekNumber : true,
+			onSelect: function (){
+
+			}
+	    });
+
+
+    }(jQuery));
+
+</script>

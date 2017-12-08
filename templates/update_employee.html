@@ -1,0 +1,217 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> <i class="glyphicon glyphicon-edit tooltip-button demo-icon icon-edit" title=".icon-edit"></i> Update Employee</h3>
+            <a href="search-employee" class="btn btn-info btn-sm pull-right back-btn">Back</a>
+        </div>
+    </div>
+</div>
+
+    <div class="content-box bg-white">
+        <form class="form-horizontal bordered-row PDL15 PDR15">
+            <div class="form-group form-group-ex remove-border">
+                <label class="col-sm-3 control-label">First Name:</label>
+                <div class="col-sm-6">
+                    <input type="text" ng-model="employee.firstname" class="form-control" id="firstname" placeholder="First name"/>
+                    <span class="help-block firstname-help-block danger"></span>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Last Name:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" ng-model="employee.lastname" id="lastname" placeholder="Last name"/>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Email:</label>
+                <div class="col-sm-6">
+                    <input type="text" ng-model="employee.email" class="form-control" id="email" placeholder="Email"/>
+                    <span class="help-block email-help-block danger"></span>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Contact:</label>
+                <div class="col-sm-6">
+                    <input type="text" ng-model="employee.contactNumber" ng-keyup="validateMobileNumber(employee.contactNumber,$event)" class="form-control" id="phone" placeholder="Phone No."/>
+                    <span class="help-block phone-help-block danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Employee Code</label>
+                <div class="col-sm-6">
+                    <input type="text" ng-model="employee.employee_code"  class="form-control" placeholder="Enter Employee Code"/>
+                </div>
+            </div>
+
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Employee CTC</label>
+                <div class="col-sm-6">
+                    <input type="text" ng-model="employee.employee_ctc"  class="form-control" placeholder="Enter Employee CTC"/>
+                </div>
+            </div>
+
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Address Line1:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" ng-model="employee.address" id="address1" placeholder="Address Line1"/>
+                    <span class="help-block address-help-block danger"></span>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Address Line2:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" ng-model="employee.addressLine2" id="address2" placeholder="Address Line2"/>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">State:</label>
+                <div class="col-sm-6">
+                    <div class="input-group" id="adv-search" style="z-index:20;">
+                        <input type="text" class="form-control" ng-model="employeeStateLabel" readonly="" placeholder="Select State">
+                        <div class="input-group-btn">
+                            <div class="btn-group" role="group">
+                                <div class="dropdown dropdown-lg">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                                    <div class="dropdown-menu dropdown-menu-right list_of_items" style="width:513px;">
+                                        <input type="text" ng-model="state_query" autocomplete="Off" class="in_search_input" placeholder="Search State" />
+                                        <div class="col-md-12 list_block" ng-click="updateStateId(null)">Select State</div>
+                                        <div class="col-md-12 list_block" ng-click="updateStateId(state)" ng-class="{selected: employee.state === state.state_id}" ng-repeat="state in states | filter: state_query">{{state.state_name}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="help-block state-help-block danger"></span>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">City:</label>
+                <div class="col-sm-6">
+                    <div class="input-group" id="adv-search" style="z-index:15;">
+                        <input type="text" class="form-control" ng-model="employeeCityLable" readonly="" placeholder="Select city">
+                        <div class="input-group-btn">
+                            <div class="btn-group" role="group">
+                                <div class="dropdown dropdown-lg">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                                    <div class="dropdown-menu dropdown-menu-right list_of_items" style="width:513px;">
+                                        <input type="text" autocomplete="Off" class="in_search_input" ng-model="city_query" placeholder="Search City" />
+                                        <div class="col-md-12 list_block" ng-click="setCity(null)">Select City</div>
+                                        <div class="col-md-12 list_block" ng-click="setCity(city)" ng-class="{selected: employee.city === city.city_id}" ng-repeat="city in cities | filter: city_query">{{city.city_name}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="help-block city-help-block danger"></span>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Join Date:</label>
+                <div class="col-sm-6">
+                    <input type="text" style="width:52%;" id="datepicker" ng-model="employee.doj" class="form-control" placeholder="DD-MM-YYYY"/>
+                    <span class="help-block doj-help-block danger"></span>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Reporting:</label>
+                <div class="col-sm-6">
+                    <div class="input-group" id="adv-search" style="z-index:10;">
+                        <input type="text" class="form-control" readonly="" ng-model="employee.reportingToEmployee" placeholder="Select Reporting">
+                        <div class="input-group-btn">
+                            <div class="btn-group" role="group">
+                                <div class="dropdown dropdown-lg">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                                    <div class="dropdown-menu dropdown-menu-right list_of_items" style="width:513px;">
+                                        <input type="text" autocomplete="Off" ng-model='reporting_user_query' class="in_search_input" placeholder="Search Reporting" />
+                                        <div class="col-md-12 list_block" ng-click="changeReporting(null)">Select Reporting</div>
+                                        <div class="col-md-12 list_block" 
+											ng-click="changeReporting(emp)" 
+											ng-class="{selected: employee.reportingTo === emp.id}" 
+											ng-repeat="emp in reportingToUsers | filter:reporting_user_query:false:firstname"
+											ng-if='employee.id !== emp.id'
+											>
+											{{emp.firstname+' '+emp.lastname}} ({{emp.employee_designation}})
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="help-block reporting-help-block danger"></span>
+                </div>
+            </div>
+            <div class="form-group form-group-ex">
+                <label class="col-sm-3 control-label">Designation:</label>
+                <div class="col-sm-6">
+                    <div class="input-group" id="adv-search" style="z-index: 1;">
+                        <input type="text" class="form-control" ng-model="employee.employee_designation" readonly="" placeholder="Select Designation">
+                        <div class="input-group-btn">
+                            <div class="btn-group" role="group">
+                                <div class="dropdown dropdown-lg">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                                    <div class="dropdown-menu dropdown-menu-right list_of_items" style="width:493px;max-height:145px;">
+                                        <input type="text" autocomplete="Off" class="in_search_input" ng-model="designation_query" placeholder="Search Designation" />
+                                        <div class="col-md-12 list_block" ng-click="setDesignation(null)">Select Designation</div>
+                                        <div class="col-md-12 list_block" ng-click="setDesignation(designation)" ng-class="{selected: employee.designation === designation.id}" ng-repeat="designation in emp_designations | filter: designation_query ">{{designation.designation}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="help-block designation-help-block danger"></span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Agent IVR Id</label>
+                <div class="col-sm-6">
+                    <input type="text" ng-model="employee.crm_id" class="form-control" name="" />    
+                </div>
+                
+            </div>
+            
+        </form>
+    </div>
+    
+<div class="row PDT10 PDB10">
+    <div class="col-md-12 col-lg-12">
+        <div class="col-md-4 col-lg-4"></div>
+        <div class="col-md-4 col-lg-4"><button class="btn btn-primary" ng-click="updateEmployee(employee)" >Update</button></div>
+        <div class="col-md-4 col-lg-4"></div>
+    </div>
+</div>
+    
+<div ng-bind-html="successResponse"></div>
+   
+<script type="text/javascript">
+    (function ($){
+        
+        var date = new Date();
+        var element = $('#datepicker');
+        
+        var current = {
+            year : date.getFullYear(),
+            month : (date.getMonth() < 9 ? '0'+ date.getMonth() : date.getMonth() + 1),
+            date : date.getDate()
+        };
+        
+        var default_min_date = '01';
+        var min_year = 2012;
+        var max_year = date.getFullYear() + 10;
+        
+        var picker = new Pikaday(
+        {
+            field: document.getElementById('datepicker'),
+            format: 'DD-MM-YYYY',
+            firstDay: 1,
+            minDate: new Date(min_year,01,01),
+            maxDate: new Date(current.year, current.month, current.date),
+            yearRange: [min_year,current.year],
+            showWeekNumber : true,
+            onSelect: function (){
+
+            }
+        });
+    }) (jQuery);
+</script>

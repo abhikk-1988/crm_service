@@ -1,0 +1,39 @@
+<div class="container-fluid">
+	<div class="page-header">
+		<h4>Enquiry Project Details 
+			<search-project ng-if="is_lead_editable" class="pull-right" enquiry_id="{{enquiry_id}}" lead_number="{{lead_number}}"></search-project>
+		</h4>
+	</div>
+	
+	<!--Projects Table--> 
+	
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-bordered" style="font-size:12px;">
+				<thead>
+					<th>#</th>
+					<th>Project Name</th>
+					<th>Project City</th>
+					<th>Project URL</th>
+					<th class="make_center" ng-if="projects.length > 1">Remove Project</th>
+				</thead>
+                <tbody>
+                    <tr ng-repeat="project in projects">
+					   <td ng-bind="$index + 1"></td>
+					   <td>{{project.project_name}}</td>
+					   <td>{{project.project_city}}</td>
+					   <td><a target="_blank" ng-href="{{project.project_url}}">{{project.project_url}}</a></td>
+					   <td class="make_center" ng-if="projects.length > 1">
+						   <span ng-click="removeProject(project)" ng-if="is_lead_editable" style="cursor: pointer;font-size:14px;">&times;</span></td>
+				    </tr>
+                
+                    <tr class="loading" ng-if="projects.length < 1">
+                        <td colspan="5" class="make_center">Loading ...</td>
+                    </tr>
+                </tbody>
+			</table>
+		</div>
+	</div>
+	
+	<!--End : Projects Table--> 
+</div>

@@ -1,0 +1,203 @@
+<style type="text/css">
+    
+    .notification_center {  
+        width: 175px;
+        height: auto;
+        background-color: #4A5760;
+        color: #FFF;
+        padding: 5px;
+        position: relative;
+        top: 6px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .notification-bell{
+        color: green;
+        font-size: 1.3em;
+    }
+    
+    .badge1 {
+        left: 4px;
+        margin: 0px;
+        position: absolute;
+        top: -10px;
+        background-color: #F00;
+    }
+    
+    
+    /* THE NOTIFICAIONS WINDOW. THIS REMAINS HIDDEN WHEN THE PAGE LOADS. */
+    #notifications {
+        display:none;
+        width:430px;
+        position:absolute;
+        top:42px;
+        right:0;
+        background:#FFF;
+        border:solid 1px rgba(100, 100, 100, .20);
+        -webkit-box-shadow:0 3px 8px rgba(0, 0, 0, .20);
+        z-index: 999999999;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    /* AN ARROW LIKE STRUCTURE JUST OVER THE NOTIFICATIONS WINDOW */
+    #notifications:before {         
+        content: '';
+        display:block;
+        width:0;
+        height:0;
+        color:transparent;
+        border:10px solid #CCC;
+        border-color:transparent transparent #FFF;
+        margin-top:-20px;
+        margin-right:20px;
+        float: right;
+    }
+        
+    /*h3 {
+        display:block;
+        color:#333; 
+        background:#FFF;
+        font-weight:bold;
+        font-size:13px;    
+        padding:8px;
+        margin:0;
+        border-bottom:solid 1px rgba(100, 100, 100, .30);
+    }*/
+        
+    .seeAll {
+        background:#F6F7F8;
+        padding:8px;
+        font-size:12px;
+        font-weight:bold;
+        border-top:solid 1px rgba(100, 100, 100, .30);
+        text-align:center;
+    }
+    .seeAll a {
+        color:#3b5998;
+    }
+    .seeAll a:hover {
+        background:#F6F7F8;
+        color:#3b5998;
+        text-decoration:underline;
+    }
+    
+    .messages {
+        height: auto;
+        max-height: 300px;
+    }
+</style>
+
+<div class="navbar-items" >
+
+	<div class="row" style="margin:0px;">
+
+		<div class="col-md-1">
+			<span class="glyphicon glyphicon-list pull-left left-nav-expander" data-slide="down"></span>
+		</div>
+		<div class="col-md-9">
+				<iframe src="https://agent.c-zentrixcloud.com/czhandler/cti_handler.php" style="height: 62px;width:120%;border: 1px; overflow: hidden;margin-left:-50px;"></iframe>
+
+		</div>
+		
+		<!--    NOTIFICATIONS BOX-->
+       <!--
+		<div class="col-md-2" ng-controller="notificationCtrl">
+            <div class="notification_center">
+                <div class="row" style="margin:0px;">
+                    <div class="col-xs-2"><i class="fa fa-bell notification-bell" aria-hidden="true"></i></div>
+                    <div class="col-xs-7">Notifications</div>
+                    <div class="col-xs-2">
+                        <div 
+                             id="notification_counter" 
+                             class="badge"
+                             ng-click="fetchNotifications($event)"
+                             >
+                                {{notification_count}}
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="notifications">
+                    <p class="text-primary" style="margin:4px 10px;">Messages ({{notifications.length}})
+                    </p>
+                    <div class="messages">
+                        <div 
+                           style="padding:12px;margin:0 0 1px; color:#000;"
+                           ng-repeat="notification in notifications"
+                           ng-class="notification.notification_bg_color"
+                           >
+                           <p class="text-primary">{{notification.title}}</p>
+                           <p ng-if="!notification.link">{{notification.message}}</p>
+                           <p ng-if="notification.link"><a ng-href="{{notification.link}}">{{notification.message}}</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+
+		<div class="col-md-2">
+			<div class="dp-32 settings_circle pull-right"></div>
+			<div class="ac_info">
+				<div class="account_container">
+					<div class="user_account_data">
+						<div class="row">
+							
+							<div class="col-md-6">
+								<div class="media">
+									<div class="media-left media-middle">
+									<a href="#">
+										<img style="width:125px; height: 125px;" class="media-object" ng-src="{{currentUser.profile_image}}" alt="profile_image_64">
+									</a>
+									</div>
+								</div>
+							</div>
+							
+							<div class="col-md-6">
+								<span class="text-primary" style="font-size: 15px; font-weight: bold;">{{currentUser.firstname}} {{currentUser.lastname}}</span>
+								<p class="text-muted" style="font-size:13px;">
+									{{currentUser.email}}
+									<br/>
+									Logged in from: {{currentUser.login_ip_address}}
+								</p>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row sa">
+						<div class="col-md-6" ng-click="user_setting()">Settings</div>
+						<div class="col-md-6" ng-click="logout (currentUser.id)">Logout</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+			
+	</div>
+</div>
+
+<script type="text/javascript">
+
+    (function ($){
+        
+        $(document).ready(function(){
+         
+            $('#notifications').click(function () {
+                return false;       // DO NOTHING WHEN CONTAINER IS CLICKED.
+            });
+            
+            $(document).click(function () {
+                $('#notifications').hide();
+            });
+
+            $('.notification_center').click(function (e){
+                var parent = this;
+            });
+            
+        });
+        
+    }(jQuery));
+    
+</script>

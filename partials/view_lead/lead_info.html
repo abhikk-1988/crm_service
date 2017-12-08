@@ -1,0 +1,219 @@
+<div class="container-fluid">
+	<div class="page-header">
+		<h4>Lead Details</h4>
+	</div>
+	<form>
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Enquiry Id
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{enquiry_id}}
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Lead Number
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{lead_id}}
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Current Status
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col" style="font-weight: bold; color:teal;">
+					{{lead_detail.primary_disposition_status_text | uppercase}} 
+                    
+                    <span ng-if="lead_detail.secondary_disposition_status_text"> / </span>
+                    
+                    {{lead_detail.secondary_disposition_status_text | uppercase}}
+					<br/>
+					<event-time data="lead_detail"></event-time>
+                    
+					<div class="event-specification" ng-if="is_event_detail">
+                    
+                        <div id="event_id" style="cursor:pointer;">Event ID: {{event_detail.event_id}}</div>
+                        <div id="event_details" 
+                             style="    border: 1px solid #CCC;padding: 5px;background-color: azure;color: brown;font-size: 13px;font-weight: normal;">
+                            
+                            <div class="row" style="height:25px;">
+                                <div class="col-md-4">Project:</div>
+                                <div class="col-md-8">
+									<a 
+									   ng-repeat="event_item in event_detail.project" 
+									   ng-href="{{event_item.project_url}}" 
+									   target="_blank">{{event_item.project_name}}</a>
+									
+									
+                                </div>
+                            </div>
+                            <div class="row" style="height:25px;">
+                                <div class="col-md-4">Date Time:</div>
+                                <div class="col-md-8">{{event_detail.datetime}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">Address:</div>
+                                <div class="col-md-8">{{event_detail.address}}</div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+               
+			</div>
+		</div>
+		
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Created By
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{lead_detail.lead_owner}}
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Re-Assign To
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{lead_detail.assign_to}}
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Assigned To Area Sales Manager
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{lead_detail.lead_assigned_to_asm}}
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Assigned To Sales Person
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{lead_detail.lead_assigned_to_sp}}
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Lead Primary Source
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{lead_detail.primary_campaign_source_text}}
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Lead Secondary Source
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{lead_detail.leadSecondarySource}}
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Next Followup Date
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+<!--					{{ (lead_detail.future_followup_date) && lead_detail.future_followup_date | date: 'fullDate' || 'NA'}}-->
+						NA
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Last Followup Date
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					NA
+					<!--{{ (lead_detail.last_followup_date != 'null') && lead_detail.last_followup_date | date: 'fullDate' || 'NA' }}-->
+				</div>
+			</div>
+		</div>
+		
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Remark
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					{{lead_detail.enquiry_status_remark}}
+                    
+                    <span style="font-size: 12px;float: right;line-height: 21px;" ng-if="more_remarks">
+                        <a ng-href="enquiry_remarks/{{enquiry_id}}">See All Remarks</a>
+                    </span>
+				</div>
+			</div>
+		</div>
+
+		<div class="row row-border-bottom">
+			<div class="col-md-6">
+				<div class="inner-col">
+					Client Preference
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="inner-col">
+					<span class="chip-tag" ng-repeat="pref in client_pref">{{pref}} <span ng-if="!$last">|</span> </span>
+				</div>
+			</div>
+		</div>
+
+
+	</form>
+</div>

@@ -1,0 +1,9 @@
+<form>
+	
+	<select ng-model="name" ng-change="getPerson(name)" ng-options="person.id as person.name for person in names">
+		<option>Select Name</option>
+	</select>
+	
+	<p>Selected Person name - {{name}}</p>
+	
+</form>

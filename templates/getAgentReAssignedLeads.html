@@ -1,0 +1,276 @@
+<style type="text/css">
+	.quick_search_block {
+		position: relative; 
+		left : 9px;
+		bottom: 3px;
+	}
+	.search-input {
+		border: none;
+		border-radius: 5px;
+		padding: 3px;
+		text-decoration: none;
+		outline: none;
+		/*position: relative;*/
+		/*bottom: 3px;*/
+		font-size: 14px;
+	}
+	#agentModel{
+		max-height: 400px;
+		overflow-y: auto;
+		
+	}
+	#historyModel{
+		max-height: 400px;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+</style>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17">My Re-Assign Leads</h3>
+        </div>
+    </div>
+</div>
+
+<div class="container-fliud">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="panel panel-default">
+            	<div class="panel-heading" style="height: 52px;">
+					<div class="panel-title">
+					<div class="quick_search_block pull-right">
+						<input type="text" class="search-input" placeholder="Search in leads" ng-model="search_lead_query" style="height: 34px; border: 1px solid #ccc;"/>
+					</div>				
+					<div class="col-md-3" id="enquiry_status_filter">
+						<select class="form-control" ng-model="selectedItem" ng-options="item as item.label for item in meetingStatus track by item.id"></select>
+                	</div>
+					<div class="col-md-2">
+						<select ng-model="selectedPage" class="form-control" style="height: 34px;" ng-options="page as page.label for page in PageSize track by page.id"></select>
+					</div>
+					
+					</div>
+				</div>
+                    
+					<table class="table table-bordered" style="font-size:10x;">
+                        <thead>
+	                        <th>#</th>
+							<th class="make_center"><input type="checkbox" ng-click="checkAll()" ng-model="isCheckBox"/> Check All</th>
+							<th class="make_center">Lead Generation Date</th>
+	                        <th class="make_center">Enquiry ID</th>
+	                        <th class="make_center">Client Name</th>
+	                        <th class="make_center">Client Number</th>
+							<!--<th class="make_center">Added By</th>-->
+							<!--<th class="make_center">Last Agent's Status</th>-->
+	                        <th class="make_center">Projects</th>
+							<th class="make_center">Current status</th>
+	                        <th class="make_center">Action</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in leadsData | startFrom: ((pagination.current_page - 1) * pagination.page_size) | limitTo: pagination.page_size">
+								<td ng-bind="pagination.page_size * (pagination.current_page-1) + $index+1" width="2%"></td>
+								<td width="2%" class="make_center">
+									<input type="checkbox" ng-model="data.Selected" ng-click="checkOneByOne()"/>
+								</td>
+								<td width="10%" class="make_center">{{data.leadAddDate | date :'mediumDate'}}</td>
+                                <td class="popover_item make_center" width="6%">  <a ng-href="lead_detail/{{data.enquiry_id}}/{{data.lead_id}}" title="view details">{{data.enquiry_id}} </a></td>
+                                <td width="10%" class="make_center">{{data.customerName}}</td>
+                                <td width="5%" class="make_center">{{data.customerMobile}}</td>
+                                <!--<td width="5%" class="make_center"><employee-name employee-id="{{data.lead_added_by_user}}">{{data.lead_added_by_user}}</employee-name></td>-->
+                                <!--<td width="25%" class="make_center" style="text-align: justify;">{{data.agent_status}}</td>-->
+								<td width="10%" class="make_center"><a href="" ng-click="view_projects(data.enquiry_projects)">{{data.enquiry_projects[0].project_name}}</a></td>
+                                <td width="10%" enquiry:current:status enquiry="{{data.enquiry_id}}" class="make_center"></td>
+								<td width="10%" class="make_center"><button class="btn btn-primary btn-xs" ng-click="popUpHistoryList(data.enquiry_id)">History</button></td>
+                            </tr>
+							
+							<tr ng-if="!leadsData.length">
+								<td colspan="10" class="make_center">
+									<p class="text-danger">No Lead Found</p>
+								</td>
+							</tr>
+							
+                               </tbody>
+                    </table>
+					<!--Pagination Starts here -->
+						<div class="pull-right" ng-if="leadsData.length > 0">
+							<ul uib-pagination  total-items="leadsData.length"  ng-model="pagination.current_page"  items-per-page="pagination.page_size" boundary-links="pagination.show_boundary_links" max-size="pagination.pagination_size" ng-change="pagination.changePage ( pagination.current_page )">
+							</ul>
+						</div>
+					<!--Pagination Ends here-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal: Client enquiry projects-->
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-default">
+            <div class="panel-heading"><div class="panel-title">Client Enquiry Projects</div></div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tr><th>Name</th><th>City</th><th>URL</th></tr>
+                    <tr ng-repeat="item in client_enquiry_projects">
+                        <td>{{item.project_name}}</td>
+                        <td>{{item.project_city}}</td>
+                        <td>{{item.project_url}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+<!--End Modal: Client enquiry projects-->
+
+
+<!--Area Sales Managers List BS Popup modal --> 
+<div class="modal fade" id="asm_users_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				Area Sales Managers
+			</div>
+			<div class="modal-body">
+				
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Enquiry Id: <span ng-repeat="selected_enquiry_id in selectedLeads">{{selected_enquiry_id}} | </span>
+					</div>
+					<table class="table table-bordered">
+						<thead>
+							<th>Employee Name</th>
+							<th class="make_center">Total Capacity</th>
+							<th class="make_center">Remaining Capacity</th>
+							<th class="make_center">Action</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="emp in area_sales_managers">
+								<td>{{emp.asm_name}}</td>
+								<td class="make_center">{{emp.total_capacity_of_month && emp.total_capacity_of_month || '-'}}</td>
+								<td class="make_center">{{emp.total_remaining_capacity_of_the_month && emp.total_remaining_capacity_of_the_month || '-'}}</td>
+								<td class="make_center">
+									<button 
+										ng-disabled="!emp.total_capacity_of_month"
+										assign:btn
+										employee="emp"
+                                        ng-click="manualLeadAssignToAsm($event,emp.asm_id)"
+										enquiry_id=""
+										class="btn btn-xs btn-primary">Assign</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal:  Area Sales Managers List BS Popup modal --> 
+
+
+<!--Agent List BS Popup modal --> 
+<div class="modal fade" id="agent_users_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				Agent List
+			</div>
+			<div class="modal-body">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Enquiry Id: <span ng-repeat="selected_enquiry_id in selectedLeads">{{selected_enquiry_id}} | </span>
+					</div>
+					<div id="agentModel">
+						<table class="table table-bordered">
+							<thead>
+								<th>Employee Name</th>
+								<th class="make_center">Action</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="agent in agent_list">
+									<td>{{agent.agent_name}}</td>
+									<td class="make_center">
+										<button assign:btn employee="agent" ng-click="manualLeadAssignToAgent($event,agent.id)" enquiry_id="" class="btn btn-xs btn-primary">Assign</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal:  Agent List BS Popup modal --> 
+
+
+<!--Lead History List BS Popup modal --> 
+<div class="modal fade" id="history_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">Lead History List</div>
+			<div class="modal-body">
+				<div class="panel panel-default">
+					<div class="panel-heading"><span style="font-weight: bold;">Enquiry Id:</span> <span>#{{history_enquiry_id}}</span></div>
+					<div id="historyModel">
+						<div class="row notes-container ng-scope" ng-repeat="history in historyData" ng-if="historyData.length" style="padding: 15px 0px 0px 15px;">
+							<div class="col-sm-12">
+								<div class="media">
+									<div class="media-left">
+										<a href="#"><i class="fa fa-history fa-2x" aria-hidden="true"></i></a>
+									</div>
+									<div class="media-body">
+										<h4 class="media-heading italic-date ng-binding"> {{history.created_at}} <span style="font-style:normal; font-weight:bold; color: #000; " class="ng-binding">(ENQ: {{history.enquiry_id}})</span></h4>
+										<div ng-bind-html="history.details" ng-if="!history.meta_data" class="ng-binding ng-scope">{{history.details}}</div>
+										
+										<div ng-bind-html="history.details" ng-if="history.meta_data && history.meta_data.display_type != 'popup'"></div>
+										
+										<div ng-if="history.meta_data && history.meta_data.display_type == 'popup' " class="ng-scope"><p><span style="font-weight: bold;">Note: </span>{{history.meta_data.data}}<br><span style="font-weight: bold;">Added By: </span>{{history.meta_data.added_by}}</p>
+										</div>
+									</div>
+								</div>
+								<hr style="border: 1px solid #aeada8; margin: 10px;"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal: Lead History List BS Popup modal --> 
+
+<script type="text/javascript">
+    (function ($){
+        
+        $(document).ready(function (){
+            
+                $('.popover_item').webuiPopover({
+                    title : 'Projects',
+                    animation : 'pop',
+                    width : '260',
+                    placement : 'left',
+//                    style :'inverse',
+                    cache : true, // popover will destroy and recreate every time after close 
+                    arrow : true,
+                    closeable : true,
+                    dismissible : true,
+                    type : 'html',
+                    url : '#enquiry_project_list',
+                    backdrop : true
+                });
+                
+        });
+    })(jQuery);
+    
+    $('#checkAll').click(function(){ 
+	    if($('input:checkbox').is(':checked')){
+	    	$('input:checkbox').prop('checked',false);
+	    }else{
+	    	$('input:checkbox').not(this).prop('checked', this.checked);
+	    }
+	});
+</script>

@@ -1,0 +1,458 @@
+<style type="text/css">
+	.quick_search_block {
+		position: relative; 
+		left: 9px;
+		bottom: 3px;
+	}
+	.search-input {
+		border: none;
+		border-radius: 5px;
+		padding: 3px;
+		text-decoration: none;
+		outline: none;
+		/*position: relative;*/
+		/*bottom: 3px;*/
+		font-size: 14px;
+	}
+	#agentModel{
+		max-height: 400px;
+		overflow-y: auto;
+		
+	}
+	#historyModel{
+		max-height: 400px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		word-wrap: break-word;
+	}
+    
+    .gly-spin {
+  -webkit-animation: spin 2s infinite linear;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+</style>
+
+<div class="row">
+	<h3 class="fts-17" style="padding-left: 1%; margin-top: 0px;">Re-Assign Leads</h3>
+</div>
+
+<div class="container-fliud">
+    
+    
+<!--    Filter Header -->
+    <div class="row" style="padding: 10px; margin:7px 0px;background-color: #CCC;">
+        <div class="col-sm-12">
+            <!-- Source Filter-->
+            <div class="col-sm-2">
+                <div id="source_status_filter">
+                	<select class="form-control" ng-model="selectedSourceItem" ng-options="source as source.label for source in sourceStatus track by source.id"></select>
+                	<p style="color: #555">Source Filter:</p>
+                </div>
+            </div>
+            <!-- End Source Filter-->
+            
+            
+            <!-- User Filter-->
+            <div class="col-sm-2">
+                <div id="user_type_filter">
+                	<select class="form-control" ng-model="selectedUser" ng-options="user as user.label for user in userType track by user.id"></select>
+                	<p style="color: #555">Team Filter:</p>
+				</div>
+            </div>
+            <!-- End User Filter-->
+            
+            <!-- Status Filter-->
+            <div class="col-sm-3">
+                <div id="enquiry_status_filter">
+                	<select class="form-control" ng-model="selectedItem" ng-options="item as item.label for item in meetingStatus track by item.id"></select>
+                	<p style="color: #555">Disposition Filter:</p>
+				</div>
+            </div>
+            <!-- End Status Filter-->
+            
+            <!-- Project Filter-->
+            <div class="col-sm-3">
+                <div id="project_status_filter">
+                	<select class="form-control" ng-model="selectedProjectItem" ng-options="project as project.label for project in enq_project track by project.id"></select>
+                	<p style="color: #555">Project Filter:</p>
+                </div>
+            </div>
+            <!-- End Project Filter-->
+            
+            <!-- Assing Buttons-->
+            <div class="col-sm-2">
+                <button class="btn btn-primary btn-xs" ng-click="popUpAsmList()" lead_status="" id="isAsmDisabled" style="height: 34px;">Re-Assign To ASM</button>
+						
+				<button class="btn btn-primary btn-xs" ng-click="popUpAgentList()" lead_status="" id="isAgentDisabled" style="height: 34px;">Re-Assign To Agent</button>
+            </div>
+            <!-- End Assing Buttons-->
+            
+        </div>
+    </div>
+    
+    <div class="row" style="padding: 10px; margin: 7px 0px; background-color: #CCC;">
+        <div class="col-sm-12">
+        	<!-- Page Size-->
+            <div class="col-sm-2">
+                <div id="source_status_filter">
+                	 <select ng-model="selectedPage" class="form-control" ng-options="page as page.label for page in PageSize track by page.id"></select>
+                	<p style="color: #555">Page Size</p>
+                </div>
+            </div>
+            <!-- End Page Size-->
+            <div class="col-sm-3">
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter Search Keyword" ng-model="search_lead_query" style="padding: 2px;"/>
+                        <p style="color: #555">Search Filter:</p>
+                    </div> 
+                </form>     
+            </div>
+            <div class="col-sm-1">
+                <div class="form-group">
+                    <button ng-click="searchData(search_lead_query)" class="btn btn-ls btn-primary">Search</button>
+                </div>   
+            </div>
+            
+            <div class="col-sm-2">
+                <div class="form-group"> 
+				    <input type="text" id="datepicker" ng-model="updateLeadFilter" ng-change="filterByDateRange()" class="form-control" placeholder="Lead Updated Date Filter"/>
+				    <p style="color: #555">Updated Date Filter:</p>
+				</div>
+            </div>
+            
+            <div class="col-sm-1">
+                <button class="btn btn-primary btn-ls" ng-click="resetDateFilters()">Reset</button>
+            </div>
+            
+            <div class="col-sm-2">
+                <button data-target="#bulk_upload_leads" data-toggle="modal" class="btn btn-ls btn-info">Bulk Upload</button>
+            </div>
+			
+			<div class="col-sm-1">
+                <button class="btn btn-info btn-xs pull-right" style="height: 34px;">Total: <span class="badge">{{total_row}}</span></button>
+            </div>
+
+        </div>
+    </div>
+    
+	<div class="row">
+		<div class="col-md-12 col-lg-12">
+			<div class="panel panel-default">
+				
+                
+				<table class="table table-bordered" style="font-size:10x; word-wrap:break-word; table-layout: fixed;">
+					<thead>
+						<th ng-if="false" width="5%">#</th>
+						<th class="make_center" width="7%"><input type="checkbox" ng-click="checkAll()" ng-model="isCheckBox"/> Check All</th>
+							
+						<th class="make_center" width="8%">Enquiry ID</th>
+						<th class="make_center" width="10%">Client Name</th>
+						<th class="make_center" width="12%">Client Number</th>
+						<th class="make_center" width="10%">Created By</th>
+						<th class="make_center" width="10%">Current CRM</th>
+						<th class="make_center" width="10%">Projects</th>
+						<th width="15%">CRM disposition</th>
+						<th width="15%">Sales Disposition</th>
+						<th class="make_center" width="8%">TM Name</th>
+						<!--<th class="make_center" width="8%">SM Name</th>-->
+						<th ng-if="false" class="make_center" width="10%">Current status</th>
+						<!--<th width="10%">Assign Meeting</th>-->
+						<th class="make_center" width="10%">Created On</th>
+						<th class="make_center" width="10%">Last Updated On</th>
+                        <th class="make_center" width="8%">Action</th>    
+					</thead>
+					<tbody>
+						<tr ng-repeat="data in leadsData">
+							<td ng-if="false" ng-bind="pagination.page_size * (pagination.current_page-1) + $index+1" width="2%"></td>
+							<td width="2%" class="make_center">
+								<input type="checkbox" ng-model="data.Selected" ng-click="checkOneByOne()"/>
+							</td>
+								
+							<td class="popover_item make_center" width="6%">  <a ng-href="lead_detail/{{data.enquiry_id}}/{{data.lead_id}}" title="view details">{{data.enquiry_id}}</a></td>
+							<td width="10%" class="make_center">{{data.customerName}}</td>
+							<td width="12%" class="make_center">{{data.customerMobile}}</td>
+							<td width="5%" class="make_center">{{data.agent_name}}</td>
+							<td width="5%" class="make_center">{{data.current_crm}}</td>
+							<td width="10%" class="make_center"><a href="" ng-click="view_projects(data.enquiry_projects)">{{data.enquiry_projects[0].project_name}}</a>
+							</td>
+                                
+							<td>
+                                {{data.last_crm_activity}} {{(data.last_crm_sub_activity != '') ? data.last_crm_sub_activity: 'NA'}} 
+                            </td>
+                            
+                            
+							<td>
+                                {{data.last_sales_activity}} 
+                                {{(data.last_sales_sub_activity != '') ? data.last_sales_sub_activity: ''}}</td>
+							<td width="8%" class="make_center">{{data.asm_name}}</td>
+							<!--<td></td>-->
+								
+							<td ng-if="false" width="10%" enquiry:current:status enquiry="{{data.enquiry_id}}" class="make_center"></td>  
+							<!--<td></td>-->
+							<td width="10%" class="make_center">{{data.leadAddDate | date :'mediumDate'}}</td>
+							<td width="10%" class="make_center">{{data.leadUpdateDate | date :'mediumDate'}}</td>
+							<td width="10%" class="make_center"><button class="btn btn-primary btn-xs" ng-click="popUpHistoryList(data.enquiry_id)">History</button></td>
+						</tr>
+							
+						<tr ng-if="!leadsData.length">
+							<td colspan="15" class="make_center">
+								<p class="text-danger">No Lead Found</p>
+							</td>
+						</tr>
+							
+					</tbody>
+				</table>
+				<!--Pagination Starts here -->
+				<div class="pull-right" ng-if="total_row > 0">
+					<ul uib-pagination  total-items="total_row"  ng-model="pagination.current_page"  items-per-page="pagination.page_size" boundary-links="pagination.show_boundary_links" max-size="pagination.pagination_size" ng-change="pagination.changePage ( pagination.current_page )">
+					</ul>
+				</div>
+				<!--Pagination Ends here-->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Modal: Client enquiry projects-->
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="panel panel-default">
+				<div class="panel-heading"><div class="panel-title">Client Enquiry Projects</div></div>
+				<div class="panel-body">
+					<table class="table table-bordered">
+						<tr><th>Name</th><th>City</th><th>URL</th></tr>
+						<tr ng-repeat="item in client_enquiry_projects">
+							<td>{{item.project_name}}</td>
+							<td>{{item.project_city}}</td>
+							<td>{{item.project_url}}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal: Client enquiry projects-->
+
+
+<!--Area Sales Managers List BS Popup modal --> 
+<div class="modal fade" id="asm_users_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				Area Sales Managers
+			</div>
+			<div class="modal-body" style="width: 100%;">
+				
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Enquiry Id: <span ng-repeat="selected_enquiry_id in selectedLeads">{{selected_enquiry_id}} |</span>
+					</div>
+					<table class="table table-bordered">
+						<thead>
+							<th>Employee Name</th>
+							<th class="make_center">Total Capacity</th>
+							<th class="make_center">Remaining Capacity</th>
+							<th class="make_center">Action</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="emp in area_sales_managers">
+								<td>{{emp.asm_name}}</td>
+								<td class="make_center">{{emp.total_capacity_of_month && emp.total_capacity_of_month || '-'}}</td>
+								<td class="make_center">{{emp.total_remaining_capacity_of_the_month && emp.total_remaining_capacity_of_the_month || '-'}}</td>
+								<td class="make_center">
+									<button 
+										ng-disabled="!emp.total_capacity_of_month"
+										assign:btn
+										employee="emp"
+                                        ng-click="manualLeadAssignToAsm($event,emp.asm_id)"
+										enquiry_id=""
+										class="btn btn-xs btn-primary">Assign</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal:  Area Sales Managers List BS Popup modal --> 
+
+
+<!--Agent List BS Popup modal --> 
+<div class="modal fade" id="agent_users_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				Agent List
+			</div>
+			<div class="modal-body" style="width: 100%">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Enquiry Id: <span ng-repeat="selected_enquiry_id in selectedLeads">{{selected_enquiry_id}} |</span>
+					</div>
+					<div id="agentModel">
+						<table class="table table-bordered">
+							<thead>
+								<th>Employee Name</th>
+								<th class="make_center">Action</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="agent in agent_list">
+									<td>{{agent.agent_name}}</td>
+									<td class="make_center">
+										<button assign:btn employee="agent" ng-click="manualLeadAssignToAgent($event,agent.id)" enquiry_id="" class="btn btn-xs btn-primary">Assign</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal:  Agent List BS Popup modal --> 
+
+
+<!--Lead History List BS Popup modal --> 
+<div class="modal fade" id="history_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">Lead History List</div>
+			<div class="modal-body">
+				<div class="panel panel-default">
+					<div class="panel-heading"><span style="font-weight: bold;">Enquiry Id:</span> <span>#{{history_enquiry_id}}</span></div>
+					<div id="historyModel">
+						<div class="row notes-container ng-scope" ng-repeat="history in historyData" ng-if="historyData.length" style="padding: 15px 0px 0px 15px;">
+							<div class="col-sm-12">
+								<div class="media">
+									<div class="media-left">
+										<a href="#"><i class="fa fa-history fa-2x" aria-hidden="true"></i></a>
+									</div>
+									<div class="media-body">
+										<h4 class="media-heading italic-date ng-binding"> {{history.created_at}} <span style="font-style:normal; font-weight:bold; color: #000; " class="ng-binding">(ENQ: {{history.enquiry_id}})</span></h4>
+										<div ng-bind-html="history.details" ng-if="!history.meta_data" class="ng-binding ng-scope" style="width: 490px;">{{history.details}}</div>
+										
+										<div ng-bind-html="history.details" ng-if="history.meta_data && history.meta_data.display_type != 'popup'"></div>
+										
+										<div ng-if="history.meta_data && history.meta_data.display_type == 'popup' " class="ng-scope" style="width: 490px;"><p><span style="font-weight: bold;">Note:</span>{{history.meta_data.data}}<br><span style="font-weight: bold;">Added By:</span>{{history.meta_data.added_by}}</p>
+										</div>
+									</div>
+								</div>
+								<hr style="border: 1px solid #aeada8; margin: 10px;"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal: Lead History List BS Popup modal --> 
+
+<!--Bulk upload modal-->
+<div class="modal fade" id="bulk_upload_leads" ng-controller="bulkUploadLeads">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+<!--        <h5 class="modal-title">Bulk Upload leads</h5>-->
+        
+        <button class="btn btn-primary btn-xs" ng-click="downloadSampleCsv()">Download Sample CSV</button>  
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+            <h3>Upload CSV For Bulk Assignment Of Enquiries</h3>
+            
+            <form name="csv_parse_form"> 
+                <div class="form-group">
+                    <label>Select File: </label>
+                    <input type="file" name="bulk_upload_csv_file" /> <br/>
+                    <p ng-class="{'text-danger':file_error!=''}" ng-bind-html="file_error"></p>
+                    <p ng-class="{'text-primary': file_details.name!=''}">{{file_details.name}}</p>
+                </div>
+               
+                <div class="form-group">
+                    <button type="button" ng-click="parseCsv()" class="btn btn-primary" id="btn">Upload</button>
+                    <i class="glyphicon glyphicon-cog gly-spin" ng-if="file_parsing_start"></i>
+                </div>
+            </form>
+            <div class="parse_result" id="parse_result">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p class="text-success">{{csvParseSuccess}}</p>    
+                    </div>    
+                </div> 
+            </div>
+          
+        </div>
+      </div>
+      <div class="modal-footer">
+<!--        <button type="button" class="btn btn-primary">Upload</button>-->
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" ng-click="onCloseBulkUpload()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+	(function ($){
+			var date = new Date(); 
+			var element = $('#datepicker');
+
+			var current = {
+				year: date.getFullYear(),
+				month: (date.getMonth() < 9 ? '0' + date.getMonth() : date.getMonth() + 1),
+				date: date.getDate()
+			};
+
+			var picker = new Pikaday({
+				field: document.getElementById('datepicker'),
+				format: 'DD-MM-YYYY',
+				firstDay: 1,
+				minDate: new Date('1900', '01', '01'),
+				maxDate: new Date(current.year, current.month, current.date),
+				yearRange: [1900, current.year],
+				showWeekNumber: true,
+					onSelect: function () {
+
+				}
+			});
+
+			$(document).ready(function (){
+				$('.popover_item').webuiPopover({
+						title : 'Projects',
+						animation : 'pop',
+						width : '260',
+						placement : 'left',
+						//                    style :'inverse',
+						cache : true, // popover will destroy and recreate every time after close 
+						arrow : true,
+						closeable : true,
+						dismissible : true,
+						type : 'html',
+						url : '#enquiry_project_list',
+						backdrop : true
+					});
+				});
+    	
+			$('#checkAll').click(function(){ 
+				if($('input:checkbox').is(':checked')){
+					$('input:checkbox').prop('checked',false);
+				}else{
+					$('input:checkbox').not(this).prop('checked', this.checked);
+				}
+			});
+		
+		})(jQuery);
+    
+    
+</script>

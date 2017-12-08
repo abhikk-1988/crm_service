@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> <i class="fa fa-money tooltip-button demo-icon icon-edit" title=".icon-edit"></i>Payment Collection Details</h3>
+        </div>
+        <ol class="breadcrumb">
+          <li><a href="#" style="cursor:default;" >Enquiry Id</a></li>
+          <li><a href="#" style="cursor:default;" >{{enquiry_id}}</a></li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Collection Detail</h3>
+    </div>
+    
+    <table class="table table-bordered">
+        <thead style="font-size:11px;">
+        <th>#</th>
+        <th>Payment Type</th>
+        <th>Amount</th>
+        <th>Cheque Number</th>
+        <th style="width:92px;">Cheque Date</th>
+        <th>Bank Name</th>
+        <th>Account Number</th>
+        <th>IFSC Code</th>
+        <th>Transaction Number</th>
+        <th>Transaction Mode</th>
+        <th style="width:115px;">Transaction Date</th>
+        <th>Payment Collected By</th> 
+        </thead>
+        <tbody>
+            <tr ng-repeat="detail in payment_details">
+                <td ng-bind="$index + 1"></td>
+                <td class="make_center">
+                    <a ng-href="#" ng-click="downloadReceipt(detail.file)" style="color:blue; cursor:pointer;text-decoration:none;">{{detail.payment_type | uppercase}}</a>
+                </td>
+                <td>{{detail.amount}}</td>
+                <td is-cell-value cell-value="{{detail.cheque_number}}">{{(detail.cheque_number) ? detail.cheque_number : '-'}}</td>
+                <td format-date x-date="{{detail.cheque_date}}">{{(detail.cheque_date) ? detail.cheque_date : '-'}}</td>
+                <td is-cell-value cell-value="{{detail.bank_name}}">{{(detail.bank_name) ? detail.bank_name : '-'}}</td>
+                <td is-cell-value cell-value="{{detail.account_number}}">{{(detail.account_number) ? detail.account_number : '-'}}</td>
+                <td is-cell-value cell-value="{{detail.ifsc_code}}">{{(detail.ifsc_code) ? detail.ifsc_code : '-'}}</td>
+                <td is-cell-value cell-value="{{detail.transaction_number}}">{{(detail.transaction_number) ? detail.transaction_number : '-'}}</td>
+                <td is-cell-value cell-value="{{detail.transaction_mode}}">{{(detail.transaction_mode) ? detail.transaction_mode : '-'}}</td>
+                <td format-date x-date="{{detail.transaction_date}}">{{(detail.transaction_date) ? detail.transaction_date : '-'}}</td>
+                <td is-cell-value cell-value="{{detail.employee_name}}">{{detail.employee_name}}</td>
+            </tr>
+            
+            <tr ng-if="payment_details.length < 1 ">
+                <td colspan="12" class="make_center danger">No Record Found</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

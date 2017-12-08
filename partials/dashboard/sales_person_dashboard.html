@@ -1,0 +1,120 @@
+<div class="row">
+    <div class="col-md-3" style="padding: 15px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title make_center">Total Assigned
+                </h3>
+            </div>
+            <div class="panel-body make_center"> 
+                {{total_assigned_sales_person}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" style="padding: 15px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title make_center">Total Accepted
+                </h3>
+            </div>
+            <div class="panel-body make_center">
+                {{total_accepted_leads}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" style="padding: 15px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title make_center">Site Visit
+                </h3>
+            </div>
+            <div class="panel-body make_center">
+                {{total_sitevisit_assigned}}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3" style="padding: 15px;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title make_center">Meeting
+                </h3>
+            </div>
+            <div class="panel-body make_center">
+                {{total_meeting_assigned}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="white_bg" style="background-color: #FFF;width: 100%; height: auto; float: left;">
+    
+    <div style="padding: 15px;">
+      
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12" ng-if="sales_person_pie_chart[0]">
+            
+                <canvas
+                    class="chart chart-pie" 
+                    chart-colors="sales_person_pie_chart[0].colors" 
+                    chart-options="sales_person_pie_chart[0].options" 
+                    chart-data="sales_person_pie_chart[0].data" 
+                    chart-labels="sales_person_pie_chart[0].labels">
+                </canvas>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12" ng-if="sales_person_pie_chart[1]">
+                <canvas
+                    class="chart chart-pie" 
+                    chart-colors="sales_person_pie_chart[1].colors" 
+                    chart-options="sales_person_pie_chart[1].options" 
+                    chart-data="sales_person_pie_chart[1].data" 
+                    chart-labels="sales_person_pie_chart[1].labels">
+                </canvas>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12" ng-if="sales_person_pie_chart[2]">
+                <canvas
+                    class="chart chart-pie" 
+                    chart-colors="sales_person_pie_chart[2].colors" 
+                    chart-options="sales_person_pie_chart[2].options" 
+                    chart-data="sales_person_pie_chart[2].data" 
+                    chart-labels="sales_person_pie_chart[2].labels">
+                </canvas>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12" ng-if="sales_person_pie_chart[3]">
+                <canvas
+                    class="chart chart-pie" 
+                    chart-colors="sales_person_pie_chart[3].colors" 
+                    chart-options="sales_person_pie_chart[3].options" 
+                    chart-data="sales_person_pie_chart[3].data" 
+                    chart-labels="sales_person_pie_chart[3].labels">
+                </canvas>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12" ng-if="sales_person_pie_chart[4]">
+                <canvas
+                    class="chart chart-pie" 
+                    chart-colors="sales_person_pie_chart[4].colors" 
+                    chart-options="sales_person_pie_chart[4].options" 
+                    chart-data="sales_person_pie_chart[4].data" 
+                    chart-labels="sales_person_pie_chart[4].labels">
+                </canvas>
+            </div>
+               
+        </div>  
+        
+       <!-- <div style="float: left; width:520px;" ng-repeat="chart in sales_person_pie_chart">
+                
+                
+                    <canvas
+                    class="chart chart-pie" 
+                    chart-colors="chart.colors" 
+                    chart-options="chart.options" 
+                    chart-data="chart.data" 
+                    chart-labels="chart.labels">
+                    </canvas>
+                    
+                    
+        
+        </div> -->
+    </div>
+    
+    <p class="text-danger make_center" style="margin-bottom: 5px;" ng-if="no_pie_chart_count == 5">No Data Found</p>
+</div>
+

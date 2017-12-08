@@ -1,0 +1,591 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+		<h3 class="fts-17"> <i class="glyphicon glyphicon-user tooltip-button demo-icon icon-edit" title=".icon-edit"></i>
+			Lead Management System
+		<div class="pull-right">
+		<div class="pull-right">
+
+		<input type="file" name="file" id="file" class="inputfile" ng-files="getTheFiles($files)" />
+		<label class="btn btn-info" for="file">Import CSV</label>
+
+		<!--a href="javascript:;" ng-click="export_csv()" class="btn btn-info">Export CSV</a-->
+		<!--a href="{{baseUrl}}queryupload/query_report.csv"  class="btn btn-info"  >Download CSV Format</a-->
+
+		<a href="javascript:;"  class="btn btn-info" ng-click="import_format_csv()"  >Download CSV Format</a>
+
+		<button  ng-show="queryCount"  id="popover_item"  class="btn btn-info">Selected Queries<span class="badge ng-binding " ng-bind="queryCount"></span></button>
+		
+		 <button  ng-hide="queryCount"   class="btn btn-info">Selected Queries <span class="badge ng-binding " ng-bind="queryCount"></span></button>
+		</div>
+		</div>
+		</h3>
+		</div>
+    </div>
+	<div>
+	
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+	<style>
+	.inputfile {
+		width: 0.1px;
+		height: 0.1px;
+		opacity: 0;
+		overflow: hidden;
+		position: absolute;
+		z-index: -1;
+	}
+  
+  .inputfile + label {
+    color: white;
+    background-color: black;
+    display: inline-block;
+ }
+</style>
+	<h3 class="panel-title"></h3>
+	
+	
+	<div  class="row">
+		
+		<div   class="col-md-12" >
+			
+			<div class="form-group">
+				<div class="col-md-2">
+				
+					<button type="button" class="btn btn-info btn-sm" id="changeDate">
+					<span class="glyphicon glyphicon-calendar"></span> Calendar
+					<input   type="text" style="width:0px;height:0px;bolder:0px;background-color:#5bc0de;"  id="dateRangText" ng-model="dateRangeLead"  ng-change="changeDD()" name="daterange" ng-value="01/01/2015 - 01/31/2015"  />
+					</button>
+				</div>
+				
+				
+			<div class="col-md-3">
+				
+				<input class="form-control" type="text" ng-model="search.$" placeholder="Search"/>
+			
+			</div>	
+			
+			<div class="col-md-7">
+				<span  class="well well-sm pull-right" ng-bind="dateRangeTextShow"></span>
+			</div>
+			
+			<!--div class="col-md-1">
+				
+				<span  class="well well-sm pull-right"  ng-bind="enquiryData.length" ></span>
+			
+			</div-->
+		
+		<!--div class="col-md-1">
+		<a  href="javascript:;"  ng-click="capture_lead()">
+		<img  src="stuffs/icons/reff.png"></a>
+		</div-->
+	
+		</div>
+		
+		</div>
+				
+				
+					
+			</div>
+	
+	</div>
+	
+	<div>
+			<!--a class="pull-right" style="position: relative;bottom: 20px;border-radius: 0px;padding-left: 4px; outline: none;" href="javascript:;"  ng-click="capture_lead()">
+			<img  src="stuffs/icons/reff.png"></a-->
+	</div>
+
+	</div>
+	<div class="panel-body">
+		<table id="example" class="display table table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+				<th>Sno.&nbsp;</th>
+				<!--th>R/U</th-->
+				<th>
+				
+				<span class="pull-right"><input type="checkbox"  ng-click="check_all_ivr()"  ng-model="check_all"/></span>
+				
+				</th>
+				<th>Enquiry ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <!--th>Enquiry</th-->
+                <th>Created On</th>
+                <th>IVR Push</th>
+				<!--th>IVR Push Type</th-->
+				<th>Agent Assign</th>
+				<th>Source</th>
+				<th class="make_center">Agent</th>
+				
+            </tr>
+		
+		</thead>
+		<tbody class="tlist">
+			<tr ng-repeat="row in enquiryData|startFrom: offset | limitTo:page_record_limit | filter:search:strict"   >
+			    
+				<td  style="">
+					<span ng-bind="$index + 1"></span>
+				</td>
+					<!--td>
+						<span ng-if="row.syn_marker_new==0" class="badge ng-binding ">U</span>
+						<span ng-if="row.syn_marker_new==1" class="badge ng-binding ">R</span>
+					</td-->
+				<td>
+			
+				<!--input type="checkbox"  ng-model="row.checked"/-->
+				
+				<!--span   ng-if="row.ivr_push_status=='Reopen'"  class="pull-right"><input type="checkbox"  ng-model="row.checked"   ng-click="prepare_push_ivr()"   ng-checked="check_all"/></span-->
+				
+				<span   class="pull-right">
+					<input type="checkbox"  ng-model="row.checked"   ng-click="prepare_push_ivr()"/>
+					
+					
+					<!--input type="checkbox"  ng-model="row.checked"   ng-click="prepare_push_ivr()"   ng-checked="check_all"/-->
+				
+				</span>
+					
+					
+				</td>
+				<td>{{row.query_request_id}}</td>
+				<td>{{row.name}}</td>
+				<td>{{row.phone}}</td>
+				<td>{{row.email}}</td>
+				<td>{{row.created_time}}</td>
+			
+				<td style="background-color:#088524;color:#fff;" ng-if="row.ivr_push_status=='Pushed'" >
+					<span >Yes</span>
+				</td>
+				
+				<td  style="background-color:#E9EE4C;color:#fff;"  ng-if="row.ivr_push_status=='Pending'">
+					<span>No</span>
+				</td>
+				
+				<td  style="background-color:#D39208;color:#fff;"  ng-if="row.ivr_push_status=='Reopen'">
+					<span>Reopen</span>
+				</td>
+				
+				<td style="background-color:#088524;color:#fff;" ng-if="row.agent_assign_status=='1'" >
+					<span >Yes</span>
+				</td>
+				
+				<td  style="background-color:#E9EE4C;color:#fff;"  ng-if="row.agent_assign_status=='0'">
+					<span>No</span>
+				</td>
+				
+				<td>{{row.enquiry_from}}</td>
+				
+				<td >
+					<a  href="javascript:;" ng-click="assign_agent(row)" >View</a>
+				</td>
+				
+			</tr>
+			<tr ng-if="enquiryData.length==0">
+					<td colspan="100%" align="center" style="color:red;"><b>No Records</b></td>
+			</tr>
+		</tbody>
+    </table>
+
+	<div class="pull-right" ng-if="enquiryData.length > 0">
+     <ul uib-pagination total-items="enquiryData.length" ng-model="current_page_number" items-per-page="page_record_limit" boundary-links="true" max-size="4" ng-change="pageChange(current_page_number)"></ul>
+     </div>
+   </div>
+</div>
+<!--Template for selected projects--> 
+<div id="selected_queries"   style="display:none;">
+ <table   style="background-color:#3399FF"  class="table table-striped">
+  <thead>
+    <tr>
+      <th>Sno.</th>
+	  <th>Enquery ID</th>
+	  <th>Name</th>
+	  <th>Phone</th>
+	  <th>Email</th>
+	  <th></th>
+    </tr>
+  </thead>
+ <tbody style="background-color:#DAF7A6;">
+	<tr ng-repeat="item in prepare_ivr">
+		
+		<td ng-bind="$index+1"></td>	
+		<td ng-bind="item.query_request_id"></td>
+		<td ng-bind="item.name"></td>
+		<td ng-bind="item.phone"></td>
+		<td ng-bind="item.email"></td>
+		
+		<td>
+			<a href="javascript:;"  ng-click="remove_selected($index, 1)" >X</a>
+		</td>
+	
+	</tr>
+ </tbody>
+</table>
+	
+	<div class="row well">
+	
+		<div class="col-md-12">
+			<div  ng-if="myMessage">
+				<div class="well" ng-bind="myMessage"></div>
+			</div>
+			<div class="row">
+				   <div class="col-lg-2">
+					<input type="radio" name="ptype" ng-click="det_chooser('ivr')" value="ivr" ng-model="ptypes" />IVR
+				   </div>
+				   <div class="col-lg-2">
+					<input type="radio" name="ptype" ng-click="det_chooser('agent')" value="Agent" ng-model="ptypes" ng-checked="true" />Agent
+				   </div>
+				   <div class="col-lg-6">
+			
+					<!--select ng-if="agentShow1"  ng-model="selectedAgent"  ng-change="change_agent(this.value)">
+					<option value="">--Please select Agent--</option>
+					<option ng-repeat="x in agentData" value="{{x.id}}">{{x.firstname}} {{x.lastname}} </option>
+					</select-->
+
+					<select ng-if="agentShow1" ng-change="updateValue(agent)"  ng-model="agent.id" ng-options="agent.id as agent.firstname for agent in agentData">
+				 </select>
+				</div>
+				<div class="col-lg-2">
+					<input  type="button"  ng-click="push_to_ivr()" class="btn btn-primary" value="Submit" />
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+<!--Template End-->
+
+<div id="classModal" class="modal fade bs-example-modal-lg" tabindex="-1"
+    role="dialog" aria-labelledby="classInfo" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              ×
+            </button>
+            <h4 class="modal-title" id="classModalLabel">
+             <span ng-bind="QueryDetailData.query_request_id"></span> : 
+			 <span ng-bind="QueryDetailData.name"></span>
+			</h4>
+          </div>
+		    <div align="center">
+				<!--{{QueryDetailData}}-->
+			</div>
+			 <div class="modal-body">
+				<ul>
+					<li ng-repeat="(key, value ) in QueryDetailData.leadJson">
+						<span><b ng-bind="key"></b></span>
+						<span ng-bind="value"></span>
+					</li>
+				</ul>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">
+				  Close
+				</button>
+			</div>
+	 </div>
+    </div>
+ </div>
+ 
+ <div id="assignAgent" class="modal fade bs-example-modal-lg" tabindex="-1"
+    role="dialog" aria-labelledby="classInfo" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+			X
+            </button>
+            <h4 class="modal-title" id="classModalLabel">
+             <span ng-bind="QueryData.query_request_id"></span> : 
+			</h4>
+          </div>
+		   <div align="center">
+			</div>
+			 <div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 well">
+							<ul class="list-group">
+									
+									<li class="list-group-item" ng-repeat="(key,value) in QueryData.leadJson">
+									
+									<div class="row">
+										
+										<div class="col-md-4">
+											<b><span ng-bind="key"></span></b>
+										</div>
+										
+										<div class="col-md-8">
+											<b><span ng-bind="value"></span></b>
+										</div>
+									
+									</div>	
+								</li>
+							</ul>
+					</div>
+				
+				</div>
+					
+				
+			<div ng-if="assignmentAction=='success'" class="row">
+					
+					<div class="col-md-12">
+						<div class="alert alert-{{assignmentAction}}">
+							<span ng-bind="assignmentMessage"></span>
+						</div>
+					</div>
+			</div>		
+			
+			<div class="row well" ng-if="selectedUser">
+				<div  class="col-lg-10">
+					<div class="row">
+						<div class="col-md-3" >
+							<img  class="img-thumbnail" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" class="img-circle">
+						</div>
+						<div class="col-md-9">
+							<h3>
+								<span ng-bind="selectedUser.firstname"></span>
+								<span ng-bind="selectedUser.lastname"></span>
+							</h3>
+							<h6>Email: <span ng-bind="selectedUser.email"></span></h6>
+							<h6>Contact: <span ng-bind="selectedUser.contactNumber"></span></h6>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+			
+			
+			<div class="row well-sm">
+				<div ng-if="selectedUser" class="row  pull-right">
+							
+							<div class="col-md-9" >
+								
+								<div ng-if="agent_assign_status==1">
+									<a href="javascript:;" class="btn btn-info" ng-click="remove_assignment(selectedUser.id , QueryData.id)">Remove Assignment</a>
+								</div>
+						 </div>	
+					</div>
+			</div>	
+			<div class="row" ng-if="agent_assign_status==0">
+				
+				<div class="well well-sm"><h3>Agents List</h3></div>
+				<div class="col-lg-4">
+					<ul class="list-group">
+							<li class="list-group-item" ng-repeat="agent in agentData">
+								<a href="javascript:;" ng-click="mark_assign(agent)" >
+									<span ng-bind="agent.firstname"></span>
+									<span ng-bind="agent.lastname"></span> 
+								</a>
+							</li>
+					</ul>
+				</div>
+				<div  class="col-lg-8">
+					
+					<div class="row" ng-if="selecteUserDetail">
+						<div class="col-md-3" >
+							<img class="img-thumbnail" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" class="img-circle">
+						</div>
+						<div class="col-md-9">
+							<h3>
+								<span ng-bind="selecteUserDetail.firstname"></span>
+								<span ng-bind="selecteUserDetail.lastname"></span>
+							</h3>
+							<h6>Email: <span ng-bind="selecteUserDetail.email"></span></h6>
+							<h6>Contact: <span ng-bind="selecteUserDetail.contactNumber"></span></h6>
+						</div>
+					</div>
+					
+					<div ng-if="selecteUserDetail" class="row  pull-right">
+							 <div class="col-md-9" >
+								<div ng-if="agent_assign_status==0">
+									<a href="javascript:;" class="btn btn-info" ng-click="save_assignment(selecteUserDetail.id , QueryData.id)">Assign Agent</a>
+								</div>
+						</div>	
+					</div>
+			</div>
+		</div>
+		<!--div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">
+				  Close
+				</button>
+		</div-->
+		</div>
+    </div>
+ </div>
+ </div>
+ 
+<div id="csvImportModal" class="modal fade bs-example-modal-lg" tabindex="-1"
+    role="dialog" aria-labelledby="classInfo" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+           
+		   <button type="button" class="close"  ng-click="CloseModal()" aria-hidden="true">
+              x
+            </button>
+			
+			<h4 class="modal-title" id="classModalLabel">
+             CSV Import message
+			</h4>
+          </div>
+		  <div class="modal-body">
+		  <!--{{totalCSVData}}-->
+		  
+		  <!-- New In -->
+			<div ng-if="totalCSVData.newIn.length > 0"  >
+			 
+			 <div class="bg-success row"> 
+					<div class="col-sm-12 "><b style="color:#000;" ><span ng-bind="totalCSVData.newIn.length"></span> <span> Quesrie(s) has been uploaded in LMS</span></b>
+					</div>
+			 </div>
+			
+			<div style="overflow: auto"> 
+				<table  style="display:none;"  class="table table-striped">
+					<thead class="thead-inverse">
+						<tr>
+							<th>SNo</th><th  ng-repeat="head in totalCSVData.csvHead" ng-bind="head"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr  ng-repeat="alr in totalCSVData.newIn" >
+							<td ng-bind="$index+1"></td><td ng-repeat="val in alr">{{val}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<hr />
+			</div>
+			<!-- end New In -->
+		   <!-- Phone Validation  -->
+		   
+		   
+		   
+			<div ng-if="totalCSVData.phoneValidation.length > 0">
+			<div class="bg-danger row"> 
+			<div class="col-sm-12 centered">
+			<b style="color:#000;" ><span ng-bind="totalCSVData.phoneValidation.length"></span> <span> 	Phone Number Validation Error</span></b>
+			</div>
+			</div>	
+			<div style="overflow: auto"> 
+			<table class="table table-striped">
+				<thead class="thead-inverse">
+					<tr >
+						<th>SNo</th><th  ng-repeat="head in totalCSVData.csvHead" ng-bind="head"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="alr in totalCSVData.phoneValidation" >
+						<td ng-bind="$index+1"></td><td ng-repeat="val in alr">{{val}}</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>	
+			<hr />
+			</div>
+			<!-- End phone Validation -->
+			<!-- Already  exist in database-->
+			<div ng-if="totalCSVData.already.length > 0">
+				<div class="bg-info row"> 
+					<div class="col-sm-12"><b style="color:#000;" ><span ng-bind="totalCSVData.already.length"></span> <span> phone number are 	already in LMS database or may be dublicate phone number in imported CSV.</span></b>
+					</div>
+				</div>
+				
+			<div style="overflow: auto"> 	
+			  <table class="table table-striped">
+				<thead class="thead-inverse">
+					<tr>
+						<th>SNo</th><th  ng-repeat="head in totalCSVData.csvHead" ng-bind="head"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="alr in totalCSVData.already" >
+						<td ng-bind="$index+1"></td>
+						
+						<td ng-repeat="val in alr">{{val}}</td>
+						
+					</tr>
+				</tbody>
+			</table>	
+			</div>
+			</div>
+			<!-- end  of Already exist in database-->
+		 </div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" ng-click="CloseModal()" >
+			  Close
+			</button>
+		</div>
+	 </div>
+    </div>
+ </div>
+ <script type="text/javascript">
+    (function ($){
+		
+		$(document).ready(function (){
+			
+			$('#popover_item').webuiPopover({
+                    title : 'Queries Assignment',
+                    animation : 'pop',
+                    width:'700',//can be set with  number
+					height:'400;',//can be set with  number
+                    placement : 'auto',
+					// style :'inverse',
+                    cache : true, // popover will destroy and recreate every time after close 
+                    arrow : true,
+                    closeable : true,
+                    dismissible : true,
+                    type : 'html',
+                    url : '#selected_queries',
+                    backdrop : true,
+					//  onshow : function ($element){},
+					//  onhide : function ($element){}
+               });
+		});
+	
+	})(jQuery);
+   
+</script>
+<style>
+.modal-header-primary {
+	color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #428bca;
+}
+</style>
+<script type="text/javascript">
+
+(function ($){
+$('input[name="daterange"]').daterangepicker(
+{
+	locale: {
+      format: 'DD/MM/YYYY'
+    },
+    startDate: new Date(),
+    endDate:  new Date(),
+}, 
+function(start, end, label) {
+	//alert("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+});
+
+	
+$('#changeDate').click(function(){
+	
+	$('input[name="daterange"]').trigger( "click" );
+
+});
+	
+}(jQuery));
+
+</script>
+
+
+
+
+

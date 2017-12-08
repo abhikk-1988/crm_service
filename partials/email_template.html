@@ -1,0 +1,57 @@
+<style type="text/css">
+
+        #attachment_container{
+             padding: 5px;
+             position: relative;
+             top: 5px;
+             float: left;
+        }
+
+        #attachment_container > div{
+            border: 1px solid #CCC;
+            padding:5px;
+            margin: 3px 3px;
+            float: left;
+        }
+    </style>
+
+<!--<div style="position: absolute;top: 36px;right: 47px;padding: 10px;background-color: #E5E5E5;z-index: 105;width:662px;color:#000;">-->
+    <div>
+    <div ng-controller="emailCtrl" class="container-fluid">
+        
+        <div>
+            <div class="form-group">
+                <label>To</label>
+                <input class="form-control" type="text" ng-model="email_data.toEmail" value="" />
+            </div>
+            <div class="form-group">
+                <label>Cc</label>
+                <input class="form-control" type="text" ng-model="email_data.ccEmail" value="" />
+            </div>
+            <div class="form-group">
+                <label>Bcc</label>
+                <input class="form-control" type="text" ng-model="email_data.bccEmail" value="" />
+            </div>
+            <div class="form-group">
+                <label>Subject</label>
+                <input class="form-control" type="text" ng-model="email_data.subject" value="" />
+            </div>
+            <div class="form-group">
+                <label>Select Project Template</label>
+                <select class="form-control" ng-change="getProjectTemplate(email_data.mailer_project)" ng-model="email_data.mailer_project" ng-options="project as project.project_name for project in mailerProjects">
+                    <option value="">--Select Project--</option>
+                </select>
+            </div>
+        </div>
+        <div ckeditor="options" ng-model="email_data.content" ready="onReady()"></div>
+        <div id="attachment_container">
+            <div ng-repeat="attachment in email_data.attachments">
+                {{attachment.original_name}} <span style="cursor: pointer;" ng-click="removeAttachment(attachment.save_name)">&times;</span>
+            </div>
+        </div>
+
+        <div style="width:100%; float: left; margin:10px;">
+            <button class="btn btn-primary" ng-click="sendMail(email_data)">Send</button>
+        </div>
+    </div>
+    </div>

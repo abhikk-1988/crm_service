@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> 
+				<i class="fa fa-envelope tooltip-button demo-icon icon-edit" title=".icon-edit"></i>Previous Capacity
+				<div class="left_heading_items pull-right">
+					<a ng-href="capacity" class="label label-info">Back To Listing</a>
+				</div>
+			</h3>
+			
+			<!--bread crumbs-->
+			<ol class="breadcrumb" style="position:relative; top:25px;">
+				<li><a href="#">{{user_for_showing_previous_capacites.getDesignationFromSlug()}}</a></li>
+				<li><a href="#">{{user_for_showing_previous_capacites.name}}</a></li>
+			</ol>
+			
+        </div>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+		<div class="panel-heading">{{current_month_in_text}} {{current_year}}</div>
+			<table class="table table-striped">	
+				<thead>
+					<th>#</th>
+					<th>Month</th>
+					<th>Year</th>
+					<th class="make_center">Total Capacity</th>
+					<th class="make_center">Remaining Capacity</th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="data in previous_capacities" ng-if="previous_capacities.length > 0">
+						<td ng-bind="$index+1"></td>
+						<td>{{data.month | getMonthName:'full'}}</td>
+						<td>{{data.year}}</td>
+						<td class="make_center">{{data.capacity}}</td>
+                        <td class="make_center">{{data.remaining_capacity}}</td>
+					</tr>
+					<tr ng-if="previous_capacities.length < 1">
+						<td colspan="6" class="make_center text-danger">No Record Found</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!--BS Modal-->
+<div class="modal fade project_wise_capacity_model" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"> 
+	<div class="modal-dialog modal-lg">
+		
+		<div class="modal-content"> 
+			<div class="modal-header">Assigned Projects with Capacities</div> 
+			<div class="modal-body">
+				
+				<table class="table table-bordered">
+					<thead><th>Project</th><th class="make_center">Capacity</th><th class="make_center">Remaining Capacity</th></thead>
+					<tbody>
+						<tr ng-repeat="project in project_with_capacities">
+							<td>{{project.project}}</td>
+							<td class="make_center">{{project.capacity}}</td>
+							<td class="make_center">{{project.remaining_capacity}}</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
+		</div> 
+	</div> 
+</div>
+
+<!--End: BS Modal-->

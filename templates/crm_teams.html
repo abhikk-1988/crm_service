@@ -1,0 +1,96 @@
+<div class="row" style="margin-top:30px;margin-right: 0px; margin-left:0px; ">
+    <div class="col-md-7">
+        <div class="page-header">
+            <h3 class="fts-17">CRM Teams</h3>
+        </div>
+
+        <p class="text-danger" ng-if="teams.length < 1">No Team Found</p>
+        <div class="col-md-5" ng-repeat="team in teams">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">Team {{team.team_name}} | <span style="color:chocolate;">{{team.asm_name}}</span>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <th>CRM Name</th>
+                            <th class="make_center">Action</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="member in team.members">
+                                <td style="font-size: 12px;">{{member.member_name}}</td>
+                                <td class="make_center">
+                                    <i class="glyphicon glyphicon-remove deletable" ng-click="removeSingleMember(member.id,member.member_name,team.id)" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <button class="btn btn-xs btn-default" ng-if="false">Edit</button>
+                            <button class="btn btn-xs btn-danger" ng-click="deleteTeam(team.id,team.asm_name)">Delete</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-5">
+        <div class="page-header">
+            <h3 class="fts-17">Create New CRM Team</h3>
+        </div>
+
+        <form class="form-horizontal">
+            <fieldset>
+
+                <!-- Select Basic -->
+                <div class="form-group">
+                    <p class="col-md-4">Select ASM <span class="mandate">*</span></p>
+                    <div class="col-md-8">
+                        <select id="asm_list" name="asm" ng-change="getCrmList(new_team.asm.asm_id)" class="form-control" ng-model="new_team.asm"
+                            ng-options="asm.asm_name for asm in asm_options">
+                            <option value="">Select ASM</option>
+                            </select>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <p class="col-md-4">Team Name <span class="mandate">*</span></p>
+                    <div class="col-md-8">
+                        <input id="team_name" name="team_name" ng-model="new_team.team_name" type="text" placeholder="Enter Team Name" class="form-control input-md">
+                        <span class="help-block">Maximum character allowed for team name is 30</span>
+                    </div>
+                </div>
+
+                <!-- Select Multiple -->
+                <div class="form-group">
+                    <p class="col-md-4">Select CRM <span class="mandate">*</span></p>
+                    <div class="col-md-8">
+                        <div isteven-multi-select input-model="members" output-model="new_team.team_members" button-label="crm_name" item-label="crm_name"
+                            tick-property="ticked" max-labels="2" min-search-length="3" helper-elements="all none filter" search-property="crm_name">
+                    </div>
+                </div>
+    </div>
+
+    <!-- Button -->
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="save_team"></label>
+        <div class="col-md-4">
+            <button id="save_team" name="save_team" ng-click="saveCrmTeam(new_team)" class="btn btn-primary">Save Team</button>
+        </div>
+    </div>
+    </fieldset>
+    </form>
+
+    <div class="bg-warning" style="padding: 10px;" ng-if="is_error">
+        <p class="text-warning">Errors</p>
+        <div id="error_container"></div>
+    </div>
+</div>
+</div>

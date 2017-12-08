@@ -1,0 +1,720 @@
+<style type="text/css">
+	#historyModel{
+		max-height: 400px;
+		min-height: 250px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		word-wrap: break-word;
+	}
+	.label-success{
+	    cursor: pointer;
+	    background-color: green;
+	    padding: 6px;
+	    border: 0;
+	    font-size: 11px;
+	    font-weight: normal;
+	}
+	.label-pending{
+	    cursor: pointer;
+	    background-color: #FFD51D;
+	    padding: 5px;
+	    border: 0;
+	    font-size: 10px;
+	    font-weight: normal;
+	}
+	
+	.label-remove{
+	    cursor: pointer;
+	    background-color: #ff0000;
+	    padding: 6px;
+	    border: 0;
+	    font-size: 11px;
+	    font-weight: normal;
+	}
+</style>
+<div class="row">
+	<div class="col-lg-6 col-md-6 col-sm-6">
+		<div class="page-header">
+			<h3 class="fts-17" style="padding-left: 1%; margin-top: 0px;"> <i class="glyphicon glyphicon-user tooltip-button demo-icon icon-edit" title=".icon-edit"></i>My Leads</h3>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="voice-logger" tabindex="-1" role="dialog" data-backdrop="static">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="stopAllAudio()"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Recording</h4>
+			  </div>
+			  <div class="modal-body">
+                    <table class="table table-striped table-borded">
+                        <tr>
+                            <th>Call Type</th>
+                            <th>Date</th>
+                            <th>#</th>
+                        </tr>
+                        <tr ng-repeat="recording in recordings">
+                            <td>{{recording.call_type}}</td>
+                            <td>{{recording.insert_date_time}}</td>
+                            <td>
+                                <audio controls>
+                                    <source ng-src="{{trustSrc(recording.audio)}}" type="audio/mpeg">
+                                    Your browser does not support the audio tag.
+                                </audio> 
+                            </td>
+                        </tr>
+                    </table>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="stopAllAudio();">Close</button>
+			</div>
+			</div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div>
+
+<!--Today's Workout-->
+<div class="panel panel-default" ng-controller="todaysWorkout">
+	<div class="panel-heading">
+		<div class="panel-title">Today's Workout</div>
+	</div>
+
+	<!-- Tabs -->
+	<div class="panel-body">
+		<uib-tabset type="tabs" justified="true">
+			<uib-tab active="active_workout_tab" index="$index + 1" ng-if="tab.show" ng-repeat="tab in tabs" heading="{{tab.title}}"
+				select="activeTab($index,tab)" style="font-size:13px;" disable="tab.disabled">
+
+				<div class="tab-content" style="padding:15px;border:1px solid #ccc; border-top:none;background-color:#fdfdfd;overflow-y: auto;max-height: 246px;overflow-x: hidden;">
+					<table class="table table-bordered" style="font-size:12px;" >
+						<thead>
+<!--
+							<th>#</th>
+                            
+-->
+                            <th>Enquiry</th>
+                            <th ng-if="view == 'view2' || view == 'view3'">Current CRM</th>
+							<th>Client Name</th>
+							<th>Client Number</th>
+                            <th ng-if="view == 'view4' || view == 'view2' || view == 'view3'">Client Address</th>
+                            <th>{{tab.title}} Time</th>
+                            <th>Project's</th>
+                            <th>Remarks</th>
+                            <th ng-if="view != 'view2' && view!='view3'">Created On</th>
+                            <th ng-if="view != 'view4' && view !='view2' && view !='view3'">CRM</th>
+							<th ng-if="view != 'view4' && view != 'view2' && view !='view3'">Location Address</th>
+							<th ng-if="view == 'view1'">Assign Lead</th>
+							<th ng-if="view == 'view2'">Assign Lead</th>
+							<th ng-if="view == 'view3'">Action</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in workout_leads">
+								<td>
+                                    <a  ng-if="view!='view3'" ng-href="lead_detail/{{row.enquiry_id}}/{{row.lead_id}}">{{row.enquiry_id}}</a>
+                                    <span ng-if="row.is_lead_accepted == '0' && view == 'view3'">{{row.enquiry_id}}</span>
+                                    <a href="lead_detail/{{row.enquiry_id}}/{{row.lead_id}}" ng-if="row.is_lead_accepted == '1' && view == 'view3'">{{row.enquiry_id}}</a>
+                                    
+								</td>
+                                
+                                <td ng-if="view == 'view2' || view == 'view3'">{{row.current_crm}}</td>
+                                
+                                <td>{{row.customerName}}</td>
+								<td>{{row.customerMobile}}</td>
+                                <td ng-if="view == 'view4' || view == 'view2' || view == 'view3'">{{row.customerAddress}}</td>
+                                <td>{{row.future_followup_date}} {{row.future_followup_time}}</td>
+                                <td>{{row.projects.join(',')}}</td>
+                                <td>{{row.enquiry_status_remark}}</td>
+                                <td ng-if="view != 'view2' && view !='view3'" format:dt dt="{{row.leadAddDate}}" format="dd/MMM/yyyy HH:mm a">{{row.leadAddDate}}</td>
+                                
+                                
+                                <td ng-if="view != 'view4' && view !='view2' && view!='view3'">{{row.lead_created_by}}</td>
+								<td ng-if="view != 'view4' && view !='view2' && view!='view3'" title="{{row.meeting_address}}">{{row.meeting_address | limitTo:20}} {{(row.meeting_address.length > 20 ? '...' : '')}}</td>
+								<td ng-if="view == 'view1'">
+									<button class="btn btn-primary btn-xs" ng-click="popUpAsmList(row.enquiry_id, row.lead_category)" lead_status={{data.disposition_status_id}}>Assign Lead
+									</button>
+								</td>
+								<td ng-if="view == 'view2'">
+									<button class="btn btn-primary btn-xs"  ng-click="showLeadAssignDialog(row.enquiry_id)">Assign Lead
+									</button>
+								</td>
+								<td ng-if="view == 'view3'">
+									<button class="btn btn-xs btn-info" ng-click="acceptLead(row.enquiry_id)">Accept</button>
+									<button class="btn btn-xs btn-danger" ng-click="rejectLeadAction(row.enquiry_id)">Reject</button>
+									<button class="btn btn-info btn-xs" data-target="#lead_info_popup_panel_meeting" data-toggle="modal" ng-click="getLeadStatusAndDetail(row.enquiry_id)">
+										View
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<p ng-if="workout_leads.length < 1" class="bg-danger" style="text-align:center;padding:2px;">No Leads Found</p>
+				</div>
+
+				</uib-tab>
+		</uib-tabset>
+	</div>
+</div>
+
+<!--Table panel-->
+<div class="panel panel-default">
+
+	<div class="panel-heading" style="height:90px;">Lead Listing
+
+		<div class="row pull-right" style="padding:0px;">
+			<div class="col-md-2" style="font-size:11px;">
+				<p style="margin:0px;">Lead Updation Filter</p>
+				<input type="text" name="updation_date" placeholder="Date Filter" ng-model="lead_updation_date_filter" ng-change="filterByDateRange(lead_daterange)"
+					style="padding:5px;height:34px;width:136px;text-align:center;font-weight:bold;" />
+				<button class="btn btn-xs btn-default" style="margin-top:3px;" ng-click="resetUpdateLeadDateFilter()">Reset</button>
+			</div>
+			<div class="col-md-3" style="font-size:11px;margin-left:15px;">
+				<p style="margin:0px;">Search in leads</p>
+				<input type="text" ng-model="lead_query" class="form-control" placeholder="search leads" />
+			</div>
+
+			<div class="col-md-2" style="font-size:11px;">
+				<p style="margin:0px;">Lead Creation Filter</p>
+				<input type="text" id="date_filter_from" name="creation_date" placeholder="Date Filter" ng-model="lead_creation_date_filter"
+					ng-change="filterByDateRange(lead_daterange)" style="padding:5px;height:34px;width:136px;text-align:center;font-weight:bold;"
+				/>
+				<button class="btn btn-xs btn-default" style="margin-top:3px;" ng-click="resetCreateLeadDateFilter()">Reset</button>
+			</div>
+
+			<div class="col-md-3" id="enquiry_status_filter" style="font-size:11px;margin-left:15px;">
+				<p style="margin:0px;">Filter by enquiry status</p>
+				<select class="form-control" ng-model="enquiry_filter_status" ng-options="status.id as status.status_title for status in primary_enquiry_status_list"
+					ng-change="filterLeads()">
+					<option value="">-- Select Enquiry Status --</option>
+					</select>
+			</div>
+		</div>
+	</div>
+
+	<!--Table for view 1-->
+	<table class="table table-bordered" ng-if="view === 'view1'" style="overflow-x: auto; overflow-y: hidden;">
+		<thead>
+			<th>#</th>
+			<th>Recording</th>
+			<th>Created On</th>
+			<th>Last Update On</th>
+			<th ng-if="!hideLeadAddedByCol">CRM</th>
+			<th>Enquiry ID</th>
+			<th class="make_center">Category</th>
+			<th>Client Name</th>
+			<th>Client Number</th>
+			<th>Project</th>
+			<th>Status</th>
+			<th>Sub Status</th>
+			<th>TM Name</th>
+			<th>Sales Manager</th>
+			<th class="make_center">Assign Lead</th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="data in leads | startFrom : ((pagination.current_page - 1) * pagination.page_size) | limitTo: pagination.page_size | filter : lead_query">
+				<td ng-bind="pagination.page_size * (pagination.current_page-1) + $index+1"></td>
+				<td><a href="javascript:void(0)" ng-click="show_logger(data.customerMobile)" data-toggle="modal" data-target="#voice-logger" ng-if="data.recording_url != false" style="color:green;">
+                            <span class="fa fa-2x fa-microphone"></span>
+                        </a>
+                    
+                        <a href="javascript:void(0)" ng-if="data.recording_url == false" style="color:red;">
+                            <span class="fa fa-2x fa-microphone-slash"></span>
+                        </a></td>
+				<td format-dt dt="{{data.leadAddDate}}" format="dd/MMM/yyyy HH:mm a">{{data.leadAddDate}}</td>
+				<td format-dt dt="{{data.leadUpdateDate}}" format="dd/MMM/yyyy HH:mm a">{{data.leadUpdateDate}}</td>
+				<td ng-if="!hideLeadAddedByCol">{{data.lead_added_by_employee}}</td>
+				<td><a ng-href="lead_detail/{{data.enquiry_id}}/{{data.lead_id}}">{{data.enquiry_id}}</a></td>
+				<td class="make_center">{{data.lead_category && data.lead_category || '-'}}</td>
+				<td>{{data.customerName}}</td>
+				<td>{{data.customerMobile}}</td>
+				<td>{{data.projects.join(',')}}</td>
+				<td>{{getStatusTitle(data.disposition_status_id)}}</td>
+				<td>{{getStatusTitle(data.disposition_sub_status_id)}}</td>
+				<td>{{data.asm_name}}</td>
+				<td>{{data.sp_name}}</td>
+				<td>
+                    <button ng-if="!data.lead_assigned_to_asm" class="btn btn-primary btn-xs" ng-click="popUpAsmList(data.enquiry_id, data.lead_category)" is-enable-for-assign lead_status={{data.disposition_status_id}}>Assign Lead</button>
+
+					<span class="label label-primary" ng-if="!!data.lead_assigned_to_asm">Assigned</span>
+				</td>
+			</tr>
+			<tr class="text-danger" ng-if="leads.length <= 0">
+				<td class="make_center" colspan="14">No Record Found</td>
+			</tr>
+		</tbody>
+	</table>
+	<!--End: Table for view 1-->
+
+	<!--Table for view 2 (area sales manager)-->
+	<table class="table table-bordered" ng-if="view ==='view2'" style="font-size: 12px;">
+		<thead>
+            <th ng-if="false">#</th>
+            <th>Recording</th>
+            <th class="make_center">Enquiry ID</th>
+            <th>CRM</th>
+            <th>Client Name</th>
+            <th>Project</th>
+            <th>SM Name</th>
+            <th>Sales Disposition</th>
+			<th>Created On</th>
+			<th>Last Update On</th>
+			<th ng-if="false">Client Email</th>
+			<th ng-if="false">Client Mobile</th>
+			<th class="make_center">Action</th>
+		</thead>
+
+		<tbody>
+			<tr ng-repeat="data in leads | startFrom : ((pagination.current_page - 1) * pagination.page_size) | limitTo: pagination.page_size | filter : lead_query">
+				<td ng-if="false" ng-bind="pagination.page_size * (pagination.current_page-1) + $index+1"></td>
+				<td>
+					<a href="javascript:void(0)" ng-click="show_logger(data.customerMobile)" data-toggle="modal" data-target="#voice-logger" ng-if="data.recording_url != false" style="color:green;">
+                            <span class="fa fa-2x fa-microphone"></span>
+                    </a>
+                    
+                    <a href="javascript:void(0)" ng-if="data.recording_url == false" style="color:red;">
+                    	<span class="fa fa-2x fa-microphone-slash"></span>
+                    </a>
+                </td>
+				<td class="make_center">
+					<a ng-if="(data.lead_assigned_to_sp > 0 && data.is_lead_accepted == 1) && !data.remove_lead" ng-href="lead_detail/{{data.enquiry_id}}/{{data.lead_id}}">{{data.enquiry_id}}</a>
+					
+					<span ng-if="data.remove_lead || (data.lead_assigned_to_sp == 0 || data.lead_assigned_to_sp == NULL || data.lead_assigned_to_sp > 0) && data.is_lead_accepted == 0">{{data.enquiry_id}}</span>
+				
+				</td>
+                <td>{{data.lead_added_by_employee}}</td>
+                <td>{{data.customerName}}</td>
+                <td>{{data.projects.join(',')}}</td>
+                <td><span is:value value="{{data.sp_name}}">{{data.sp_name}}</span></td>
+                <td>{{data.sales_disposition}}</td>
+                <td format-dt dt="{{data.leadAddDate}}" format="dd/MMM/yyyy HH:mm a">{{data.leadAddDate}}</td>
+				<td format-dt dt="{{data.leadUpdateDate}}" format="dd/MMM/yyyy HH:mm a">{{data.leadUpdateDate}}</td>
+				<td ng-if="false">{{data.customerEmail}}</td>
+				<td ng-if="false">{{data.customerMobile}}</td>
+				
+				<td>
+					<a ng-if = "((data.lead_assigned_to_sp == 0 || data.lead_assigned_to_sp == NULL) && data.is_lead_accepted == 0 && data.is_lead_rejected == 0) && !data.remove_lead" class="label label-primary label-pending" style="font-weight:normal;" ng-href="#" ng-click="showLeadAssignDialog(data.enquiry_id)">Assign Lead</a>
+					
+					<a ng-if = "(data.lead_assigned_to_sp > 0 && data.is_lead_accepted == 0 && data.is_lead_rejected == 0) && !data.remove_lead" class="label label-primary" style="font-weight:normal;" ng-href="#">Pending for Accepatnce</a>
+					
+					<a ng-if = "data.is_lead_rejected == 1" class="label label-primary" style="font-weight:normal;" ng-href="#">Rejected By SP</a>
+
+					<a ng-href="#" class="label label-primary make_center label-success not-active" style="cursor:pointer;" title="{{data.lead_assigned_to_sp_on | date : 'dd MMMM, yyyy' : '+0530'}}" ng-if="(data.lead_assigned_to_sp > 0 && data.is_lead_accepted == 1) && !data.remove_lead">Assigned</a>
+					
+					<a ng-href="#" class="label label-primary label-remove make_center not-active" style="cursor:pointer;" title="{{data.lead_assigned_to_sp_on | date : 'dd MMMM, yyyy' : '+0530'}}" ng-if="data.remove_lead">Removed</a>
+				</td>
+			</tr>
+			<tr class="text-danger" ng-if="leads.length <= 0">
+				<td class="make_center" colspan="12">No Record Found</td>
+			</tr>
+		</tbody>
+	</table>
+	<!--End: Table for View 2-->
+
+	<!-- view 3: Table for sales person -->
+	<table class="table table-bordered" ng-if="view ==='view3'">
+		<thead>
+			<th width="5%" ng-if="false">#</th>
+			<th width="2%">Recording</th>
+            <th width="10%" class="make_center">Enquiry ID</th>
+            <th width="10%" ng-if="!hideLeadAddedByCol">CRM</th>
+            <th width="10%">Client Name</th>
+            <th width="10%">Project</th>
+            <th width="15%">Sales Disposition</th>
+			<th width="15%">Created On</th>
+			<th width="15%">Last Update On</th>
+			<th width="10%" ng-if="false">Client Email</th>
+			<th width="10%" ng-if="false">Client Mobile</th>
+			
+			<th width="15%" class="make_center col-sm-3">Action</th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="data in leads | startFrom : ((pagination.current_page - 1) * pagination.page_size) | limitTo: pagination.page_size | filter : lead_query">
+				<td width="5%" ng-if="false" ng-bind="pagination.page_size * (pagination.current_page-1) + $index+1"></td>
+				<td width="2%">
+					<a href="javascript:void(0)" ng-click="show_logger(data.customerMobile)" data-toggle="modal" data-target="#voice-logger" ng-if="data.recording_url != false" style="color:green;">
+                            <span class="fa fa-2x fa-microphone"></span>
+                    </a>
+                    
+                    <a href="javascript:void(0)" ng-if="data.recording_url == false" style="color:red;">
+                    	<span class="fa fa-2x fa-microphone-slash"></span>
+                    </a>
+                </td>
+				<td width="10%" class="make_center">
+					<span ng-if="data.current_status != 'accepted'">{{data.enquiry_id}}</span>
+					<a ng-if="data.current_status =='accepted'" ng-href="lead_detail/{{data.enquiry_id}}/{{data.lead_id}}" role="link">	{{data.enquiry_id}} </a>
+				</td>
+                <td width="10%" ng-if="!hideLeadAddedByCol">{{data.lead_added_by_employee}}</td>
+                <td width="10%">{{data.customerName}}</td>
+                <td width="10%">{{(data.projects.join(','))}}</td>
+                <td width="15%">{{data.sales_disposition}}</td>
+                <td width="15%" format:dt dt="{{data.leadAddDate}}" format="dd/MMM/yyyy HH:mm a">{{data.leadAddDate | date : 'dd MMMM, yyyy' : '+0530'}}</td>
+				
+                <td width="15%" format:dt dt="{{data.leadUpdateDate}}" format="dd/MMM/yyyy HH:mm a">{{data.leadUpdateDate | date : 'dd MMMM, yyyy' : '+0530'}}</td>
+                
+				<td width="10%" ng-if="false">{{data.customerEmail}}</td>
+				<td width="10%" ng-if="false">{{data.customerMobile}}</td>
+                
+				<td width="15%" class="make_center">
+					<button class="btn btn-xs btn-info" ng-click="acceptLead(data.enquiry_id)" ng-if="data.current_status=='assign'">Accept</button>
+					
+					<button class="btn btn-xs btn-danger" ng-click="rejectLeadAction(data.enquiry_id)" ng-if="data.current_status=='assign' || data.current_status=='rejected'">Reject</button>
+					<div ng-if="data.current_status=='assign'">&nbsp;</div>
+					
+					<button class="btn btn-info btn-xs" data-target="#lead_info_popup_panel_meeting" data-toggle="modal" ng-click="getLeadStatusAndDetail(data.enquiry_id)" ng-if="data.current_status=='accepted' || data.current_status=='assign'"> View Lead </button>
+					<div ng-if="data.current_status=='accepted'">&nbsp;</div>
+					<span class="label label-info" style="cursor: pointer;background-color: Green; font-size: 13px;" ng-if="data.current_status=='accepted'" title="Lead accepted on {{data.lead_accept_datetime | date :'fullDate'}}">Lead Accepted</span>
+					<span class="label label-info" style="cursor: no-drop;background-color: red; font-size: 13px;" ng-if="data.current_status=='accepted & rejected'" title="Lead accepted on {{data.lead_accept_datetime | date :'fullDate'}}">Accepted & Rejected</span>
+					
+					<span class="label label-info" style="cursor: no-drop;background-color: red; font-size: 13px;" ng-if="data.current_status=='removed'" title="Lead accepted on {{data.lead_accept_datetime | date :'fullDate'}}">Removed</span>
+				</td>
+			</tr>
+			<tr class="text-danger" ng-if="leads.length <= 0">
+				<td class="make_center" colspan="12">No Record Found</td>
+			</tr>
+		</tbody>
+	</table>
+	<!--End: Table for view 3-->
+
+	<!--Table for view 4 (Agent)-->
+	<table class="table table-bordered" ng-if="view ==='view4'" style="font-size: 12px;">
+		<thead>
+			<th ng-if="false">#</th>
+			<th class="make_center" width="4%">Recording</th>
+            <th class="make_center" width="10%">Enquiry ID</th>
+            <th class="make_center" width="12%">Client Name</th>
+            <th class="make_center" width="10%">Project</th>
+            <th class="make_center" width="12%">CRM Disposition</th>
+            <th class="make_center" width="12%">Sales Disposition</th>
+            <th class="make_center" width="10%">TM Name</th>
+            <th class="make_center" width="10%">SM Name</th>
+			<th class="make_center" width="10%">Created On</th>
+			<th class="make_center" width="10%">Last Updated On</th>
+			
+<!--			<th>Remark</th>-->			
+<!--            <th ng-if="false">Client Email</th>-->
+<!--			<th ng-if="false">Client Mobile</th>-->
+		</thead>
+		<tbody>
+            <tr ng-class="!data.self_lead ? 'bg-danger' : ''" ng-repeat="data in leads | startFrom : ((pagination.current_page - 1) * pagination.page_size) | limitTo: pagination.page_size | filter : lead_query">
+				<td ng-if="false" ng-bind="pagination.page_size * (pagination.current_page-1) + $index+1"></td>
+				<td style="text-align:center;">
+                    <a href="javascript:void(0)" ng-click="show_logger(data.customerMobile)" data-toggle="modal" data-target="#voice-logger" ng-if="data.recording_url != false" style="color:green;"><span class="fa fa-2x fa-microphone"></span></a>
+                    
+					<a href="javascript:void(0)" ng-if="data.recording_url == false" style="color:red;"><span class="fa fa-2x fa-microphone-slash"></span></a>
+                </td>
+                <td class="make_center">
+                	<button class="btn btn-success btn-xs" ng-if="data.self_lead" style="width: 60px;"><a style="color: white;" ng-href="lead_detail/{{data.enquiry_id}}/{{data.lead_id}}">{{data.enquiry_id}}</a></button>
+                    <!--<span ng-click="popUpHistoryList(data.enquiry_id)" ng-if="!data.self_lead">{{data.enquiry_id}}</span>-->
+                    <button style="width: 60px;" ng-if="!data.self_lead" class="btn btn-warning btn-xs" ng-click="popUpHistoryList(data.enquiry_id)">{{data.enquiry_id}}</button>
+                </td>
+                <td>{{data.customerName}}</td>
+                <td>{{data.projects.join(',')}}</td>
+                <td>{{getStatusTitle(data.crm_disposition_status_id, data.crm_sub_disposition_status_id)}}</td>
+                <td>{{getStatusTitle(data.sales_disposition_status_id, data.sales_sub_disposition_status_id)}}</td>
+                <td>{{data.asm_name}}</td>
+				<td>{{data.sp_name}}</td>
+				<td format-dt dt="{{data.leadAddDate}}" format="dd/MMM/yyyy HH:mm a">{{data.leadAddDate}}</td>
+				<td format-dt dt="{{data.leadUpdateDate}}" format="dd/MMM/yyyy HH:mm a">{{data.leadUpdateDate}}</td>
+			</tr>
+			<tr class="text-danger" ng-if="leads.length <= 0">
+                <td class="make_center" colspan="13">No Record Found</td>
+            </tr>
+		</tbody>
+		</table>
+		<!--End: Table for view 4-->
+		
+        <!--Table for view 5-->
+			<table class="table table-bordered " ng-if="view === 'view5'" style="overflow-x: auto; overflow-y: hidden; ">
+			<thead>
+			<th>#</th>
+			<th>Lead Generation Date</th>
+			<th>Lead Added By</th>
+			<th>Enquiry ID</th>
+			<th class="make_center ">Lead ID</th>
+			<th class="make_center ">Lead Category</th>
+			<th>Client Name</th>
+			<th>Status</th>
+			<th>Sub Status</th>
+			<th>Lead Assigned To ASM <small>(area sales manager)</small></th>
+			<th>Lead Assigned To SP <small>(sales person)</small></th>
+			
+			</thead>
+			<tbody>
+				<tr ng-repeat="data in leads | startFrom : ((pagination.current_page - 1) * pagination.page_size) | limitTo: pagination.page_size
+					| filter : lead_query ">
+					<td ng-bind="pagination.page_size * (pagination.current_page-1) + $index+1 "></td>
+					<td>{{data.leadAddDate | date : 'dd MMMM, yyyy' : '+0530'}}</td>
+					<td>{{data.lead_added_by_employee}}</td>
+					<td><a ng-href="lead_detail/{{data.enquiry_id}}/{{data.lead_id}} ">{{data.enquiry_id}}</a></td>
+					<td class="make_center ">{{ ( data.lead_id.toLowerCase() === 'null'  ? 'NA' : data.lead_id ) }}</td>
+					<td class="make_center ">{{data.lead_category && data.lead_category || '-'}}</td>
+					<td>{{data.customerName}}</td>					
+					<td>{{getStatusTitle(data.disposition_status_id)}}</td>
+					<td>{{getStatusTitle(data.disposition_sub_status_id)}}</td>
+					<td>{{data.asm_name}}</td>
+                    <td>{{data.sp_name}}</td>
+				</tr>
+                <tr class="text-danger " ng-if="leads.length <=0 ">
+			         <td class="make_center " colspan="12 ">No Record Found</td>
+		        </tr>
+			</tbody>
+			</table>
+		<!--End: Table for view 5 -->
+    
+<!--        TOTAL RECORDS COUNT-->
+        
+            <div class="pull-left " style="position:relative; top:25px; ">
+                <button class="btn btn-info btn-xs ">Total Records: <span class="badge badge-info ">{{leads.length}}</span></button>    
+            </div>
+<!--        End: TOTAL RECORDS COUNT-->
+    
+		<!--Pagination--> 
+			<div class="pull-right " ng-if="leads.length> 0">
+
+					<!--Select option for no. of pages-->
+					<select ng-options="page for page in [10,20,30,'All']" ng-change="changePageSize(page_size)" ng-model="page_size" style="height:26px;position:relative;top:-32px;right:20px;">
+					<option value="">Select page size</option>
+					<option ng-repeat="page in pages" value="{{page}}">{{page}}</option>
+				</select>
+
+					<ul uib-pagination total-items="leads.length" ng-model="pagination.current_page" items-per-page="pagination.page_size" boundary-links="pagination.show_boundary_links"
+						max-size="pagination.pagination_size" ng-change="pagination.changePage ( pagination.current_page )">
+						</ul>
+</div>
+<!--End: Pagination-->
+
+<!--</div>-->
+</div>
+
+<!--Lead reject Modal-->
+<div class="modal fade" id="lead_reject_modal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Rejecting Lead</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+					<span aria-hidden="true">&times;</span> 
+				</button>
+				<p class="text-primary" style="position: relative; top:17px;">Enquiry ID - {{reject_lead_enquiry_id}}</p>
+			</div>
+			<div class="modal-body">
+				<form class="form">
+					<div class="form-group">
+						<textarea style="height:150px;" ng-model="lead_reject_reason" class="form-control" placeholder="Enter your reason here"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" ng-disabled="!lead_reject_reason" class="btn btn-default btn-xs" ng-click="rejectLead(lead_reject_reason, reject_lead_enquiry_id)">Reject Lead</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Area Sales Managers List BS Popup modal -->
+<div class="modal fade" id="asm_users_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				Area Sales Managers
+			</div>
+			<div class="modal-body">
+
+				<div class="panel panel-default">
+					<div class="panel-heading" ng-hide="0">
+						Enquiry Id: {{enquiry_id_for_asm_assignment}}
+					</div>
+					<table class="table table-bordered">
+						<thead>
+							<th>Employee Name</th>
+							<th class="make_center">Total Capacity</th>
+							<th class="make_center">Remaining Capacity</th>
+							<th class="make_center">Action</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="emp in area_sales_managers">
+								<td>{{emp.asm_name}}</td>
+								<td class="make_center">{{emp.total_capacity_of_month && emp.total_capacity_of_month || '-'}}</td>
+								<td class="make_center">{{emp.total_remaining_capacity_of_the_month && emp.total_remaining_capacity_of_the_month || '-'}}</td>
+								<td class="make_center">
+									<button ng-disabled="!emp.total_capacity_of_month" assign:btn employee="emp" ng-click="manualLeadAssignToAsm($event,enquiry_id_for_asm_assignment,lead_category_for_asm_assignment,emp.asm_id)"
+										enquiry_id="{{enquiry_id_for_asm_assignment}}" class="btn btn-xs btn-primary">Assign</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--Modal to show sales person list-->
+
+<div class="modal fade" id="sales_person_modal">
+
+	<div class="modal-dialog" role="document">
+
+		<div class="modal-content">
+			<div class="modal-header">
+				Sales Persons
+			</div>
+
+			<div class="modal-body">
+
+				<div class="panel panel-default">
+					<div class="panel-heading" ng-hide="0">
+						Enquiry Id: {{lead_assign.enquiry_id}}
+					</div>
+					<table class="table table-bordered">
+						<thead>
+							<th>Employee Name</th>
+							<th class="make_center">Total Capacity</th>
+							<th class="make_center">Remaining Capacity</th>
+							<th class="make_center">Action</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="sales_person in sales_persons">
+								<td>{{sales_person.sales_person_name}}</td>
+								<td class="make_center">{{sales_person.capacity}}</td>
+								<td class="make_center">{{sales_person.remaining_capacity}}</td>
+								<td class="make_center">
+									<button assign:btn class="btn btn-xs btn-primary" ng-click="assignLeadToSalesPerson(sales_person.id)">Assign
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<!--Lead Info Popup Modal-->
+
+<div class="modal fade" id="lead_info_popup_panel_meeting">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">Lead Details</div>
+			<div class="modal-body" style="background-color: #B0E0E6;">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-3 bordered_bs_col fs12">Status</div>
+						<div class="col-md-9 bordered_bs_col">{{lead_status_data.status}}</div>
+					</div>
+					<div class="row" ng-if="lead_status_data.status_id == 3">
+						<div class="col-md-3 bordered_bs_col fs12">Project</div>
+						<div class="col-md-9 bordered_bs_col">
+							<a ng-href="{{lead_status_data.project[0].project_url}}" target="_blank">{{lead_status_data.project[0].project_name}}</a>
+						</div>
+					</div>
+					<div class="row" ng-if="lead_status_data.status_id == 6">
+						<div class="col-md-3 bordered_bs_col fs12">Project</div>
+						<div class="col-md-9 bordered_bs_col">
+							<a ng-href="{{lead_status_data.project[0].project_url}}" target="_blank">{{lead_status_data.project[0].project_name}}</a>
+						</div>
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-md-3 bordered_bs_col fs12">Date</div>
+						<div class="col-md-9 bordered_bs_col">{{lead_status_data.event_date | date : 'dd-MMM-yyyy HH:mm a'}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--Lead History List BS Popup modal --> 
+<div class="modal fade" id="history_list_popup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">Lead History List</div>
+			<div class="modal-body">
+				<div class="panel panel-default">
+					<div class="panel-heading"><span style="font-weight: bold;">Enquiry Id:</span> <span>#{{history_enquiry_id}}</span></div>
+					<div id="historyModel">
+						<div class="row notes-container ng-scope" ng-repeat="history in historyData" ng-if="historyData.length" style="padding: 15px 0px 0px 15px;">
+							<div class="col-sm-12">
+								<div class="media">
+									<div class="media-left">
+										<a href="#"><i class="fa fa-history fa-2x" aria-hidden="true"></i></a>
+									</div>
+									<div class="media-body">
+										<h4 class="media-heading italic-date ng-binding"> {{history.created_at}} <span style="font-style:normal; font-weight:bold; color: #000; " class="ng-binding">(ENQ: {{history.enquiry_id}})</span></h4>
+										<div ng-bind-html="history.details" ng-if="!history.meta_data" class="ng-binding ng-scope" style="width: 490px;">{{history.details}}</div>
+										
+										<div ng-bind-html="history.details" ng-if="history.meta_data && history.meta_data.display_type != 'popup'"></div>
+										
+										<div ng-if="history.meta_data && history.meta_data.display_type == 'popup' " class="ng-scope" style="width: 490px;"><p><span style="font-weight: bold;">Note: </span>{{history.meta_data.data}}<br><span style="font-weight: bold;">Added By: </span>{{history.meta_data.added_by}}</p>
+										</div>
+									</div>
+								</div>
+								<hr style="border: 1px solid #aeada8; margin: 10px;"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Modal: Lead History List BS Popup modal --> 
+
+<script type="text/javascript">
+	(function ($) {
+
+		var current = {};
+		current.year = new Date().getFullYear();
+		current.month = new Date().getMonth();
+		current.date = new Date().getDate();
+        
+        // get next month
+        let next_month = current.month + 1;
+        
+        if(parseInt(next_month) < 10 ){
+            current.month = '0' + next_month.toString();
+        }else{
+            current.month = next_month.toString();
+        }
+                
+		$('input[name="creation_date"]').daterangepicker(
+			{
+				locale: {
+					format: 'YYYY-MM-DD',
+					separator: ' / '
+				},
+				startDate: current.year + '-' + current.month + '-' + current.date,
+				endDate: current.year + '-' + current.month + '-' + current.date,
+				opens: 'left'
+			},
+			function (start, end, label) {
+				//alert("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+			}
+		);
+
+		$('input[name="updation_date"]').daterangepicker(
+			{
+				locale: {
+					format: 'YYYY-MM-DD',
+					separator: ' / '
+				},
+				startDate: current.year + '-' + current.month + '-' + current.date,
+				endDate: current.year + '-' + current.month + '-' + current.date,
+				opens: 'right'
+			},
+			function (start, end, label) {
+				//alert("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+			}
+		);
+
+
+	} (jQuery))
+
+</script>

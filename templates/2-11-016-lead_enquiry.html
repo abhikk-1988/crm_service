@@ -1,0 +1,245 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+		<h3 class="fts-17"> <i class="glyphicon glyphicon-user tooltip-button demo-icon icon-edit" title=".icon-edit"></i>
+			Lead Management System
+			
+		<div class="pull-right">
+		
+		<div class="pull-right">
+		
+		<input type="file" name="file" id="file" class="inputfile" ng-files="getTheFiles($files)" />
+		<label class="btn btn-info" for="file">Import CSV</label>
+		
+		<!--a href="{{baseUrl}}queryupload/query_report.csv"  class="btn btn-info"  >Download CSV Format</a-->
+		<button  ng-show="queryCount"  id="popover_item"  class="btn btn-info">Selected Queries<span class="badge ng-binding " ng-bind="queryCount"></span></button>
+		<button  ng-hide="queryCount"   class="btn btn-info">Selected Queries <span class="badge ng-binding " ng-bind="queryCount"></span></button>
+		</div>
+		</div>
+		</h3>
+		</div>
+    </div>
+	<div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+	<style>
+	.inputfile {
+		width: 0.1px;
+		height: 0.1px;
+		opacity: 0;
+		overflow: hidden;
+		position: absolute;
+		z-index: -1;
+	}
+  
+  .inputfile + label {
+    color: white;
+    background-color: black;
+    display: inline-block;
+ }
+</style>
+
+		 <h3 class="panel-title">LMS</h3>
+		<div>
+			<a class="pull-right" style="position: relative;bottom: 20px;border-radius: 0px;padding-left: 4px; outline: none;" href="javascript:;"  ng-click="capture_lead()">
+			<img  src="stuffs/icons/reff.png"></a>
+			<input type="text" class="pull-right" style="position: relative;bottom: 20px;border-radius: 0px;padding-left: 4px; outline: none;" ng-model="search.$" placeholder="Search"/>
+		</div>
+
+	</div>
+	<div class="panel-body">
+       <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+				<th>Sno.&nbsp;</th>
+				<!--th>R/U</th-->
+				<th>
+				<!--All <span class="pull-right"><input type="checkbox"  ng-click="check_all_ivr()"  ng-model="check_all"/></span> --></th>
+				<th>Enquiry ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <!--th>Enquiry</th-->
+                <th>Created On</th>
+                <th>IVR Push</th>
+				<!--th>IVR Push Type</th-->
+				<th>IVR Push On</th>
+				<th>Source</th>
+				<!--th class="make_center">Action</th-->
+				
+            </tr>
+		
+		</thead>
+		<tbody class="tlist">
+			<tr ng-repeat="row in enquiryData|startFrom: offset | limitTo:page_record_limit | filter:search:strict"   >
+			    
+				<td  style="">
+					<span ng-bind="$index + 1"></span>
+				</td>
+					<!--td>
+						<span ng-if="row.syn_marker_new==0" class="badge ng-binding ">U</span>
+						<span ng-if="row.syn_marker_new==1" class="badge ng-binding ">R</span>
+					</td-->
+				<td>
+					<span   ng-if="row.ivr_push_status=='Pending'"  class="pull-right"><input type="checkbox"  ng-model="row.checked"   ng-click="prepare_push_ivr()"   ng-checked="check_all"/></span>
+					<span   ng-if="row.ivr_push_status=='Reopen'"  class="pull-right"><input type="checkbox"  ng-model="row.checked"   ng-click="prepare_push_ivr()"   ng-checked="check_all"/></span>
+				</td>
+				<td>{{row.query_request_id}}</td>
+				<td>{{row.name}}</td>
+				<td>{{row.phone}}</td>
+				<td>{{row.email}}</td>
+				<td>{{row.created_time}}</td>
+        		<td style="background-color:#088524;color:#fff;" ng-if="row.ivr_push_status=='Pushed'" >
+					<span >{{row.ivr_push_status}}</span>
+				</td>
+				
+				<td  style="background-color:#E9EE4C;color:#fff;"  ng-if="row.ivr_push_status=='Pending'">
+					<span>Pending</span>
+				</td>
+				
+				<td  style="background-color:#D39208;color:#fff;"  ng-if="row.ivr_push_status=='Reopen'">
+					<span>Reopen</span>
+				</td>
+				
+				<!--td> 
+					<span ng-if="row.ivr_push_status=='Pushed'">{{row.ivr_push_type}}</span>
+					<span ng-if="row.ivr_push_status=='Pending'">---</span>
+				</td-->
+				
+				<td>
+					<span ng-if="row.ivr_push_status=='Pushed'">{{row.ivr_push_date}}</span>
+					<span ng-if="row.ivr_push_status=='Pending'">---</span>
+				</td>
+				<td>{{row.enquiry_from}}</td>
+				
+				<!--td>
+					
+					<a href="javascript:;" ng-click="ViewQuery(row)" >View</a>
+				
+				</td-->
+				
+			
+			</tr>
+		</tbody>
+    </table>
+
+	<div class="pull-right" ng-if="enquiryData.length > 0">
+     <ul uib-pagination total-items="enquiryData.length" ng-model="current_page_number" items-per-page="page_record_limit" boundary-links="true" max-size="4" ng-change="pageChange(current_page_number)"></ul>
+     </div>
+    
+	</div>
+	
+</div>
+
+
+<!--Template for selected projects--> 
+<div id="selected_queries"   style="display:none;">
+ <table   style="background-color:#3399FF"  class="table table-striped">
+  <thead>
+    <tr>
+      <th>Sno.</th>
+      <th>Name</th>
+      <th>Phone</th>
+	  
+	  <th></th>
+    </tr>
+  </thead>
+
+ <tbody style="background-color:#DAF7A6;">
+	<tr ng-repeat="item in prepare_ivr">
+     
+		<td ng-bind="$index+1"></td>	
+		<td ng-bind="item.name"></td>
+		<td ng-bind="item.phone"></td>
+		<td><a href="javascript:;" ng-click="prepare_ivr.splice($index, 1)" >X</a></td>
+	</tr>
+ </tbody>
+</table>
+	
+	<div class="modal-header-primary"  >
+		
+		<div text-align="right" >
+			
+			<input  type="button"  ng-click="push_to_ivr()" class="btn btn-primary" value="Push to IVR" />
+		
+		</div>
+	
+	</div>
+	
+</div>
+<!--Template End-->
+
+
+<div id="classModal" class="modal fade bs-example-modal-lg" tabindex="-1"
+    role="dialog" aria-labelledby="classInfo" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              ×
+            </button>
+            <h4 class="modal-title" id="classModalLabel">
+             Detail 
+            </h4>
+          </div>
+		
+			<div class="modal-body">
+			<!--{{QueryDetailData}}-->
+			
+			
+			</div>
+		
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">
+				  Close
+				</button>
+			</div>
+		
+     </div>
+      
+	  </div>
+  
+  </div>
+
+   <script type="text/javascript">
+    (function ($){
+		
+		$(document).ready(function (){
+			
+			$('#popover_item').webuiPopover({
+                    title : 'Selected Queries to IVR',
+                    animation : 'pop',
+                    width:'auto',//can be set with  number
+					height:'400;',//can be set with  number
+                    placement : 'auto',
+					// style :'inverse',
+                    cache : true, // popover will destroy and recreate every time after close 
+                    arrow : true,
+                    closeable : true,
+                    dismissible : true,
+                    type : 'html',
+                    url : '#selected_queries',
+                    backdrop : true,
+					//  onshow : function ($element){},
+					//  onhide : function ($element){}
+               });
+		});
+		
+   }) (jQuery);
+</script>
+<style>
+.modal-header-primary {
+	color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #428bca;
+}
+
+</style>
+
+
+
+
+

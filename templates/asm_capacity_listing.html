@@ -1,0 +1,83 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> 
+				<i class="fa fa-envelope tooltip-button demo-icon icon-edit" title=".icon-edit"></i>Capacity Listing
+				<span class="badge"></span>
+				<!--{{current_month}}/{{current_year}}-->
+				<div class="pull-right">
+					<button 
+					class="btn btn-xs btn-primary"
+					is:enable
+					>Add New Capacity for {{current_month}}, {{current_year}}
+					</button>
+				</div>				
+			</h3>
+			
+			<!-- bread crumbs -->
+			<ol class="breadcrumb" style="position:relative; top:25px;">
+					<li><a href="#">{{current_month}}</a></li>
+					<li><a href="#">{{current_year}}</a></li>
+			</ol>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+	
+	<!--Panel Heading-->
+	<div class="panel-heading">Capacities List</div>
+	<!--End: Panel Heading-->
+	
+	<!--Table Start-->
+	<table class="table table-striped">
+		<thead>
+			<th>#</th>
+			<th>ASM Name</th>
+			<th class="make_center">Total Capacity</th>
+			<th class="make_center">Remaining Capacity</th>
+			<th>Projects</th>
+			<th class="make_center">Action</th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="item in capacities">
+				<td ng-bind="$index+1"></td>
+				<td>{{item.asm_name}}</td>
+				<td class="make_center">{{item.total_capacity_of_month | handleNull}}</td>
+				<td class="make_center">{{item.total_remaining_capacity_of_the_month | handleNull}}</td>
+				<td>{{item.projects[0].project_name | handleNull}}
+					<i class="fa fa-caret-down" 
+					   style="cursor: pointer;" 
+					   aria-hidden="true" 
+					   ng-click="showProjects($event)"
+					   ng-if="item.projects.length > 1 "></i>
+					<div class="list-group" style="display: none;">
+						<div class="list-group-item capacity-projects" ng-repeat="project in item.projects">
+							<div><small>{{project.project_name}} | <b>{{project.capacity}}</b></small></div>
+						</div>
+					</div>
+				</td>
+				<td class="make_center">
+					<a ng-href="edit_capacity_asm/{{item.asm_id}}" style="text-decoration: none; margin-right: 5px;">
+						<i class="fa fa-pencil"  aria-hidden="true" style="cursor:pointer;" title="Edit capacity"></i>
+					</a>
+					<a ng-href="previous_capacities/{{item.asm_id}}/area_sales_manager" style="text-decoration: none;">
+						<i class="fa fa-history" aria-hidden="true" style="cursor:pointer;" title="View previous capacities"></i>
+					</a>
+				</td>
+			</tr>
+            
+            <tr ng-if="capacities.length < 1">
+            <td colspan="6" class="make_center danger">No Record Found</td>
+            </tr>
+            
+		</tbody>
+	</table>
+	<!--End: Table-->
+</div>
+
+
+<script type="text/javascript">
+	
+</script>

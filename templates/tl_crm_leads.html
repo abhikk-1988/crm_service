@@ -1,0 +1,144 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> <i class="glyphicon glyphicon-user tooltip-button demo-icon icon-edit" title=".icon-edit"></i>My Leads</h3>
+        </div>
+    </div>
+</div>
+
+	<div class="panel panel-primary ">
+	
+		<div class="panel-heading">
+		<div class="panel-title">
+			Leads Required Action
+		</div>
+	</div>
+		<div class="panel-body">
+		<table class="table table-bordered">
+			<thead>
+			<th>#</th>
+			<th>Lead Generation Date</th>
+			<th>Enquiry ID</th>
+			<th class="make_center">Lead ID</th>
+			<th>Lead Assigned To</th>
+			<th>Status</th>
+			<th>Sub Status</th>
+			<th class="make_center">Assign Lead</th>
+			</thead>
+			<tbody>
+				<tr ng-repeat="data in leads">
+					<td ng-bind="$index + 1"></td>
+					<td>{{data.leadAddDate | date : 'dd MMMM, yyyy' : '+0530'}}</td>
+					<td><a ng-href="lead_detail/{{data.enquiry_id}}/{{data.lead_id}}">{{data.enquiry_id}}</a></td>
+					<td class="make_center">{{ ((data.lead_id !== null)) && data.lead_id || 'NA' }}</td>
+					<td>{{(data.lead_reassign_to !== null) && data.firstname+' '+data.lastname || login_user_fullname }}</td>
+					<td>{{getStatusTitle(data.disposition_status_id)}}</td>
+					<td>{{getStatusTitle(data.disposition_sub_status_id)}}</td>
+					<td>
+						<div class="col-md-8">
+							<select class="form-control" ng-model="data.lead_assigned_to" ng-options="emp.id as emp.full_name for emp in sales_person">
+							<option value="">Select Sales Person</option>
+						</select>
+						</div>
+						<div class=col-md-3><button class="btn btn-info btn-xs" ng-click="assignLead(data);">Assign</button></div>
+						
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	</div>
+
+	<div class="panel panel-primary" ng-controller="callbackLeads">
+		<div class="panel-heading">
+			<h3 class="panel-title">Callbacks Leads</h3>
+		</div>
+		<div class="panel-body">
+			
+			<div class="table-responsive">
+			
+				<table class="table table-bordered">
+					<thead>
+				<th>#</th>
+				<th>Lead Generation Date</th>
+				<th>Followup Date </th>
+				<th>Followup Time </th>
+				<th>Client Name</th>
+				<th>Client Number</th>
+				<th>Client Land Ph.</th>
+				<th>Client Email</th>
+				<th>Enquiry ID</th>
+				<th>Lead Assigned To</th>
+				<th>Status</th>
+				<th>Sub Status</th>
+				</thead>
+					<tbody>
+					<tr ng-repeat="data in callback_leads">
+						<td ng-bind="$index + 1"></td>
+						<td>{{data.leadAddDate | date : 'dd MMMM, yyyy' : '+0530'}}</td>
+						<td>{{data.future_followup_date | date : 'fullDate' : '+0530'}}</td>
+						<td>{{data.future_followup_time}}</td>
+						<td>{{data.customerName}}</td>
+						<td>{{data.customerMobile}}</td>
+						<td>{{data.customerLandline}}</td>
+						<td>{{data.customerEmail}}</td>
+						<td><a ng-href="leadDetail/{{data.enquiry_id}}">{{data.enquiry_id}}</a></td>
+						<td>{{login_user_fullname }}</td>
+						<td>{{getStatusTitle(data.disposition_status_id)}}</td>
+						<td>{{getStatusTitle(data.disposition_sub_status_id)}}</td>
+					</tr>
+				</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+
+<div class="row" ng-controller="technicalIssueLeads">
+	<div class="col-xs-12 col-md-12">
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="panel-title">
+					Technical Issue Leads
+				</div>
+			</div>
+			<div class="panel-body">
+				
+				<div class="table-responsive">
+					
+					<table class="table table-bordered">
+						<thead>
+							<th>#</th>
+							<th>Lead Generation Date</th>
+							<th>Enquiry ID</th>
+							<th>Client Name</th>
+							<th>Client Number</th>
+							<th>Client Land Ph.</th>
+							<th>Client Email</th>
+							<th>Status</th>
+							<th>Sub Status</th>
+							<th>Assigned To</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat="data in technical_issues_leads">
+								<td ng-bind="$index + 1"></td>
+								<td>{{data.leadAddDate | date : 'dd MMMM, yyyy' : '+0530'}}</td>
+								<td><a ng-href="leadDetail/{{data.enquiry_id}}">{{data.enquiry_id}}</a></td>
+								<td>{{data.customerName}}</td>
+								<td>{{data.customerMobile}}</td>
+								<td>{{data.customerLandline}}</td>
+								<td>{{data.customerEmail}}</td>
+								<td>{{getStatusTitle(data.disposition_status_id)}}</td>
+								<td>{{getStatusTitle(data.disposition_sub_status_id)}}</td>
+								<td>{{login_user_fullname}}</td>
+							</tr>
+						</tbody>
+					</table>
+					
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>

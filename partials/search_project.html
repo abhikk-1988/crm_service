@@ -1,0 +1,173 @@
+<div class="container-fluid">
+	
+<!--modal Trigger Button-->	
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#find_project_modal">Search Project</button>
+
+
+<!--Modal--> 
+<div class="modal fade" id="find_project_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				  <span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">{{popup_title}}</h4>
+			</div>
+			<div class="modal-body">
+				
+				<div class="container-fluid">
+					<div id="search_city">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<p class="text-muted fts-13">Search City</p>
+								<input type="text" 
+										ng-model="projectCity"
+										ng-change ="showProjects(projectCity)"
+										placeholder="Type city name" 
+										uib-typeahead="city.city_name for city in cities | filter : {city_name : projectCity}" 
+										typeahead-loading="loadingLocations" 
+										typeahead-no-results="noResults" 
+										typeahead-wait-ms="200"
+									   class="form-control"/>
+								<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+								<p ng-show="noResults" class="text-danger" style="font-size: 12px; margin-top: 5px;">
+								  <i class="glyphicon glyphicon-remove"></i> No City Found
+								</p>
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row" id="filters_panel">		
+							<div class="col-md-2">
+								<div class="form-group">
+									<p class="text-muted fts-13">BHK</p>
+									<select multiple="multiple" ng-options="item for item in [1,2,3,4,5] " class="form-control fts-12" id="bhk_filter" ng-model="bhk">
+										<option value="">Select BHK</option>
+									</select>
+								</div>
+							
+							</div>
+							<div class="col-md-3">
+								<p class="text-muted fts-13">Property Status</p>
+								<select ng-options="state for state in ['Under Construction','Ready To Move','New Launch'] " class="form-control fts-12" ng-model="property_status" ng-change="select_property_status(property_status)" >
+									<option value="">Select Property State</option>
+								</select>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<p class="text-muted fts-13">Property Type</p>
+									<select multiple="multiple" ng-options="type.value as type.label for type in property_types" class="form-control fts-12" id="property_types_filter" ng-model="selected_property_types" >
+										<option value="">Select Property Type</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<p class="text-muted fts-13">Min Budget</p>
+											<select class="form-control fts-11" ng-change="checkMinBudget(min_budget_range)" ng-model="min_budget_range" ng-options="price.value as price.label +' '+price.currency_suffix for price in budget_range.min">
+												<option value="">Select Budget</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<p class="text-muted fts-13">Max Budget</p>
+											<select class="form-control fts-11" ng-change="checkMaxBudget(max_budget_range)" ng-model="max_budget_range" ng-options="price.value as price.label +' '+price.currency_suffix for price in budget_range.max">
+												<option value="">Select Budget</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<button class="btn btn-xs btn-primary pull-right" ng-click="showProjects(projectCity)">Filter</button>
+						</div>
+					</div>
+				</div>
+				
+				<div class="container-fluid" style="padding:10px;"> 
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">Projects ({{crm_projects.length}})
+							<button 
+								type="button" 
+								class="btn btn-xs btn-primary pull-right" 
+								ng-click="saveCheckedProjects()" 
+								ng-disabled="!selected_projects.length"> 
+								Save Changes
+							</button>
+							</h4>
+						</div>
+							<table class="table table-striped  fts-13"> 
+								<thead>
+									<th>Select</th>
+									<th>Project Name</th>
+									<th>Project Status</th>
+									<th>Project URL</th>
+								</thead>
+								<tbody>
+                                    <tr ng-repeat="project in crm_projects"> 
+									   <td><input type="checkbox" ng-click="select_p(project.project_id,$event)" /></td>
+									   <td>{{project.project_name}}</td>
+									   <td>{{project.status}}</td>
+									   <td>{{project.project_url}}</td>
+								    </tr>
+                                    <tr class="loading" ng-if="crm_projects.length < 1">
+                                        <td colspan="4" class="make_center" ng-bind-html="pre_loading_content">
+                                        </td>
+                                    </tr>
+                                </tbody>
+							</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" id="modal_close" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" ng-click="saveCheckedProjects()" ng-disabled="!selected_projects.length">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End: Modal-->
+
+</div>
+
+
+<!--Initialize multiselect jquery plugin -->
+
+<script type="text/javascript">
+
+(function ($){
+	
+	$(document).ready(function (){
+		
+		// On Property Type filter 
+		$('#property_types_filter').multiselect({
+			includeSelectAllOption: false
+		});
+		
+		// On BHK filter  
+		$('#bhk_filter').multiselect({
+			includeSelectAllOption: false
+		});
+		
+		
+		$('.multiselect-container label').removeClass('checkbox').css({paddingLeft : '10px'});
+		
+		$('.multiselect-container li:first-child input[type="checkbox"]').remove();
+		
+	});
+	
+}(jQuery));
+
+</script>

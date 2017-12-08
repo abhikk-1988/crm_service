@@ -1,0 +1,856 @@
+<style>
+    .custom_breadcrumb ol { width: 218px; font-size: 14px;}
+	.lead-status-container {
+		margin: 25px auto;
+    	border: 1px solid #eee;
+	}
+
+	.bottom-line { border-bottom: 1px solid #eee;}
+</style>
+
+<div class="row bottom-line" style="margin: 0px;">
+        <div class="col-md-3">
+			<h3 class="text-primary">Lead Information</h3> 
+            <div>
+                <span>Enquiry Number</span>
+                <span>/</span>
+                <span style="color:#000; font-weight:bold;">{{enquiry_id}}</span>
+            </div>
+            <div>
+                <span>Lead Number</span>
+                <span>/</span>
+                <span style="color:#000;font-weight:bold; ">{{(lead_id && lead_id || 'NA')}}</span>
+            </div>
+			<div style="margin-bottom:5px;">
+				<button class="btn btn-default" ng-if="is_lead_editable"  ng-click="editLead(enquiry_id,lead_id)">Edit</button>
+			</div>
+        </div>
+    
+        <div class="col-md-5" style="position: relative; top:35px; padding: 3px;">
+			<div class="col-md-6 pull-right" >
+				<button class="btn btn-sm" ng-click="toggleSmsBox($event)">Send SMS </button>
+				<button class="btn btn-sm" ng-click="toggleEmailBox($event)">Send Email</button>
+			</div>
+
+			<div style="position:relative;" class="pull-right" ng-if="show_message_box" ng-include="'partials/sms_template.html'"></div>
+			<!--        Send Mail Template-->
+            <div class="modal fade" id="sendMailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-body">
+                     <div ng-include="'partials/email_template.html'"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+		</div>
+    
+		<div class="col-md-2">
+			<div class="pull-right lead-status-container">
+				<div class="make_center" style="padding:6px; background-color: gold;">Lead Current Status</div>
+				<div class="make_center" style="padding: 6px;">
+					<a ng-href="" title="Click to edit current status">{{current_enquiry_status.status_title}} {{(current_enquiry_status.sub_status_title && current_enquiry_status.sub_status_title || '')}}</a>
+				</div>
+        	</div>
+		</div>
+    
+        <div class="col-md-2" style="position: relative; top:18px; padding: 3px;">
+            
+            <div class="col-xs-12">
+                <p>Lead Status</p>
+                <hr style="margin:0 0px 18px ;"/>
+                <span style="color: #000;" class="label label-success" ng-class="hwc_status_class">{{hwc_status | pluralizeString}}</span>
+            </div>
+            
+        </div>
+    
+</div>
+
+<!--Navigation links--> 
+<div id="navigation" style="margin-top:25px;">
+	<ul active-nav>
+		<li><a ui-sref="view_lead_customer_info" class="active">Customer Details</a></li>
+		<li><a ui-sref="view_lead_info" class="active">Lead Info</a></li>
+		<li><a ui-sref="view_lead_project_info">Project Details</a></li>
+		<li><a ui-sref="view_lead_history">Lead History</a></li>
+		<li><a ui-sref="view_lead_notes">Notes</a></li>
+        <li><a ng-href="closed_lead_payment_detail/{{enquiry_id}}/{{lead_id}}">View Payment Details</a></li>
+	</ul>
+</div>
+<!--End: Navigation Links-->
+
+<div class="container-fluid">
+	
+	<div class="row" style="margin-bottom:15px;">
+		
+		<div class="col-xs-9 col-md-9"> 
+			<div id="lead_content_area">
+				<div ui-view></div>
+			</div>
+		</div>
+		
+		<div class="col-xs-3 col-md-3" ng-if="is_open">
+			
+			<div class="list-group">
+				
+				<div class="list-group-item active">
+					<h4 class="list-group-item-heading">Update New Status</h4>
+				</div>
+				
+				<!--Lead Actions List-->
+				<div class="list-group-item" ng-repeat="action in lead_actions">
+					
+					<div ng-if="action.childs.length">
+                        <a ng-href="#" style="cursor:pointer;" ng-click="toggleSubList($event)">{{action.parent_title}}</a> 
+					       <i class="fa fa-caret-down" aria-hidden="true" ng-if="action.childs.length" style="margin-left:2px;"></i>    
+                    </div>
+                    
+                    <div ng-if="!action.childs.length">
+                        <a ng-href="#" style="cursor: pointer;" ng-click="changeParentLeadAction(action.parent_id)">{{action.parent_title}}</a>
+                    </div>
+					
+<!--
+					 Check-box for single status    
+					<input ng-if="!action.childs.length" 
+						   type="checkbox" 
+						   class="pull-right" 
+						   ng-checked="action.parent_id == current_enquiry_status.status_id"
+						   ng-click="changeParentLeadAction(action.parent_id)"
+						   />
+-->
+					
+					
+<!--					<i class="fa fa-check pull-right" style="color:green;" ng-if="(action.parent_id == current_enquiry_status.status_id && action.parent_title !== 'Not Interested')"></i>-->
+					
+					<div class="sub_list" style="margin:0px 0 -5px 15px; display: none;">
+					
+						<div class="sub_list_item" ng-if="action.parent_id != 7" style="padding: 5px; background-color: beige;" ng-repeat="sub_status in action.childs">
+							<span>{{sub_status.status}} 
+								<span class="pull-right">
+									
+									<input name="lead_actions"  
+										   type="radio" 
+										   ng-checked="(current_enquiry_status.sub_status_id == sub_status.id) && true || false"
+										   action-popup-dialog action="{{action.parent_id}}" sub_action="{{sub_status.id}}"
+										   />
+								</span>
+							</span>
+						</div>
+						
+						<div ng-if="action.parent_id == 7" ng-repeat="sub_status in action.childs">
+							<a ng-href="lead-closure/{{enquiry_id}}/{{action.parent_id}}/{{sub_status.id}}" class="btn" role="button">{{sub_status.status}}</a>
+						</div>
+						
+						
+					</div>				
+				</div>
+				<!--End: Lead Actions List-->
+				
+			</div>
+			
+			<div class="row" ng-if="is_tl_crm && (is_lead_accepted === 0 || is_lead_accepted === 2 )"> 
+				<div class="col-sm-12">
+					<div class="dropdown">
+						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+							Assign to Sales Person
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+							<li ng-repeat="emp in sales_persons"><a ng-href="#" ng-click="assign_lead(emp.id)">{{emp.full_name}}</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+</div>
+
+<div class="modal fade" id="action_modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+		<!--Modal Header-->
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title">Update Status</h4>
+		</div>
+		
+		<!--Modal Body-->
+		<div class="modal-body">
+			
+			<div class="container-fluid">
+		
+				<!--Meeting Panel-->
+				<div class="panel panel-default action-panels" id="action-panel-3">
+						<div class="panel-heading">
+							<h5 class="panel-title">Meeting</h5>
+						</div>
+
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-3">						
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Meeting Date</p>
+												<div class="input-group">
+													<input type="text" ng-model="lead_status.callback_date" id="datetimepicker_meeting" class="form-control" placeholder="Meeting Date">
+													<div class="input-group-addon" id="date_icon1"><i class="fa fa-calendar fa-1x"></i></div>
+												</div>
+											</div>
+										</form>
+									</div>	
+									<div class="col-md-3">
+										<form class="form-inline">
+											<p>Meeting Time</p>
+											<div class="form-group" style="width:113px;">
+												<div class="input-group">
+													<input type="text" id="datetimepicker_meeting_time" ng-model="lead_status.callback_time" class="form-control" placeholder="Time">
+													<div class="input-group-addon"><i class="fa fa-clock-o fa-1x"></i></div>
+												</div>
+											</div>
+										</form>
+									</div>		
+									<div class="col-md-3">
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Meeting Location</p>
+												<div class="input-group">
+													<select class="form-control" ng-change="setOfficeAddress(lead_status.meeting_location_type)" ng-model="lead_status.meeting_location_type">
+														<option value="">Select Type</option>
+														<option value="office">Office</option>
+                                                        <option value="client">Client</option>
+														<option value="other">Other</option>
+													</select>
+												</div>
+											</div>
+										</form>
+									</div>
+									
+									<div class="col-md-3">
+										<div class="form-group">
+											<p>Select Project</p>
+											<select class="form-control" 
+													ng-model="lead_status.project" 
+													ng-change="setMeetingProject(lead_status.project)"
+													ng-options="project as project.project_name for project in clientEnquiryProjects"
+													>
+												<option value="">Select Project</option>
+											</select>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+							<div class="row row-gap">
+								<div class="col-sm-12">
+									<div class="col-sm-4">
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Meeting Address</p>
+												<div class="input-group">
+													<textarea class="form-control" ng-model="lead_status.meeting_address" rows="3" style="width:235px" placeholder="Type meeting address" ></textarea>
+												</div>
+											</div>
+										</form>
+									</div>
+									
+									<div class="col-sm-4">
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Remark</p>
+												<div class="input-group">
+													<textarea class="form-control" rows="3" style="width:235px" ng-model="lead_status.remark" cols="10" placeholder="Enter your remark" ></textarea>
+												</div>
+											</div>
+										</form>
+									</div>
+                                    
+                                    <div class="col-sm-4">
+                                        <div class="form-inline">
+                                            <div class="form-group">
+                                                <p>Status</p>
+                                                <div class="input-group">
+                                                    <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'hot' ? 'hot-status' : '' " style="margin: 2px;"  ng-click="setLeadHotWarmColdStatus('hot')">Hot</button>
+                                                    <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'warm' ? 'warm-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('warm')">Warm</button>
+                                                    <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'cold' ? 'cold-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('cold')">Cold</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				<!--Site Visit Panel-->
+				<div class="panel panel-default action-panels" id="action-panel-6">
+						<div class="panel-heading">
+							<h5 class="panel-title">Site Visit</h5>
+						</div>
+
+						<div class="panel-body">
+
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-4">						
+										<form class="form-inline">
+											<div class="form-group">
+												<p>SiteVisit Date</p>
+												<div class="input-group">
+													<input type="text" 
+                                                           ng-model="lead_status.callback_date"
+                                                           id="datetimepicker_site_visit" class="form-control"
+                                                           placeholder="SiteVisit Date">
+													<div class="input-group-addon" id="date_icon1">
+                                                        <i class="fa fa-calendar fa-1x"></i>
+                                                    </div>
+												</div>
+                                                <span class="help block danger">{{site_visit_booking_error}}</span>
+                                                
+											</div>
+										</form>
+									</div>	
+									<div class="col-md-4">
+										<form class="form-inline">
+											<p>SiteVisit Time</p>
+											<div class="form-group" style="width:113px;">
+												<div class="input-group">
+													<input type="text" 
+                                                           id="datetimepicker_site_visit_time" 
+                                                           ng-model="lead_status.callback_time"
+                                                           ng-change="checkTimeForSiteVisit(lead_status.callback_time)"
+                                                           class="form-control" placeholder="Time">
+													<div class="input-group-addon">
+                                                        <i class="fa fa-clock-o fa-1x"></i>
+                                                    </div>
+												</div>
+											</div>
+										</form>
+									</div>		
+									<div class="col-md-4">
+										<form class="form-inline">
+											<div class="form-group">
+												<p>No. of people for site visit</p>
+												<div class="input-group">
+													<select class="form-control" ng-model="lead_status.no_of_people_for_site_visit" ng-options="count for count in [1,2,3,4,5]">
+														<option value="">Select</option>
+													</select>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row row-gap">
+								<div class="col-md-12">
+									
+									<div class="col-md-4">
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Site Address</p>
+												<div class="input-group">
+													<textarea class="form-control" ng-model="lead_status.site_visit_address" style="width:235px;" rows="3" placeholder="Type Site address" ></textarea>
+												</div>
+											</div>
+										</form>
+									</div>
+									
+									<div class="col-md-4">
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Remark</p>
+												<div class="input-group">
+													<textarea class="form-control" rows="3" style="width:235px" ng-model="lead_status.remark" cols="10" placeholder="Enter your remark" ></textarea>
+												</div>
+											</div>
+										</form>
+									</div>
+									
+									<div class="col-md-4">
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Select Project</p>
+												<div class="input-group">
+													<select class="form-control" ng-model="lead_status.site_visit_project" ng-options="project as project.project_name for project in site_visit_projects">
+														<option value="">-- Select Project --</option>
+													</select>
+												</div>
+											</div>
+                                            <span class="hel-block"></span>
+										</form>
+									</div>
+									
+								</div>
+							</div>
+							
+                            <div class="row row-gap">
+                                <div class="col-md-4">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <p>Status</p>
+                                            <div class="input-group">
+                                                <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'hot' ? 'hot-status' : '' " style="margin: 2px;"  ng-click="setLeadHotWarmColdStatus('hot')">Hot</button>
+                                                <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'warm' ? 'warm-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('warm')">Warm</button>
+                                                <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'cold' ? 'cold-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('cold')">Cold</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+						</div>
+					</div>
+				
+				<!--Future Reference Panel -->
+				<div class="panel panel-default action-panels" id="action-panel-47">
+						<div class="panel-heading">
+							<h5 class="panel-title">Callback</h5>
+						</div>
+						
+						<div class="panel-body">
+							
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-4">						
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Callback Date</p>
+												<div class="input-group">
+													<input type="text" ng-model="lead_status.callback_date" id="datetimepicker_future_ref_date" class="form-control" placeholder="Callback Date">
+													<div class="input-group-addon" id="date_icon1"><i class="fa fa-calendar fa-1x"></i></div>
+												</div>
+											</div>
+										</form>
+									</div>	
+									<div class="col-md-4">
+										<form class="form-inline">
+											<p>Callback Time</p>
+											<div class="form-group" style="width:113px;">
+												<div class="input-group">
+													<input type="text" id="datetimepicker_future_ref_time" ng-model="lead_status.callback_time" class="form-control" placeholder="Time">
+													<div class="input-group-addon"><i class="fa fa-clock-o fa-1x"></i></div>
+												</div>
+											</div>
+										</form>
+									</div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <p>Status</p>
+                                            <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'hot' ? 'hot-status' : '' " style="margin: 2px;"  ng-click="setLeadHotWarmColdStatus('hot')">Hot</button>
+                                            <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'warm' ? 'warm-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('warm')">Warm</button>
+                                            <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'cold' ? 'cold-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('cold')">Cold</button>
+                                        </div>
+                                    </div>
+								</div>
+							</div>
+							
+							<div class="row row-gap">
+								<div class="col-md-12">
+									<div class="col-md-4">
+										<form class="form-inline">
+											<div class="form-group">
+												<p>Remark</p>
+												<div class="input-group">
+													<textarea class="form-control" rows="3" style="width:235px" ng-model="lead_status.remark" cols="10" placeholder="Enter your remark" ></textarea>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				<!-- Technical Issue --> 
+				<div class="panel panel-default action-panels" id="action-panel-5">
+					<div class="panel-heading">
+						<h5 class="panel-title">Technical Issue</h5>
+					</div>
+					
+					<div class="panel-body">
+						
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-inline">
+									<div class="form-group">
+										<p>Remark</p>
+										<div class="input-group">
+											<textarea 
+												class="form-control" 
+												rows="3" 
+												style="width:800px"
+												ng-model="lead_status.remark" 
+												cols="10" 
+												placeholder="Add your remark about the issue" >
+											</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+				<!--Not Interested-->
+				<div class="panel panel-default action-panels" id="action-panel-1">
+					<div class="panel-heading">
+						<h5 class="panel-title">Not Interested</h5>
+					</div>
+					
+					<div class="panel-body">
+						
+						<div class="row" ng-if="isRemarksMandatory">
+							<div class="col-md-12">
+								<div class="form-inline">
+									<div class="form-group">
+										<p>Remark</p>
+										<div class="input-group">
+											<textarea 
+												class="form-control" 
+												rows="3" 
+												style="width:800px"
+												ng-model="lead_status.remark" 
+												cols="10" 
+												placeholder="Add your remark about the issue" >
+											</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+				<!--Meeting Done-->
+				<div class="panel panel-default action-panels" id="action-panel-11">
+					<div class="panel-heading">
+						<h5 class="panel-title">Update Status For Meeting Done</h5>
+					</div>
+					<div class="panel-body">
+						<div class="col-md-8">
+							<form class="form-inline">
+								<div class="form-group">
+									<p>Remark</p>
+									<div class="input-group">
+										<textarea class="form-control" rows="3" style="width:235px" ng-model="lead_status.remark" cols="10" placeholder="Enter your remark" ></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+                        <div class="col-md-4">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <p>Status</p>
+                                    <div class="input-group">
+                                        <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'hot' ? 'hot-status' : '' " style="margin: 2px;"  ng-click="setLeadHotWarmColdStatus('hot')">Hot</button>
+                                        <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'warm' ? 'warm-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('warm')">Warm</button>
+                                        <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'cold' ? 'cold-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('cold')">Cold</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+				</div>
+				
+				<!--Meeting Not Done-->
+				<div class="panel panel-default action-panels" id="action-panel-44">
+					<div class="panel-heading">
+						<h5 class="panel-title">Update Status For Meeting Not Done</h5>
+					</div>
+					<div class="panel-body">
+						<div class="col-md-12">
+							<form class="form-inline">
+								<div class="form-group">
+									<p>Remark</p>
+									<div class="input-group">
+										<textarea class="form-control" rows="3" style="width:235px" ng-model="lead_status.remark" cols="10" placeholder="Enter your remark" ></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<!--Site visit done-->
+				<div class="panel panel-default action-panels" id="action-panel-14">
+					
+					<div class="panel-heading">
+						
+						<h5 class="panel-title">Site visit done</h5>
+					</div>
+					<div class="panel-body">
+						<div class="col-md-8">
+							<form class="form-inline">
+								<div class="form-group">
+									<p>Remark</p>
+									<div class="input-group">
+										<textarea class="form-control" rows="3" style="width:235px" ng-model="lead_status.remark" cols="10" placeholder="Enter your remark" ></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+                        <div class="col-md-4">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <p>Status</p>
+                                        <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'hot' ? 'hot-status' : '' " style="margin: 2px;"  ng-click="setLeadHotWarmColdStatus('hot')">Hot</button>
+                                        <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'warm' ? 'warm-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('warm')">Warm</button>
+                                        <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'cold' ? 'cold-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('cold')">Cold</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+				</div>
+				
+                <!--Site visit Not Done-->
+				<div class="panel panel-default action-panels" id="action-panel-45">
+					<div class="panel-heading">
+						<h5 class="panel-title">Site Visit Not Done</h5>
+					</div>
+					<div class="panel-body">
+						<div class="col-md-8">
+							<form class="form-inline">
+								<div class="form-group">
+									<p>Remark</p>
+									<div class="input-group">
+										<textarea class="form-control" rows="3" style="width:235px" ng-model="lead_status.remark" cols="10" placeholder="Enter your remark" ></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+                
+                <!-- Just Enquiry -->
+				<div class="panel panel-default action-panels" id="action-panel-34">
+					<div class="panel-heading">
+						<h5 class="panel-title">Just Enquiry</h5>
+					</div>
+					
+					<div class="panel-body">
+						
+						<div class="row">
+							<div class="col-md-8">
+								<div class="form-inline">
+									<div class="form-group">
+										<p>Remark</p>
+										<div class="input-group">
+											<textarea 
+												class="form-control" 
+												rows="3" 
+												style="width:400px; resize: vertical;"
+												ng-model="lead_status.remark" 
+												cols="10" 
+												placeholder="Add your remark about the issue" >
+											</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <p>Status</p>
+                                    <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'hot' ? 'hot-status' : '' " style="margin: 2px;"  ng-click="setLeadHotWarmColdStatus('hot')">Hot</button>
+                                    <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'warm' ? 'warm-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('warm')">Warm</button>
+                                    <button class="btn btn-xs" ng-class="lead_status.hot_warm_cold_status == 'cold' ? 'cold-status' : '' " style="margin: 2px;" ng-click="setLeadHotWarmColdStatus('cold')">Cold</button>
+                                </div>
+                                
+                                {{lead_status.hot_warm_cold_status}}
+                            </div>
+						</div>
+						
+					</div>
+				</div>
+				
+                <!-- No Response-->
+                <div class="panel panel-default action-panels" id="action-panel-40">
+					<div class="panel-heading">
+						<h5 class="panel-title">No Response</h5>
+					</div>
+					
+					<div class="panel-body">
+						
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-inline">
+									<div class="form-group">
+										<p>Remark</p>
+										<div class="input-group">
+											<textarea 
+												class="form-control" 
+												rows="3" 
+												style="width:800px"
+												ng-model="lead_status.remark" 
+												cols="10" 
+												placeholder="Add your remark about the issue" >
+											</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+                  <!-- Reject Status-->
+                <div class="panel panel-default action-panels" id="action-panel-48">
+                    <div class="panel-heading">
+						<h5 class="panel-title">Reject</h5>
+					</div>
+                    <div class="panel-body">
+                        
+                        <div class="row">
+							<div class="col-md-12">
+								<div class="form-inline">
+									<div class="form-group">
+										<p>Remark</p>
+										<div class="input-group">
+											<textarea 
+												class="form-control" 
+												rows="3" 
+												style="width:800px"
+												ng-model="lead_status.remark" 
+												cols="10" 
+												placeholder="Add your remark about the issue" >
+											</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+		
+		<!--Modal Footer-->
+		<div class="modal-footer">
+            
+            <div class="errors pull-left col-md-5" ng-if="errors.length > 0">
+                <ul class="list-group" style="font-size:12px;">
+                    <li 
+                        class="list-group-item" 
+                        style="text-align:left; color:#f00;"
+                        ng-repeat="error in errors">{{error}}</li>
+                </ul>
+            </div>
+            
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			
+			<!--Disable the save changes button only in case of technical issue--> 
+			<button type="button" class="btn btn-primary" ng-click="updateLeadStatus(lead_status)">Update Enquiry Status</button>
+		</div>
+		
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+	
+	(function ($){
+		
+        function  getDisabledDates(){
+
+            var disabled_dates  = [];
+            var current_hour    = new Date().getHours();
+            var current_minute  = new Date().getMinutes();
+
+            if(current_hour >=  17){
+             
+                var d = new Date().getDate();
+                var m = ( (new Date().getMonth()) < 9 ? '0'+ (new Date().getMonth()+1) : (new Date().getMonth()+1) ); 
+                var y = new Date().getFullYear();
+                
+                var date_to_disabled = d+'.'+m+'.'+y;
+                
+                disabled_dates.push(date_to_disabled);
+            }
+            return disabled_dates;
+        }
+        
+		/*
+         * Function to get 24 hours times with 15 minutes interval
+         */
+        function getTimesList(){
+            
+            var i= 0;
+            var times = [];
+            
+            for(i=0; i<24; i++){
+                times.push(i+':00');
+                times.push(i+':15');
+                times.push(i+':30');
+                times.push(i+':45');
+            }
+            return times;
+        }
+        
+        /*
+         * Function to get allowed times for site visit
+         */
+        function getSiteVisitTimes(){
+            var i= 7;
+            var times = [];
+            
+            for(i=7; i<18; i++){
+                times.push(i+':00');
+                times.push(i+':15');
+                times.push(i+':30');
+                if(i < 17){
+                    times.push(i+':45');   
+                }
+            }
+            return times;
+        }
+        
+		
+		$('#datetimepicker_meeting, #datetimepicker_future_ref_date').datetimepicker({
+			timepicker:false,
+			mask:false, // '9999/19/39 29:59' - digit is the maximum possible for a cell
+			defaultDate:new Date(),
+			format : 'Y-m-d',
+            formatDate : 'd.m.Y',
+			lang:'en',
+			minDate: new Date(),
+            yearStart : new Date().getFullYear()
+		});
+		
+        $('#datetimepicker_site_visit').datetimepicker({
+			timepicker:false,
+			mask:false, // '9999/19/39 29:59' - digit is the maximum possible for a cell
+			defaultDate:new Date(),
+			format : 'Y-m-d',
+            formatDate : 'd.m.Y',
+			lang:'en',
+			minDate: new Date(),
+            yearStart : new Date().getFullYear(),
+            disabledDates : getDisabledDates()
+		});
+        
+        jQuery('#datetimepicker_meeting_time, #datetimepicker_future_ref_time').datetimepicker({
+			datepicker:false,
+			format:'H:i',
+			lang :'en',
+			allowTimes: getTimesList()
+		});
+        
+		jQuery('#datetimepicker_site_visit_time').datetimepicker({
+			datepicker:false,
+            format: 'H:i',
+            allowTimes:getSiteVisitTimes()
+        });
+		
+	} (jQuery));
+	
+</script>

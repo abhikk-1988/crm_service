@@ -1,0 +1,174 @@
+<style type="text/css">
+	span.tag {
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    display: block;
+    float: left;
+    /*padding: 5px 9px;*/
+	padding:3px;
+    text-decoration: none;
+    background: #1ABB9C;
+    color: #F1F6F7;
+    margin-right: 5px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    font-family: helvetica;
+}
+.tag {
+    line-height: 1;
+    background: #1ABB9C;
+    color: #fff !important;
+}
+
+.trans_input {
+	background: transparent;
+	text-decoration: none;
+	border: none;
+	outline: none;
+	width:auto;
+}
+
+</style>
+
+<button class="btn btn-primary" data-toggle="modal" data-target="#send_mail_interface">Send Mail</button>
+
+<!-- Popup modal for mail sending interface-->
+
+<div class="modal fade" id="send_mail_interface" tabindex="-1" role="dialog"  aria-hidden="true"> 
+	<div class="modal-dialog modal-lg"> s
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+<!--				<h4 class="modal-title">Send New Mail</h4>-->
+			</div>
+			<div class="modal-body">
+				
+				<div class="panel panel-default">
+					
+					<div class="panel-heading">Compose Mail
+						<div class="col-md-3 pull-right form-inline">
+							<label class="pull-right">
+								<input type="checkbox" ng-model="advance" style="margin-left:6px;" class="pull-right"> 
+								<span style="font-size:12px; font-weight: normal;line-height: 22px;">Show CC, BCC</span>
+							</label>
+						</div>
+					</div>
+					
+					<div class="panel-body">
+						<form>
+							<div class="row">
+								
+								<div class="col-md-12">
+									<div class="form-group">
+										<p>Select Email Template</p>
+										<select id="email_event" 
+												class="form-control" 
+												ng-model="template_id" 
+												ng-change="fetchMail(template_id)"
+												ng-options="item.template_id as item.email_category +' - '+ item.event + ' - ' + item.subject disable when item.is_delete == 1 for item in email_list">
+											<option value="">Select</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="col-md-12">
+									<div class="form-group">
+										<p>To</p>
+										<div class="form-control" id="to_input_tags" style="height:auto;">
+											<input class="trans_input" 
+												   ng-blur="add_to_tag(to_user_email, $event)" 
+												   data-user_type="to"
+												   type="text" 
+												   ng-model="to_user_email"
+												   placeholder="Add To email id" />
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-12" ng-show="advance">
+									<div class="form-group">
+										<p>Cc</p>
+										<div class="form-control" id="cc_input_tags" style="height:auto;">
+											<input class="trans_input" 
+												   ng-blur="add_cc_tag(cc_user_email, $event)" 
+												   data-user_type="cc"
+												   type="text" 
+												   ng-model="cc_user_email"
+												   placeholder="Add CC email id" />
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-12" ng-show="advance">
+									<div class="form-group">
+										<p>Bcc</p>
+										<div class="form-control" id="bcc_input_tags" style="height:auto;">
+											<input class="trans_input" 
+												   ng-blur="add_bcc_tag(bcc_user_email, $event)" 
+												   data-user_type="cc"
+												   type="text" 
+												   ng-model="bcc_user_email"
+												   placeholder="Add BCC email id" />
+										</div>
+									</div>
+								</div>
+							
+								<div class="col-md-12">
+									<div class="form-group">
+										<p>Subject</p>
+										<input type="text" id="email_subject" placeholder="Enter Subject" class="form-control" ng-model="email.subject" />
+									</div>
+								</div>
+							
+								<div class="col-md-12">
+									<div class="form-group">
+										<p>Message Body</p>
+										<div id="summernote_editor"></div> <!--summernote editor--> 
+									</div>
+								</div>
+							</div>
+						</form>
+						
+					</div>
+					
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-md-12">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary pull-right" ng-click="send()">Send Mail</button>
+							</div>
+						</div>	
+					</div>
+				</div>
+				
+			</div>
+		</div> 
+	</div> 
+</div>
+
+<script type="text/javascript">
+	
+	// summernote HTML editor initialization
+	
+	(function ($){
+		
+		$('#summernote_editor').summernote({
+			height : 300,
+			focus : true,
+			// custom toolbar
+			toolbar: [
+				// [groupName, [list of button]]
+				['style', ['style']],
+				['font', ['strikethrough', 'superscript', 'subscript','bold', 'italic', 'underline', 'clear']],
+				['fontname', ['fontname']],
+				['fontsize', ['fontsize']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['height', ['height']],
+				['view',['fullscreen','codeview']]
+			]
+		});
+		
+	})(jQuery);
+	
+</script>

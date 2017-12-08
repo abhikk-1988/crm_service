@@ -1,0 +1,93 @@
+<style type="text/css">
+	.header-actions-container{
+		padding: 10px;
+		background-color:inherit;
+		border-radius: 3px;
+		color: #000;
+	}
+</style>
+
+<div class="row page-header">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div>
+            <h3 class="fts-17"> <i class="fa fa-comments tooltip-button demo-icon icon-edit" title=".icon-edit"></i>{{page_title}}</h3>
+        </div>
+    </div>
+	<div class="col-lg-4 col-md-4 col-sm-4"></div>
+	<div class="col-lg-4 col-md-4 col-sm-4">
+		<div class="pull-right header-actions-container">
+			<div class="col-md-12" style="padding: 0px;
+    background-color: #2A6599;
+    height: 35px;
+    border-radius: 3px;
+    line-height: 33px;">
+				<a style="color:#FFF;" ng-href="add_message_template" class="btn btn-xs">Add New Template</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--<div class="action-block">
+	
+	<div class="col-md-9">
+
+	</div>
+	
+	<div class="col-md-3"> 
+		<ul class="nav nav-pills">
+			<li role="presentation" class="active"></li>
+		</ul>
+	</div>
+</div>-->
+
+<!--email template listing--> 
+<div class="">
+	
+	<div class="col-md-12">
+		
+		<table class="table table-bordered email_templates_tbl">
+			
+			<thead>
+				<th>#</th>
+				<th>Category</th>
+				<th>Message Text</th>
+				<th>Event</th>
+				<th>Default Numbers</th>
+				<th>Action</th>
+			</thead>
+			
+			<tbody>
+				<tr ng-repeat="template in message_templates">
+					<td ng-bind="$index + 1"></td>
+					<td>{{template.message_category}}</td>
+					<td>{{template.message}}</td>
+					<td>{{template.event}}</td>
+					<td>
+						<p class="text-primary" ng-repeat="number in template.default_numbers">{{number}}</p>
+					</td>
+					<td>
+						<i class="fa fa-pencil" style="cursor:pointer;" ng-click="editMessageTemplate(template.template_id)" title="Edit Template" aria-hidden="true"></i>
+						<i  ng-if="template.is_delete == 0" class="fa fa-trash" title="Mark As Delete" ng-click="delete_template(template.template_id,template.is_delete)" style="color:#f00; cursor: pointer;" aria-hidden="true"></i>
+						<i  ng-if="template.is_delete == 1" class="fa fa-trash" title="Restore Template" ng-click="delete_template(template.template_id,template.is_delete)" style="color:green; cursor: pointer;" aria-hidden="true"></i>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+	
+	(function ($){
+		
+		$('table').css({
+			opacity : 0
+		  }).animate({
+			opacity : 1
+		  }, 1000, function() {
+			console.log('Animation done');
+		});
+		
+	}(jQuery));
+	
+</script>

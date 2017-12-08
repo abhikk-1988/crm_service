@@ -1,0 +1,21 @@
+<div id="left-navigation-block" ng-controller="leftNavCtrl" data-slide="down">
+    
+    <div class="panel panel-primary user_pro_panel_left">
+        <div class="panel-heading">
+            <div class="pull-left"><img width="32" class="avatar" height="32" ng-src=" {{currentUser.profile_image}}" alt="profile image"/></div>
+            <div class="col-md-2 col-lg-10 pull-right welcome-msg"><span class="welcome">Welcome</span>, <span class="name" title="{{currentUser.firstname}} {{currentUser.lastname}}">{{currentUser.firstname}}</span></div>
+        </div>
+        <div class="panel-body" style="color:#000;">
+            {{currentUser.email}}
+        </div>
+    </div>
+    
+    <ul class="navigation">
+        <li><a href="home">Dashboard</a></li>
+        <li ng-repeat="module in currentUser.modules.modules" ng-click="displayMenu(module.submenu,$event)">
+            <span title="No link" ng-if="module.submenu.length > 0">{{module.title}}</span>
+            <a href="{{module.link}}" ng-if="!module.submenu.length">{{module.title}}</a>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript" src="html/sidebar/scripts/script.js"></script>

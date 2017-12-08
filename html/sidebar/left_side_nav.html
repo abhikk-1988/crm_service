@@ -1,0 +1,47 @@
+<!--
+<div ng-controller="leftNavCtrl">
+        <div id="left-navigation-block">
+            <ul class="navigation">
+                <li><a href="home">Dashboard</a></li>
+                <li ng-repeat="module in currentUser.modules.modules" ng-click="displayMenu(module.submenu,$event)">
+                    <span title="No link" ng-if="module.submenu.length > 0">{{module.title}}</span>
+                    <a href="{{module.link}}" ng-if="!module.submenu.length">{{module.title}}</a>
+                </li>
+            </ul>
+        </div>
+</div>
+-->
+
+
+<div class="nav-side-menu" ng-controller="leftNavCtrl">
+    <div class="brand">
+        <i style="text-align: left;float: left;position: relative;top: 20px;left: 12px;" class="fa fa-home fa-lg"></i>
+        <a ng-href="home" style="color: #FFF; font-size: 15px;margin-left: 20px;" role="button">Dashboard</a>
+    </div>
+    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+  
+        <div class="menu-list">
+            <ul id="menu-content" class="menu-content collapse out">
+                <span ng-repeat="nav in currentUser.modules.modules">
+                    <li ng-if="nav.submenu.length < 1" class="collapsed active">
+                        <a ng-href="{{nav.link}}"><i class="fa fa-dashboard fa-lg"></i> {{nav.title}}
+                        </a>
+                    </li>
+                    <li ng-if="nav.submenu.length > 0"  data-toggle="collapse" data-target="#{{nav.id}}" class="collapsed active">
+                        <a href="#"><i class="fa fa-gift fa-lg"></i> {{nav.title}} <span class="arrow"></span></a>
+                    </li>
+                    <ul class="sub-menu collapse" ng-if="nav.submenu.length > 0" id="{{nav.id}}">
+                        <span ng-repeat="subnav in nav.submenu">
+                        
+                            <li>
+                                <a ng-click="noEvent($event,subnav.link)">{{subnav.title}}</a>
+                            </li>
+                        </span>  
+                        
+                    </ul>
+                </span>
+           </ul>
+     </div>
+</div>
+
+<script type="text/javascript" src="html/sidebar/scripts/script.js"></script>

@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> <i class="glyphicon glyphicon-user tooltip-button demo-icon icon-edit" title=".icon-edit"></i>Manage Employee Disposition Status</h3>
+			<span class="badge">Employee: {{employee_name}}</span>
+			<span class="badge">Group : {{disposition_group.group_name}}</span>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">Status</h3>
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered" style="display: none;">
+			<thead>
+				<th>#</th>
+				<th>Title</th>
+				<th>Action</th>
+			</thead>
+		</table>
+		<div class="list-group" ng-if="disposition_group.group_status.length">
+				<div class="panel panel-default" ng-repeat="data in disposition_group.group_status">
+					<div class="panel-heading">
+						<div class="panel-title"><a href="" ng-click="toggleContent(data)">{{data.status_title}}</a>
+							<span class="pull-right">
+								<input class="parent-{{data.id}}" type="checkbox"  ng-checked="data.assigned" ng-model="data.assigned" ng-change="setAssigned(data.assigned,'parent',data.id)"  />
+							</span>
+						</div>
+					</div>
+					<div class="panel-body" id="status-content-{{data.id}}" ng-if="data.childs.length" ng-init="data.show_panel = 0" ng-show="data.show_panel">
+						<ul class="list-group">
+							<li class="list-group-item" ng-repeat="sub_status in data.childs">{{sub_status.status}}
+								<span class="pull-right">
+									<input type="checkbox" class="child-{{data.id}}" ng-model="sub_status.assigned" ng-checked="sub_status.assigned" ng-change="setAssigned(sub_status.assigned,'child',sub_status.id)"  />
+								</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		<span ng-if="!disposition_group.group_status.length"><p class="text-primary">No Status Assisgned</p></span>
+		</div>
+	</div>
+
+<div class="row" ng-if="disposition_group.group_status.length">
+	<div class="col-md-12">
+		<button class="btn btn-primary pull-right" ng-click="updateEmployeeDispositionStatus(disposition_group.group_status)">Update Status</button>
+	</div>
+</div>
+<!--</div>-->

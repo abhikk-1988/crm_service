@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="page-header">
+            <h3 class="fts-17"> <i class="glyphicon glyphicon-tasks tooltip-button demo-icon icon-edit" title=".icon-edit"></i> Manage Modules</h3>
+        
+            <button class="btn btn-primary btn-xs pull-right back-btn" popup-modals modal="addNew">Add New</button>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modules Listing</h3>
+         <div>
+             <input type="text" class="pull-right" style="position: relative;bottom: 20px;border-radius: 0px;padding-left: 4px; outline: none;" ng-model="search_in_modules" placeholder="Search"/>
+         </div>
+    </div>
+    <div class="panel-body">
+        <table id="example" class="display table table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr class="tbl-col-bg">
+                <th>#</th>
+                <th>Title</th>
+                <th>Link</th>
+                <th>Parent Module</th>
+                <th class="make_center">Status</th>
+                <th class="make_center">Action</th>
+            </tr>
+        </thead>
+        <tbody class="tlist">
+            <tr ng-repeat="data in modules | filter: search_in_modules">
+                <td ng-bind="$index + 1"></td>
+                <td ng-click="displayHeirarchyView(data)" class="link" style="cursor:pointer;">{{data.title}}</td>
+                <td>{{(data.link ? data.link :'NA')}}</td>
+                <td>{{getParentModuleTitle(data.parent,modules)}}</td>
+                <td class="make_center">
+                    <div class="checkbox">
+                        <div ng-class="data.markAsDisable == 1 ? 'checkbox_danger' : 'checkbox_success'" ng-click="setEnableDisable(data,$event)"><i class="glyphicon glyphicon-ok"></i></div>
+                    </div></td>
+                <td class="make_center">
+                    <button class="btn btn-xs btn-info" ng-click="displayHeirarchyView(data)">Hierarchy View</button>
+                    <button ng-click="editModule(data)" class="btn btn-xs btn-info">Edit</button>
+                    <button ng-if="data.markAsDelete == 0" class="btn btn-xs btn-danger" ng-click="deleteModule(data,'delete')">Delete</button>
+                    <button ng-if="data.markAsDelete == 1" class="btn btn-xs btn-success" ng-click="deleteModule(data,'restore')">Restore</button>
+                </td>
+                
+            </tr>
+          
+        </tbody>
+    </table>
+    </div>
+</div>
